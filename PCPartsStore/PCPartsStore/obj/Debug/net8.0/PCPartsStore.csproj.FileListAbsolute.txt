@@ -1,0 +1,5 @@
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\obj\Debug\net8.0\PCPartsStore.GeneratedMSBuildEditorConfig.editorconfig
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\obj\Debug\net8.0\PCPartsStore.AssemblyInfoInputs.cache
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\obj\Debug\net8.0\PCPartsStore.AssemblyInfo.cs
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\obj\Debug\net8.0\PCPartsStore.csproj.CoreCompileInputs.cache
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\obj\Debug\net8.0\PCPartsStore.sourcelink.json
