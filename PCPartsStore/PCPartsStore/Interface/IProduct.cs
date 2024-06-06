@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,11 +9,11 @@ namespace PC_Part_Store.Interface
 {
     internal interface IProduct
     {
-        public void ViewAllProduct();
-        public void SearchProductById(int idFind);
-        public void SearchProductByName(string name);
-        public void SeaProductByCategory(string nameCategory);
-        public void AddToCart(int idProduct);
+        public void ViewAllProduct(MySqlConnection connection);
+        public void SearchProductById(int idFind, MySqlConnection connection);
+        public void SearchProductByName(string name, MySqlConnection connection);
+        public void SeaProductByCategory(int categoryId, MySqlConnection connection);
+        public void AddToCart(int idProduct, MySqlConnection connection);
 
     }
 }

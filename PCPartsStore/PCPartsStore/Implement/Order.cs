@@ -1,4 +1,5 @@
-﻿using PC_Part_Store.Interface;
+﻿using MySql.Data.MySqlClient;
+using PC_Part_Store.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,17 +18,17 @@ namespace PC_Part_Store.Implement
         public string customerAddress { get; set; }
         public bool verifyed {  get; set; }
         public bool Accepted {  get; set; }
-        public void CreateOrder()
+        public void CreateOrder(MySqlConnection connection)
         {
             throw new NotImplementedException();
         }
 
-        public void VerifyOrder()
+        public void VerifyOrder(MySqlConnection connection)
         {
             throw new NotImplementedException();
         }
 
-        public void ViewOrder()
+        public void ViewOrder(MySqlConnection connection)
         {
             throw new NotImplementedException();
         }

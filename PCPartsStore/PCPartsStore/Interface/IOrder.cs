@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,8 @@ namespace PC_Part_Store.Interface
 {
     internal interface IOrder
     {
-        public void CreateOrder();
-        public void ViewOrder();
-        public void VerifyOrder();
+        public void CreateOrder(MySqlConnection connection);
+        public void ViewOrder(MySqlConnection connection);
+        public void VerifyOrder(MySqlConnection connection);
     }
 }
