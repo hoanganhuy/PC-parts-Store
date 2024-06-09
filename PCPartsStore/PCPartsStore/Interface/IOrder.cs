@@ -9,8 +9,8 @@ namespace PC_Part_Store.Interface
 {
     internal interface IOrder
     {
-        public void CreateOrder(MySqlConnection connection);
         public void ViewOrder(MySqlConnection connection);
         public void VerifyOrder(MySqlConnection connection);
+        public void Pay(MySqlConnection connection);
     }
 }
