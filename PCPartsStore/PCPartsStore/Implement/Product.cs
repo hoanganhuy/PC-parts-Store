@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Helpers;
+using MySql.Data.MySqlClient;
 using PC_Part_Store.Interface;
 
 namespace PC_Part_Store.Implement
@@ -12,137 +13,149 @@ namespace PC_Part_Store.Implement
         public int quantity { get; set; }
         public string brand { get; set; }
         public int categoryId { get; set; }
-
-        public override void Add(MySqlConnection connection)
+        public override void Add()
         {
-            if (connection == null) { 
-                throw new ArgumentNullException(nameof(connection));
-            }
-            Console.WriteLine("Add product");
-            Console.Write("Enter Id Product: ");
-            productId = int.Parse(Console.ReadLine());
-            Console.Write("Enter name product: ");
-            productName = Console.ReadLine();
-            Console.Write("Enter description product: ");
-            descriptionProduct = Console.ReadLine();
-            Console.Write("Enter price product: ");
-            price = decimal.Parse(Console.ReadLine());
-            Console.Write("Enter quantity product: ");
-            quantity = int.Parse(Console.ReadLine());
-            Console.Write("Enter brand product: ");
-            brand = Console.ReadLine();
-            Console.Write("Enter category id: ");
-            categoryId = int.Parse(Console.ReadLine());
-
-            string query = "INSERT INTO product (description, name, price, quantity, productId, categoriesId, brand) " +
-                           "VALUES (@description, @name, @price, @quantity, @productId, @categoriesId, @brand)";
-
-            using (MySqlCommand cmd = new MySqlCommand(query, connection))
+            using (MySqlConnection connection = DBHelper.GetConnection())
             {
-                cmd.Parameters.AddWithValue("@description", descriptionProduct);
-                cmd.Parameters.AddWithValue("@name", productName);
-                cmd.Parameters.AddWithValue("@price", price);
-                cmd.Parameters.AddWithValue("@quantity", quantity);
-                cmd.Parameters.AddWithValue("@productId", productId);
-                cmd.Parameters.AddWithValue("@categoriesId", categoryId);
-                cmd.Parameters.AddWithValue("@brand", brand);
-
-                try
+                if (connection == null)
                 {
-                    connection.Open();
-                    cmd.ExecuteNonQuery();
-                    Console.WriteLine("Product added successfully.");
+                    throw new ArgumentNullException(nameof(connection));
                 }
-                catch (Exception ex)
-                {    
-                    Console.WriteLine($"An error occurred: {ex.Message}");
-                    throw;
-                }
-                finally
-                {
-                    connection.Close();
-                }
-            }
-        }   
 
-    public override void Remove(MySqlConnection connection, int id)
-        {
-            string querry = "Delete from product whare productId=@id";
-            using (MySqlCommand cmd=new MySqlCommand(querry, connection))
-            {
-                cmd.Parameters.AddWithValue("productId", id);
-                try
-                {
-                    connection.Open();
-                    int rowsAffected = cmd.ExecuteNonQuery();
+                Console.WriteLine("Add product");
+                Console.Write("Enter Id Product: ");
+                productId = int.Parse(Console.ReadLine());
+                Console.Write("Enter name product: ");
+                productName = Console.ReadLine();
+                Console.Write("Enter description product: ");
+                descriptionProduct = Console.ReadLine();
+                Console.Write("Enter price product: ");
+                price = decimal.Parse(Console.ReadLine());
+                Console.Write("Enter quantity product: ");
+                quantity = int.Parse(Console.ReadLine());
+                Console.Write("Enter brand product: ");
+                brand = Console.ReadLine();
+                Console.Write("Enter category id: ");
+                categoryId = int.Parse(Console.ReadLine());
 
-                    if (rowsAffected > 0)
+                string query = "INSERT INTO product (description, name, price, quantity, productId, categoriesId, brand) " +
+                               "VALUES (@description, @name, @price, @quantity, @productId, @categoriesId, @brand)";
+
+                using (MySqlCommand cmd = new MySqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@description", descriptionProduct);
+                    cmd.Parameters.AddWithValue("@name", productName);
+                    cmd.Parameters.AddWithValue("@price", price);
+                    cmd.Parameters.AddWithValue("@quantity", quantity);
+                    cmd.Parameters.AddWithValue("@productId", productId);
+                    cmd.Parameters.AddWithValue("@categoriesId", categoryId);
+                    cmd.Parameters.AddWithValue("@brand", brand);
+
+                    try
                     {
-                        Console.WriteLine("Record deleted successfully.");
+                        connection.Open();
+                        cmd.ExecuteNonQuery();
+                        Console.WriteLine("Product added successfully.");
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        Console.WriteLine("No record found with the specified Id.");
+                        Console.WriteLine($"An error occurred: {ex.Message}");
+                        throw;
                     }
-                }
-                catch (Exception ex)
-                {                  
-                    Console.WriteLine($"An error occurred: {ex.Message}");                 
-                    throw;
-                }
-                finally
-                {
-                    connection.Close();
                 }
             }
-        }     
-        public override void Update(MySqlConnection connection, int id)
+        }
+
+        public override void Remove(int id)
         {
-            Console.WriteLine("Update product");
-            Console.Write("Enter new name product: ");
-            string newProductName = Console.ReadLine();
-            Console.Write("Enter new description product: ");
-            string newDescriptionProduct = Console.ReadLine();
-            Console.Write("Enter new price product: ");
-            decimal newPrice = decimal.Parse(Console.ReadLine());
-            Console.Write("Enter new quantity product: ");
-            int newQuantity = int.Parse(Console.ReadLine());
-            Console.Write("Enter new brand product: ");
-            string newBrand = Console.ReadLine();
-            Console.Write("Enter new category id: ");
-            int newCategoryId = int.Parse(Console.ReadLine());
-            string query = "UPDATE product SET name = @name, description = @description, price = @price, " +
-                       "quantity = @quantity, brand = @brand, categoriesId = @categoriesId WHERE productId = @productId";
-            using (MySqlCommand cmd=new MySqlCommand(query, connection))
+            using (MySqlConnection connection = DBHelper.GetConnection())
             {
-                cmd.Parameters.AddWithValue("productName", newProductName);
-                cmd.Parameters.AddWithValue("description", newDescriptionProduct);
-                cmd.Parameters.AddWithValue("price", newPrice);
-                cmd.Parameters.AddWithValue("quantity", newQuantity);
-                cmd.Parameters.AddWithValue("brand" ,newBrand);
-                cmd.Parameters.AddWithValue("categoriesId", newCategoryId);
-                cmd.Parameters.AddWithValue("productId", id);
-                try
+                if (connection == null)
                 {
-                    connection.Open();
-                    int rowsAffected=cmd.ExecuteNonQuery();
-                    if(rowsAffected > 0)
+                    throw new ArgumentNullException(nameof(connection));
+                }
+
+                string query = "DELETE FROM product WHERE productId = @id";
+
+                using (MySqlCommand cmd = new MySqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@id", id);
+                    try
                     {
-                        Console.WriteLine("Record update sucessfully.");
+                        connection.Open();
+                        int rowsAffected = cmd.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            Console.WriteLine("Record deleted successfully.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("No record found with the specified Id.");
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        Console.WriteLine("No record found with the specified Id");
+                        Console.WriteLine($"An error occurred: {ex.Message}");
+                        throw;
                     }
                 }
-                catch(Exception ex)
+            }
+        }
+        public override void Update(int id)
+        {
+            using (MySqlConnection connection = DBHelper.GetConnection())
+            {
+                if (connection == null)
                 {
-                    Console.WriteLine($"An error occurred: {ex.Message}");
-                    throw;
+                    throw new ArgumentNullException(nameof(connection));
                 }
-                finally
+
+                Console.WriteLine("Update product");
+                Console.Write("Enter new name product: ");
+                string newProductName = Console.ReadLine();
+                Console.Write("Enter new description product: ");
+                string newDescriptionProduct = Console.ReadLine();
+                Console.Write("Enter new price product: ");
+                decimal newPrice = decimal.Parse(Console.ReadLine());
+                Console.Write("Enter new quantity product: ");
+                int newQuantity = int.Parse(Console.ReadLine());
+                Console.Write("Enter new brand product: ");
+                string newBrand = Console.ReadLine();
+                Console.Write("Enter new category id: ");
+                int newCategoryId = int.Parse(Console.ReadLine());
+
+                string query = "UPDATE product SET name = @name, description = @description, price = @price, " +
+                               "quantity = @quantity, brand = @brand, categoriesId = @categoriesId WHERE productId = @productId";
+
+                using (MySqlCommand cmd = new MySqlCommand(query, connection))
                 {
-                    connection.Close();
+                    cmd.Parameters.AddWithValue("@name", newProductName);
+                    cmd.Parameters.AddWithValue("@description", newDescriptionProduct);
+                    cmd.Parameters.AddWithValue("@price", newPrice);
+                    cmd.Parameters.AddWithValue("@quantity", newQuantity);
+                    cmd.Parameters.AddWithValue("@brand", newBrand);
+                    cmd.Parameters.AddWithValue("@categoriesId", newCategoryId);
+                    cmd.Parameters.AddWithValue("@productId", id);
+
+                    try
+                    {
+                        connection.Open();
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            Console.WriteLine("Record updated successfully.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("No record found with the specified Id.");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"An error occurred: {ex.Message}");
+                        throw;
+                    }
                 }
             }
         }
