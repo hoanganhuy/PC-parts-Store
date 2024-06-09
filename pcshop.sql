@@ -23,9 +23,11 @@ DROP TABLE IF EXISTS `admin`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `admin` (
-  `Id` int NOT NULL AUTO_INCREMENT,
-  `Name` varchar(255) NOT NULL,
-  PRIMARY KEY (`Id`)
+  `Admin_ID` int NOT NULL AUTO_INCREMENT,
+  `Admin_name` varchar(255) DEFAULT NULL,
+  `Password` varchar(255) DEFAULT NULL,
+  `Email` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`Admin_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -46,14 +48,17 @@ DROP TABLE IF EXISTS `cart`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `cart` (
-  `Id` int NOT NULL AUTO_INCREMENT,
-  `CustomerId` int DEFAULT NULL,
-  `OrderId` int DEFAULT NULL,
-  PRIMARY KEY (`Id`),
-  KEY `CustomerId` (`CustomerId`),
-  KEY `OrderId` (`OrderId`),
-  CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`CustomerId`) REFERENCES `customer` (`Id`),
-  CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`OrderId`) REFERENCES `order` (`Id`)
+  `Cart_ID` int NOT NULL AUTO_INCREMENT,
+  `Customer_ID` int DEFAULT NULL,
+  `Order_ID` int DEFAULT NULL,
+  `Product_ID` int DEFAULT NULL,
+  PRIMARY KEY (`Cart_ID`),
+  KEY `Customer_ID` (`Customer_ID`),
+  KEY `Order_ID` (`Order_ID`),
+  KEY `Product_ID` (`Product_ID`),
+  CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`Customer_ID`) REFERENCES `customer` (`Customer_ID`),
+  CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`Order_ID`) REFERENCES `order` (`Order_ID`),
+  CONSTRAINT `cart_ibfk_3` FOREIGN KEY (`Product_ID`) REFERENCES `product` (`Product_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -67,6 +72,56 @@ LOCK TABLES `cart` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `cart_detail`
+--
+
+DROP TABLE IF EXISTS `cart_detail`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `cart_detail` (
+  `Cart_ID` int NOT NULL,
+  `Product_ID` int NOT NULL,
+  `Amount` int DEFAULT NULL,
+  PRIMARY KEY (`Cart_ID`,`Product_ID`),
+  KEY `Product_ID` (`Product_ID`),
+  CONSTRAINT `cart_detail_ibfk_1` FOREIGN KEY (`Cart_ID`) REFERENCES `cart` (`Cart_ID`),
+  CONSTRAINT `cart_detail_ibfk_2` FOREIGN KEY (`Product_ID`) REFERENCES `product` (`Product_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cart_detail`
+--
+
+LOCK TABLES `cart_detail` WRITE;
+/*!40000 ALTER TABLE `cart_detail` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cart_detail` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `category`
+--
+
+DROP TABLE IF EXISTS `category`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `category` (
+  `Category_ID` int NOT NULL AUTO_INCREMENT,
+  `Category_name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`Category_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `category`
+--
+
+LOCK TABLES `category` WRITE;
+/*!40000 ALTER TABLE `category` DISABLE KEYS */;
+/*!40000 ALTER TABLE `category` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `customer`
 --
 
@@ -74,13 +129,15 @@ DROP TABLE IF EXISTS `customer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `customer` (
-  `Id` int NOT NULL AUTO_INCREMENT,
-  `Name` varchar(255) NOT NULL,
-  `PhoneNumber` varchar(20) DEFAULT NULL,
+  `Customer_ID` int NOT NULL AUTO_INCREMENT,
+  `Customer_name` varchar(255) DEFAULT NULL,
+  `User_name` varchar(255) DEFAULT NULL,
   `Email` varchar(255) DEFAULT NULL,
+  `Password` varchar(255) DEFAULT NULL,
   `Address` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `phone_number` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`Customer_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -89,6 +146,7 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
+INSERT INTO `customer` VALUES (1,'Datt',NULL,'Ruild2000@gmail.com','03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4','16B','0862091904');
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -100,15 +158,13 @@ DROP TABLE IF EXISTS `employee`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `employee` (
-  `Id` int NOT NULL AUTO_INCREMENT,
-  `Name` varchar(255) NOT NULL,
-  `PhoneNumber` varchar(20) DEFAULT NULL,
-  `Email` varchar(255) DEFAULT NULL,
+  `Employee_ID` int NOT NULL AUTO_INCREMENT,
   `Address` varchar(255) DEFAULT NULL,
-  `AdminId` int DEFAULT NULL,
-  PRIMARY KEY (`Id`),
-  KEY `AdminId` (`AdminId`),
-  CONSTRAINT `employee_ibfk_1` FOREIGN KEY (`AdminId`) REFERENCES `admin` (`Id`)
+  `Employee_name` varchar(255) DEFAULT NULL,
+  `Phone_number` varchar(20) DEFAULT NULL,
+  `Password` varchar(255) DEFAULT NULL,
+  `Email` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`Employee_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -129,17 +185,15 @@ DROP TABLE IF EXISTS `order`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `order` (
-  `Id` int NOT NULL AUTO_INCREMENT,
-  `CustomerId` int DEFAULT NULL,
-  `CustomerName` varchar(255) DEFAULT NULL,
-  `CustomerPhoneNumber` varchar(20) DEFAULT NULL,
-  `CustomerEmail` varchar(255) DEFAULT NULL,
-  `CustomerAddress` varchar(255) DEFAULT NULL,
-  `Verified` tinyint(1) DEFAULT NULL,
-  `Accepted` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`Id`),
-  KEY `CustomerId` (`CustomerId`),
-  CONSTRAINT `order_ibfk_1` FOREIGN KEY (`CustomerId`) REFERENCES `customer` (`Id`)
+  `Order_ID` int NOT NULL AUTO_INCREMENT,
+  `Customer_ID` int DEFAULT NULL,
+  `Customer_name` varchar(255) DEFAULT NULL,
+  `Customer_phone_number` varchar(20) DEFAULT NULL,
+  `Customer_email` varchar(255) DEFAULT NULL,
+  `Customer_Address` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`Order_ID`),
+  KEY `Customer_ID` (`Customer_ID`),
+  CONSTRAINT `order_ibfk_1` FOREIGN KEY (`Customer_ID`) REFERENCES `customer` (`Customer_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -160,13 +214,16 @@ DROP TABLE IF EXISTS `product`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `product` (
-  `Id` int NOT NULL AUTO_INCREMENT,
-  `Name` varchar(255) NOT NULL,
+  `Product_ID` int NOT NULL AUTO_INCREMENT,
+  `Product_name` varchar(255) DEFAULT NULL,
   `Description` text,
   `Price` decimal(10,2) DEFAULT NULL,
   `Quantity` int DEFAULT NULL,
-  `Category` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`Id`)
+  `Brand` varchar(255) DEFAULT NULL,
+  `Category_ID` int DEFAULT NULL,
+  PRIMARY KEY (`Product_ID`),
+  KEY `Category_ID` (`Category_ID`),
+  CONSTRAINT `product_ibfk_1` FOREIGN KEY (`Category_ID`) REFERENCES `category` (`Category_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -188,4 +245,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-04 13:57:32
+-- Dump completed on 2024-06-06 16:33:53

@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Helpers;
+using MySql.Data.MySqlClient;
 using PC_Part_Store.Interface;
 using System.Transactions;
 
@@ -13,55 +14,55 @@ namespace PC_Part_Store.Implement
         public int quantity { get; set; }
         public string brand { get; set; }
         public int categoryId { get; set; }
-
         public override void Add(MySqlConnection connection)
         {
-            if (connection == null) { 
-                throw new ArgumentNullException(nameof(connection));
-            }
-            Console.WriteLine("Add product");
-            Console.Write("Enter Id Product: ");
-            productId = int.Parse(Console.ReadLine());
-            Console.Write("Enter name product: ");
-            productName = Console.ReadLine();
-            Console.Write("Enter description product: ");
-            descriptionProduct = Console.ReadLine();
-            Console.Write("Enter price product: ");
-            price = decimal.Parse(Console.ReadLine());
-            Console.Write("Enter quantity product: ");
-            quantity = int.Parse(Console.ReadLine());
-            Console.Write("Enter brand product: ");
-            brand = Console.ReadLine();
-            Console.Write("Enter category id: ");
-            categoryId = int.Parse(Console.ReadLine());
-
-            string query = "INSERT INTO product (description, name, price, quantity, productId, categoriesId, brand) " +
-                           "VALUES (@description, @name, @price, @quantity, @productId, @categoriesId, @brand)";
-
-            using (MySqlCommand cmd = new MySqlCommand(query, connection))
+            connection = DBHelper.GetConnection();
             {
-                cmd.Parameters.AddWithValue("@description", descriptionProduct);
-                cmd.Parameters.AddWithValue("@name", productName);
-                cmd.Parameters.AddWithValue("@price", price);
-                cmd.Parameters.AddWithValue("@quantity", quantity);
-                cmd.Parameters.AddWithValue("@productId", productId);
-                cmd.Parameters.AddWithValue("@categoriesId", categoryId);
-                cmd.Parameters.AddWithValue("@brand", brand);
+                if (connection == null)
+                {
+                    throw new ArgumentNullException(nameof(connection));
+                }
 
-                try
+                Console.WriteLine("Add product");
+                Console.Write("Enter Id Product: ");
+                productId = int.Parse(Console.ReadLine());
+                Console.Write("Enter name product: ");
+                productName = Console.ReadLine();
+                Console.Write("Enter description product: ");
+                descriptionProduct = Console.ReadLine();
+                Console.Write("Enter price product: ");
+                price = decimal.Parse(Console.ReadLine());
+                Console.Write("Enter quantity product: ");
+                quantity = int.Parse(Console.ReadLine());
+                Console.Write("Enter brand product: ");
+                brand = Console.ReadLine();
+                Console.Write("Enter category id: ");
+                categoryId = int.Parse(Console.ReadLine());
+
+                string query = "INSERT INTO product (description, name, price, quantity, productId, categoriesId, brand) " +
+                               "VALUES (@description, @name, @price, @quantity, @productId, @categoriesId, @brand)";
+
+                using (MySqlCommand cmd = new MySqlCommand(query, connection))
                 {
-                    connection.Open();
-                    cmd.ExecuteNonQuery();
-                    Console.WriteLine("Product added successfully.");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Error: " + ex.Message);
-                    throw;
-                }
-                finally
-                {
-                    connection.Close();
+                    cmd.Parameters.AddWithValue("@description", descriptionProduct);
+                    cmd.Parameters.AddWithValue("@name", productName);
+                    cmd.Parameters.AddWithValue("@price", price);
+                    cmd.Parameters.AddWithValue("@quantity", quantity);
+                    cmd.Parameters.AddWithValue("@productId", productId);
+                    cmd.Parameters.AddWithValue("@categoriesId", categoryId);
+                    cmd.Parameters.AddWithValue("@brand", brand);
+
+                    try
+                    {
+                        connection.Open();
+                        cmd.ExecuteNonQuery();
+                        Console.WriteLine("Product added successfully.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"An error occurred: {ex.Message}");
+                        throw;
+                    }
                 }
             }
         }
@@ -136,34 +137,33 @@ namespace PC_Part_Store.Implement
 
         public override void Remove(MySqlConnection connection, int id)
         {
-            string querry = "DELETE FROMM product WHERE productId=@id";
-            using (MySqlCommand cmd=new MySqlCommand(querry, connection))
-            {
-                cmd.Parameters.AddWithValue("@productId", id);
-                try
-                {
-                    connection.Open();
-                    int rowsAffected = cmd.ExecuteNonQuery();
+           
 
-                    if (rowsAffected > 0)
-                    {
-                        Console.WriteLine("Record deleted successfully.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("No record found with the specified Id.");
-                    }
-                }
-                catch (Exception ex)
-                {                  
-                    Console.WriteLine($"An error occurred: {ex.Message}");                 
-                    throw;
-                }
-                finally
+                string query = "DELETE FROM product WHERE productId = @id";
+
+                using (MySqlCommand cmd = new MySqlCommand(query, connection))
                 {
-                    connection.Close();
+                    cmd.Parameters.AddWithValue("@id", id);
+                    try
+                    {
+                        connection.Open();
+                        int rowsAffected = cmd.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            Console.WriteLine("Record deleted successfully.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("No record found with the specified Id.");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"An error occurred: {ex.Message}");
+                        throw;
+                    }
                 }
-            }
         }
         public void SeaProductByCategory(int categoryId, MySqlConnection connection)
         {
@@ -362,6 +362,11 @@ namespace PC_Part_Store.Implement
         }
 
         public void ViewAllProduct(MySqlConnection connection)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void viewProductDetails(int productId, MySqlConnection connection)
         {
             throw new NotImplementedException();
         }
