@@ -10,7 +10,8 @@ namespace PC_Part_Store
     {
         public void MenuLogin()
         {
-
+            Console.WriteLine("1.Login");
+            Console.WriteLine("2.Register");
         }
     }
 }

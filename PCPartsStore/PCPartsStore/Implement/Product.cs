@@ -107,14 +107,14 @@ namespace PC_Part_Store.Implement
                             cmdAddToCart.Parameters.AddWithValue("@amount", amount);
                             cmdAddToCart.ExecuteNonQuery();
                         }
-                        //cap nhat so luong hang trong kho
+                        /*cap nhat so luong hang trong kho
                         string updateQuantityProduct = "UPDATE product SET quantity=quantity-@amount WHERE productId=@productId";
                         using (MySqlCommand cmdUpdateQuantity = new MySqlCommand(updateQuantityProduct, connection, transaction))
                         {
                             cmdUpdateQuantity.Parameters.AddWithValue("@productId", productId);
                             cmdUpdateQuantity.Parameters.AddWithValue("@amount", amount);
                             cmdUpdateQuantity.ExecuteNonQuery();
-                        }
+                        }*/
                         transaction.Commit();
                         Console.WriteLine("Add product to cart sucessful");
                     }

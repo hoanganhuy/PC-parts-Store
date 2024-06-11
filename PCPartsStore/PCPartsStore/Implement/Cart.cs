@@ -117,14 +117,14 @@ namespace PC_Part_Store.Implement
                                         cmdUpdateAmount.Parameters.AddWithValue("@productId", productId);
                                         cmdUpdateAmount.ExecuteNonQuery();
                                     }
-                                    //cap nhat so luong thuc te cua san pham trong kho
+                                    /*cap nhat so luong thuc te cua san pham trong kho
                                     string updateProductStockQuery = "UPDATE products SET stock_quantity = stock_quantity - @quantityChange WHERE product_id = @productId;";
                                     using (MySqlCommand updateProductStockCmd = new MySqlCommand(updateProductStockQuery, connection, transaction))
                                     {
                                         updateProductStockCmd.Parameters.AddWithValue("@quantityChange", quantityChange);
                                         updateProductStockCmd.Parameters.AddWithValue("@productId", productId);
                                         updateProductStockCmd.ExecuteNonQuery();
-                                    }
+                                    }*/
                                     Console.WriteLine("Product quantity updated successfully.");
                                     break;
                                 }
@@ -138,14 +138,15 @@ namespace PC_Part_Store.Implement
                                         cmdReomveProductInCart.Parameters.AddWithValue("@productId", productId);
                                         cmdReomveProductInCart.ExecuteNonQuery();
                                     }
-                                    //cap nhat so luong trong kho
+                                    /*cap nhat so luong trong kho
                                     string queryReStoreQuantity = "UPDATE product SET quantity=quatity-@currentQuantity WHERE product_id = @productId";
                                     using (MySqlCommand cmdReStoreQuantity = new MySqlCommand(queryReStoreQuantity, connection, transaction))
                                     {
                                         cmdReStoreQuantity.Parameters.AddWithValue("@currentQuantity", currentQuantity);
                                         cmdReStoreQuantity.Parameters.AddWithValue("@productId", productId);
                                         cmdReStoreQuantity.ExecuteNonQuery();
-                                    }
+                                    }*/
+                                    Console.WriteLine("Remove product succesful.");
                                     break;
                                 }
                             case 3:
