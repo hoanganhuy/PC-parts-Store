@@ -11,7 +11,7 @@ namespace PC_Part_Store.Implement
 {
     public class Account :IAccount
     {
-        public static int idCustomer {  get; set; }
+        public int idCustomer {  get; set; }
         public int idEmployee { get; set; }
         public string userName {  get; set; }
         public string password { get; set; }
@@ -22,8 +22,8 @@ namespace PC_Part_Store.Implement
         public void CreateAccountEmloyee(MySqlConnection connection)
         {
             Console.WriteLine("Enter new infomation employee:");
-            Console.Write("Enter user name:");
-            userName = Console.ReadLine();
+            Console.Write("Enter user name employee:");
+            userName = Console.ReadLine();                    
             Console.Write("Enter password:");
             password = Console.ReadLine();
             Console.Write("Enter name employee:");
@@ -34,7 +34,7 @@ namespace PC_Part_Store.Implement
             email = Console.ReadLine();
             Console.Write("Enter phone number: ");
             phoneNumber = Console.ReadLine();
-            string query = "INSERT INTO CUSTOMMER (userName,password,name, address, phoneNumber, email, password) VALUES (@userName ,@password, @name, @address, @phoneNumber, @email, @password)";
+            string query = "INSERT INTO employee (userName,password,name, address, phoneNumber, email, password) VALUES (@userName ,@password, @name, @address, @phoneNumber, @email, @password)";
             using(MySqlCommand cmd=new MySqlCommand(query,connection))
             {
                 cmd.Parameters.AddWithValue("@userName", userName);
@@ -132,7 +132,7 @@ namespace PC_Part_Store.Implement
             phoneNumber = Console.ReadLine();
             Console.Write("Enter address: ");
             address = Console.ReadLine();
-            string query = "INSERT INTO users (username, password, name, email, phoneNnumber, address) " +
+            string query = "INSERT INTO customer (username, password, name, email, phoneNnumber, address) " +
                        "VALUES (@userName, @password, @name, @email, @phoneNumber, @address)";
             using(MySqlCommand cmd=new MySqlCommand(query, connection))
             {
@@ -219,7 +219,7 @@ namespace PC_Part_Store.Implement
             string phoneNumber = Console.ReadLine();
             Console.Write("Update email employee: ");
             string email = Console.ReadLine();
-            string query = "UPDATE CUSTOMMER SET ";
+            string query = "UPDATE employee SET ";
             List<string> updates = new List<string>();
             if (!string.IsNullOrEmpty(name)) updates.Add("name = @name");
             if (!string.IsNullOrEmpty(email)) updates.Add("email = @email");
