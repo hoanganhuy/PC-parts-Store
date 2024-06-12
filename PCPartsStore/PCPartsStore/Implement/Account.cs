@@ -1,5 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
+using MySqlX.XDevAPI.Common;
 using PC_Part_Store.Interface;
+using PCPartsStore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,11 +21,22 @@ namespace PC_Part_Store.Implement
         public string email { get; set; }
         public string address {  get; set; }
         public string name {  get; set; }      
+        public Validations validations = new Validations();
         public void CreateAccountEmloyee(MySqlConnection connection)
         {
             Console.WriteLine("Enter new infomation employee:");
             Console.Write("Enter user name employee:");
-            userName = Console.ReadLine();                    
+            userName = Console.ReadLine();
+            while (!validations.UsernameFormCheck(userName))
+            {
+                Console.Write("Invalid username form, please enter again: ");
+                userName = Console.ReadLine();
+            }
+            while (!validations.EmployeeUsernameDuplicateCheck(userName))
+            {
+                Console.Write("Duplicated username, please enter again: ");
+                userName = Console.ReadLine();
+            }
             Console.Write("Enter password:");
             password = Console.ReadLine();
             Console.Write("Enter name employee:");
@@ -34,7 +47,7 @@ namespace PC_Part_Store.Implement
             email = Console.ReadLine();
             Console.Write("Enter phone number: ");
             phoneNumber = Console.ReadLine();
-            string query = "INSERT INTO employee (userName,password,name, address, phoneNumber, email, password) VALUES (@userName ,@password, @name, @address, @phoneNumber, @email, @password)";
+            string query = "INSERT INTO employee (userName,password,name, address, phoneNumber, email) VALUES (@userName ,@password, @name, @address, @phoneNumber, @email)";
             using(MySqlCommand cmd=new MySqlCommand(query,connection))
             {
                 cmd.Parameters.AddWithValue("@userName", userName);
@@ -66,6 +79,14 @@ namespace PC_Part_Store.Implement
             userName = Console.ReadLine();
             Console.Write("Enter password: ");
             password = Console.ReadLine();
+            while (!validations.AccountExistCheck(userName, password))
+            {
+                Console.WriteLine("Account is not exist, please enter again: ");
+                Console.Write("Username: ");
+                userName = Console.ReadLine();
+                Console.Write("Password: ");
+                password = Console.ReadLine();
+            }
             string queryCustomer = "SELECT customerId FROM customer WHERE userName = @userName AND password = @password";
             using (MySqlCommand cmd = new MySqlCommand(queryCustomer, connection))
             {
@@ -122,6 +143,16 @@ namespace PC_Part_Store.Implement
             Console.WriteLine("Screen register");
             Console.Write("Enter user name:");
             userName = Console.ReadLine();
+            while (!validations.UsernameFormCheck(userName))
+            {
+                Console.Write("Invalid username form, please enter again: ");
+                userName = Console.ReadLine();
+            }
+            while (!validations.CustomerUsernameDuplicateCheck(userName))
+            {
+                Console.Write("Duplicated username, please enter again: ");
+                userName = Console.ReadLine();
+            }
             Console.Write("Enter password:");
             password = Console.ReadLine();
             Console.Write("Enter name:");

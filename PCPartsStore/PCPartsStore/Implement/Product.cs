@@ -38,6 +38,7 @@ namespace PC_Part_Store.Implement
                 brand = Console.ReadLine();
                 Console.Write("Enter category id: ");
                 categoryId = int.Parse(Console.ReadLine());
+                //Might need to check product information
 
                 string query = "INSERT INTO product (description, name, price, quantity, productId, categoriesId, brand) " +
                                "VALUES (@description, @name, @price, @quantity, @productId, @categoriesId, @brand)";
@@ -137,7 +138,7 @@ namespace PC_Part_Store.Implement
 
         public override void Remove(MySqlConnection connection, int id)
         {
-           
+
 
                 string query = "DELETE FROM product WHERE productId = @id";
 

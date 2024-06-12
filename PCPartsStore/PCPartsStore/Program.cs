@@ -6,7 +6,6 @@ public static class Program
 {
     static void Main()
     {
-        
         using(MySqlConnection connection= DBHelper.GetConnection())
         {
             Account account = new Account();
