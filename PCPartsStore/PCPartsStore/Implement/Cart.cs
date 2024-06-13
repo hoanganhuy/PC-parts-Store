@@ -12,16 +12,16 @@ namespace PC_Part_Store.Implement
 {
     public class Cart : Super<Cart>, ICart
     {
-        public int orderId {  get; set; }
-        public int quantity {  get; set; }
-        public int idCart {  get; set; }
-        public int idCustomer {  get; set; }
+        public int orderId { get; set; }
+        public int quantity { get; set; }
+        public int idCart { get; set; }
+        public int idCustomer { get; set; }
         public override void Add(MySqlConnection connection)
         {
             throw new NotImplementedException();
-        } 
+        }
 
-        public override void Remove(MySqlConnection connection,int id)
+        public override void Remove(MySqlConnection connection, int id)
         {
             throw new NotImplementedException();
         }
@@ -61,7 +61,7 @@ namespace PC_Part_Store.Implement
                         //lay so luong hang hien tai trong cart details
                         string queryCheckProductInCart = "SELECT amount FROM cartDetails WHERE cart_id = @cartId AND product_id = @productId;";
                         int currentQuantity;
-                        using(MySqlCommand cmdCheckProductInCart=new MySqlCommand(queryCheckProductInCart, connection, transaction))
+                        using (MySqlCommand cmdCheckProductInCart = new MySqlCommand(queryCheckProductInCart, connection, transaction))
                         {
                             cmdCheckProductInCart.Parameters.AddWithValue("@cartId", cartId);
                             cmdCheckProductInCart.Parameters.AddWithValue("@productId", productId);
@@ -81,7 +81,7 @@ namespace PC_Part_Store.Implement
                         Console.WriteLine("3.Cancel update");
                         Console.Write("Choose an option: ");
                         int option = int.Parse(Console.ReadLine());
-                        switch(option) 
+                        switch (option)
                         {
                             case 1:
                                 {
@@ -89,13 +89,13 @@ namespace PC_Part_Store.Implement
                                     int newAmount = int.Parse(Console.ReadLine());
                                     //kiem tra so luong san pham hien tai trong kho
                                     string queryCheckAmountProduct = "SELECT quantity FROM products WHERE product_id = @productId";
-                                    using(MySqlCommand cmdCheckAmountProduct=new MySqlCommand(queryCheckAmountProduct, connection, transaction))
+                                    using (MySqlCommand cmdCheckAmountProduct = new MySqlCommand(queryCheckAmountProduct, connection, transaction))
                                     {
                                         cmdCheckAmountProduct.Parameters.AddWithValue("@productId", productId);
-                                        var quantityResult=cmdCheckAmountProduct.ExecuteScalar();
+                                        var quantityResult = cmdCheckAmountProduct.ExecuteScalar();
                                         if (quantityResult != null)
                                         {
-                                            currentQuantity= Convert.ToInt32(quantityResult);
+                                            currentQuantity = Convert.ToInt32(quantityResult);
                                         }
                                         else
                                         {
@@ -128,11 +128,11 @@ namespace PC_Part_Store.Implement
                                     Console.WriteLine("Product quantity updated successfully.");
                                     break;
                                 }
-                            case 2: 
+                            case 2:
                                 {
                                     //xoa san pham trong gio hang
                                     string queryRemoveProductInCart = "DELETE FROM cartDetails WHERE cartId = @cartId AND productId = @productId";
-                                    using(MySqlCommand cmdReomveProductInCart = new MySqlCommand(queryRemoveProductInCart, connection, transaction))
+                                    using (MySqlCommand cmdReomveProductInCart = new MySqlCommand(queryRemoveProductInCart, connection, transaction))
                                     {
                                         cmdReomveProductInCart.Parameters.AddWithValue("@cartId", cartId);
                                         cmdReomveProductInCart.Parameters.AddWithValue("@productId", productId);
@@ -155,10 +155,10 @@ namespace PC_Part_Store.Implement
                                     break;
                                 }
                             default:
-                            {
-                                Console.WriteLine("Invalid option.");
-                                break;
-                            }
+                                {
+                                    Console.WriteLine("Invalid option.");
+                                    break;
+                                }
                         }
                         transaction.Commit();
                     }
@@ -174,14 +174,43 @@ namespace PC_Part_Store.Implement
                 Console.WriteLine("Cannot connect to database: " + ex.Message);
             }
             finally
-            {                            
-                connection.Close();               
+            {
+                connection.Close();
             }
         }
 
         public void ViewCart(int idCart, MySqlConnection connection)
         {
             throw new NotImplementedException();
+        }
+        public void ManageCart(int customerId, MySqlConnection connection)
+        {
+            bool manageCart = true;
+            while (manageCart)
+            {
+                Console.WriteLine("1. Enter product ID");
+                Console.WriteLine("2. Back");
+                Console.WriteLine("3. Quit");
+                Console.Write("Choose an option: ");
+                string cartOption = Console.ReadLine();
+
+                switch (cartOption)
+                {
+                    case "1":
+                        Console.Write("Enter product ID: ");
+                        int cartProductId = int.Parse(Console.ReadLine());                      
+                        break;
+                    case "2":
+                        manageCart = false;
+                        break;
+                    case "3":
+                        Environment.Exit(0); // Exit
+                        break;
+                    default:
+                        Console.WriteLine("Invalid option. Please try again.");
+                        break;
+                }
+            }
         }
     }
 }

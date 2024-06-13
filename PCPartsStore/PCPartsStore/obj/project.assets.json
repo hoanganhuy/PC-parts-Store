@@ -1791,11 +1791,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\My Projects\\CodingProject\\PC-parts-Store\\PCPartsStore\\PCPartsStore\\PCPartsStore.csproj",
+      "projectUniqueName": "D:\\Thư mục mới\\PC-parts-Store\\PCPartsStore\\PCPartsStore\\PCPartsStore.csproj",
       "projectName": "PCPartsStore",
-      "projectPath": "D:\\My Projects\\CodingProject\\PC-parts-Store\\PCPartsStore\\PCPartsStore\\PCPartsStore.csproj",
+      "projectPath": "D:\\Thư mục mới\\PC-parts-Store\\PCPartsStore\\PCPartsStore\\PCPartsStore.csproj",
       "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-      "outputPath": "D:\\My Projects\\CodingProject\\PC-parts-Store\\PCPartsStore\\PCPartsStore\\obj\\",
+      "outputPath": "D:\\Thư mục mới\\PC-parts-Store\\PCPartsStore\\PCPartsStore\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",

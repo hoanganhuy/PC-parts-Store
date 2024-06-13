@@ -361,15 +361,132 @@ namespace PC_Part_Store.Implement
                 }
             }
         }
+        public void ManageProductOptions(int manageProductId, MySqlConnection connection)
+        {
+            while (true)
+            {
+                Console.WriteLine("1. Add Product");
+                Console.WriteLine("2. Update Product");
+                Console.WriteLine("3. Delete Product");
+                Console.WriteLine("4. Back");
+                Console.Write("Select an option: ");
+                string manageOption = Console.ReadLine();
 
+                switch (manageOption)
+                {
+                    case "1":
+
+                        break;
+                    case "2":
+
+                        break;
+                    case "3":
+
+                        break;
+                    case "4":
+                        return;
+                    default:
+                        Console.WriteLine("Invalid option. Please try again.");
+                        break;
+                }
+            }
+        }
         public void ViewAllProduct(MySqlConnection connection)
         {
-            throw new NotImplementedException();
+            string query = "SELECT * FROM product";
+            MySqlCommand cmd = new MySqlCommand(query, connection);
+
+            connection.Open();
+            MySqlDataReader reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Console.WriteLine($"ID: {reader["productId"]}, Name: {reader["name"]}, Price: {reader["price"]}, Description: {reader["description"]}, Quantity: {reader["quantity"]}, Brand: {reader["brand"]}, Category ID: {reader["categoriesId"]}");
+            }
+            connection.Close();
         }
 
         public void viewProductDetails(int productId, MySqlConnection connection)
         {
-            throw new NotImplementedException();
+            if (connection == null) throw new ArgumentNullException(nameof(connection));
+
+            string query = "SELECT * FROM product WHERE productId = @productId";
+
+            using (MySqlCommand cmd = new MySqlCommand(query, connection))
+            {
+                cmd.Parameters.AddWithValue("@productId", productId);
+
+                try
+                {
+                    connection.Open();
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            Console.WriteLine($"ID: {reader["productId"]}");
+                            Console.WriteLine($"Name: {reader["name"]}");
+                            Console.WriteLine($"Price: {reader["price"]}");
+                            Console.WriteLine($"Description: {reader["description"]}");
+                            Console.WriteLine($"Quantity: {reader["quantity"]}");
+                            Console.WriteLine($"Brand: {reader["brand"]}");
+                            Console.WriteLine($"Category ID: {reader["categoriesId"]}");
+
+                            // Option
+                            Console.WriteLine("Options:");
+                            Console.WriteLine("1 - Add product to cart");
+                            Console.WriteLine("2 - Back");
+                            Console.WriteLine("3 - Quit");
+
+                            string input = Console.ReadLine();
+                            switch (input)
+                            {
+                                case "1":
+                                    Console.Write("Enter quantity to add to cart: ");
+                                    if (int.TryParse(Console.ReadLine(), out int quantity))
+                                    {
+                                        Console.Write("Enter customer ID: ");
+                                        if (int.TryParse(Console.ReadLine(), out int customerId))
+                                        {
+                                            AddToCart(productId, customerId, quantity, connection);
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Invalid customer ID. Please enter a valid number.");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Invalid quantity. Please enter a valid number.");
+                                    }
+                                    break;
+                                case "2":
+                                    // Exit 
+                                    return;
+                                case "3":
+                                    Environment.Exit(0); // Quit 
+                                    break;
+                                default:
+                                    Console.WriteLine("Invalid option, please try again.");
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Product not found.");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error occurred: {ex.Message}");
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
         }
+
     }
 }
