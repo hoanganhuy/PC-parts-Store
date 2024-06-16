@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "sW7tfTffn9MNIJRyEykM0b76IeWYlAsr9ld3ahcRQNh8HZGmpVizYz2LHklIrHNdpQys2wfdyujHwnDaTafsMQ==",
+  "dgSpecHash": "HhuqhFi/3kJ84tskhJGJAWJWEQHfW9T+3hSCMO9kupN984oL8kijZ9Zm7yk5ETrP3UqzeXnB48aZaweKOdFDOw==",
   "success": true,
-  "projectFilePath": "D:\\Thư mục mới\\PC-parts-Store\\PCPartsStore\\PCPartsStore\\PCPartsStore.csproj",
+  "projectFilePath": "D:\\My Projects\\CodingProject\\PC-parts-Store\\PCPartsStore\\PCPartsStore\\PCPartsStore.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ADMIN\\.nuget\\packages\\bouncycastle.cryptography\\2.2.1\\bouncycastle.cryptography.2.2.1.nupkg.sha512",
     "C:\\Users\\ADMIN\\.nuget\\packages\\google.protobuf\\3.25.1\\google.protobuf.3.25.1.nupkg.sha512",
