@@ -11,6 +11,6 @@ namespace PC_Part_Store.Interface
     {
         public void ViewCart(int idCart, MySqlConnection connection);
         public void UpdateProductToCart(int customerId, MySqlConnection connection);
-    
+
     }
 }

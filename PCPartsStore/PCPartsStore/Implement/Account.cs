@@ -11,16 +11,16 @@ using System.Threading.Tasks;
 
 namespace PC_Part_Store.Implement
 {
-    public class Account :IAccount
+    public class Account : IAccount
     {
-        public int idCustomer {  get; set; }
+        public int idCustomer { get; set; }
         public int idEmployee { get; set; }
-        public string userName {  get; set; }
+        public string userName { get; set; }
         public string password { get; set; }
-        public string phoneNumber {  get; set; }
+        public string phoneNumber { get; set; }
         public string email { get; set; }
-        public string address {  get; set; }
-        public string name {  get; set; }      
+        public string address { get; set; }
+        public string name { get; set; }
         public Validations validations = new Validations();
         public void CreateAccountEmloyee(MySqlConnection connection)
         {
@@ -48,12 +48,12 @@ namespace PC_Part_Store.Implement
             Console.Write("Enter phone number: ");
             phoneNumber = Console.ReadLine();
             string query = "INSERT INTO employee (userName,password,name, address, phoneNumber, email) VALUES (@userName ,@password, @name, @address, @phoneNumber, @email)";
-            using(MySqlCommand cmd=new MySqlCommand(query,connection))
+            using (MySqlCommand cmd = new MySqlCommand(query, connection))
             {
                 cmd.Parameters.AddWithValue("@userName", userName);
                 cmd.Parameters.AddWithValue("@password", password);
                 cmd.Parameters.AddWithValue("@name", name);
-                cmd.Parameters.AddWithValue ("@address", address);
+                cmd.Parameters.AddWithValue("@address", address);
                 cmd.Parameters.AddWithValue("@email", email);
                 cmd.Parameters.AddWithValue("@phoneNumber", phoneNumber);
                 try
@@ -62,7 +62,7 @@ namespace PC_Part_Store.Implement
                     cmd.ExecuteNonQuery();
                     Console.WriteLine("Create account employee sucessful!");
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Console.WriteLine("Error: " + ex.Message);
                 }
@@ -165,7 +165,7 @@ namespace PC_Part_Store.Implement
             address = Console.ReadLine();
             string query = "INSERT INTO customer (username, password, name, email, phoneNnumber, address) " +
                        "VALUES (@userName, @password, @name, @email, @phoneNumber, @address)";
-            using(MySqlCommand cmd=new MySqlCommand(query, connection))
+            using (MySqlCommand cmd = new MySqlCommand(query, connection))
             {
                 cmd.Parameters.AddWithValue("@userName", userName);
                 cmd.Parameters.AddWithValue("@password", password);

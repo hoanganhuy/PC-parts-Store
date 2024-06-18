@@ -8,13 +8,13 @@ namespace PC_Part_Store.Implement
 {
     internal class Order : IOrder
     {
-       
+
         public string customerName { get; set; }
         public string customerPhoneNumber { get; set; }
         public string customerEmail { get; set; }
         public string customerAddress { get; set; }
-        public bool verifyed {  get; set; }
-        public bool accepted {  get; set; }
+        public bool verifyed { get; set; }
+        public bool accepted { get; set; }
 
         public void Pay(MySqlConnection connection, int customerId)
         {
@@ -281,7 +281,7 @@ namespace PC_Part_Store.Implement
                 if (confirmation != 2)
                 {
                     string queryAccepted = "UPDATE order SET accepted = true WHERE orderId=@orderId";
-                    using(MySqlCommand cmdAccepted = new MySqlCommand( queryAccepted, connection))
+                    using (MySqlCommand cmdAccepted = new MySqlCommand(queryAccepted, connection))
                     {
                         cmdAccepted.Parameters.AddWithValue("@orderId", selectedOrderId);
                         cmdAccepted.ExecuteNonQuery();
