@@ -26,7 +26,7 @@ namespace PC_Part_Store.Implement
                     try
                     {
                         // Get Cart ID
-                        string queryGetCartId = "SELECT cartId FROM cart WHERE customer_id = @customerId";
+                        string queryGetCartId = "SELECT cartId FROM cart WHERE Customer_ID = @customerId";
                         int cartId;
                         using (MySqlCommand cmdGetCartId = new MySqlCommand(queryGetCartId, connection, transaction))
                         {
@@ -53,7 +53,7 @@ namespace PC_Part_Store.Implement
                         }
 
                         // Truy xuất thông tin khách hàng
-                        string queryCustomer = "SELECT name, email, address, phone FROM customers WHERE customerId = @customerId;";
+                        string queryCustomer = "SELECT Customer_Name, Email, Address, phone_number FROM customers WHERE customer_ID = @customerId;";
                         string customerName = "", customerEmail = "", customerAddress = "", customerPhoneNumber = "";
                         using (MySqlCommand cmdCustomer = new MySqlCommand(queryCustomer, connection, transaction))
                         {
@@ -112,7 +112,7 @@ namespace PC_Part_Store.Implement
                         }
 
                         // Create Order
-                        string queryCreateOrder = "INSERT INTO orders (customerId, customerName, customerPhoneNumber, customerEmail, customerAddress, verified, accepted) VALUES (@customerId, @customerName, @customerPhoneNumber, @customerEmail, @customerAddress, false, false);";
+                        string queryCreateOrder = "INSERT INTO orders (Customer_ID, Customer_Name, Customer_Phone_Number, Customer_email, Customer_Address, Verified, Accepted) VALUES (@customerId, @customerName, @customerPhoneNumber, @customerEmail, @customerAddress, false, false);";
                         using (MySqlCommand cmdCreateOrder = new MySqlCommand(queryCreateOrder, connection, transaction))
                         {
                             cmdCreateOrder.Parameters.AddWithValue("@customerId", customerId);
@@ -130,9 +130,9 @@ namespace PC_Part_Store.Implement
                             {
                                 while (reader.Read())
                                 {
-                                    int productId = reader.GetInt32("productId");
-                                    int amount = reader.GetInt32("amount");
-                                    string queryUpdateQuantity = "UPDATE product SET quantity = quantity - @amount WHERE productId = @productId;";
+                                    int productId = reader.GetInt32("Product_ID");
+                                    int amount = reader.GetInt32("Amount");
+                                    string queryUpdateQuantity = "UPDATE product SET Quantity = Quantity - @Amount WHERE Product_ID = @Product_ID;";
                                     using (MySqlCommand cmdUpdateQuantity = new MySqlCommand(queryUpdateQuantity, connection, transaction))
                                     {
                                         cmdUpdateQuantity.Parameters.AddWithValue("@amount", amount);

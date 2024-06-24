@@ -13,28 +13,35 @@ namespace PCPartsStore
     {
         public bool AccountExistCheck(string username, string password)
         {
-            string[] tableNames = { "CustomerTable", "EmployeeTable", "AdminTable" };
+            string[] tableNames = { "Customer", "Employee", "Admin" };
             bool exists = false;
-
-            using (MySqlConnection conn = DBHelper.GetConnection())
+            try
             {
-                conn.Open();
-
-                foreach (string tableName in tableNames)
+                using (MySqlConnection conn = DBHelper.GetConnection())
                 {
-                    string query = $"SELECT COUNT(*) FROM {tableName} WHERE username = @username AND password = @password";
+                    conn.Open();
 
-                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    foreach (string tableName in tableNames)
                     {
-                        cmd.Parameters.AddWithValue("@username", username);
-                        cmd.Parameters.AddWithValue("@password", password);
+                        string query = $"SELECT COUNT(*) FROM {tableName} WHERE username = @username AND password = @password";
 
-                        exists = Convert.ToInt32(cmd.ExecuteScalar()) > 0;
+                        using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                        {
+                            cmd.Parameters.AddWithValue("@username", username);
+                            cmd.Parameters.AddWithValue("@password", password);
 
-                        if (exists)
-                            break; // If account exists in any table, break the loop
+                            exists = Convert.ToInt32(cmd.ExecuteScalar()) > 0;
+
+                            if (exists)
+                                break; // If account exists in any table, break the loop
+                        }
                     }
                 }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Account is not exist, please enter again: ");
             }
 
             return exists;
@@ -47,7 +54,7 @@ namespace PCPartsStore
             using (MySqlConnection conn = DBHelper.GetConnection())
             {
                 conn.Open();
-                string query = "SELECT COUNT(*) FROM ProductTable WHERE ProductId = @productId";
+                string query = "SELECT COUNT(*) FROM Product WHERE ProductId = @productId";
                 using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@productId", productId);
@@ -64,7 +71,7 @@ namespace PCPartsStore
             string connectionString = DBHelper.DefaultConnectionString;
 
             // Define a query to check if the product with the given ID exists and has remaining quantity
-            string query = "SELECT RemainingQuantity FROM ProductTable WHERE ProductId = @productId";
+            string query = "SELECT RemainingQuantity FROM Product WHERE ProductId = @productId";
 
             // Initialize a boolean variable to store the result
             bool productExistsWithRemaining = false;
@@ -101,7 +108,7 @@ namespace PCPartsStore
             string connectionString = DBHelper.DefaultConnectionString;
 
             // Define the query to check for duplicate username
-            string query = "SELECT COUNT(*) FROM CustomerTable WHERE Username = @username";
+            string query = "SELECT COUNT(*) FROM Customer WHERE Username = @username";
 
             // Initialize a boolean variable to store the result
             bool usernameExists = false;

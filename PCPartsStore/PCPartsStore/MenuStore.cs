@@ -18,14 +18,15 @@ namespace PC_Part_Store
         }
         public void CustomerMenu()
         {
-            Console.WriteLine("1. Next page");
-            Console.WriteLine("2. Previous page");
-            Console.WriteLine("3. Choose page");
-            Console.WriteLine("4. Search product");
-            Console.WriteLine("5. View cart");
-            Console.WriteLine("6. Enter product ID to view detail");
-            Console.WriteLine("7. Enter product ID to add to cart");
-            Console.WriteLine("8. Quit");
+            Console.WriteLine("1. Previous page");
+            Console.WriteLine("2. Next page");
+            Console.WriteLine("3. Go to page");
+            Console.WriteLine("4. View details product");
+            Console.WriteLine("5. Search product");
+            Console.WriteLine("6. View cart");
+            Console.WriteLine("7. Update infomation customer");
+            Console.WriteLine("8. Add product to cart");
+            Console.WriteLine("9. Quit");
         }
         public void EmployeeMenu()
         {
@@ -46,54 +47,22 @@ namespace PC_Part_Store
             Console.WriteLine("6. Back");
             Console.WriteLine("7. Quit");
         }
-        public class SearchHandler
+        
+        public void SearchMenu()
+        {        
+            Console.WriteLine("Search Menu:");
+            Console.WriteLine("1. Search by Name");
+            Console.WriteLine("2. Search by Category"); ;
+            Console.WriteLine("3. Quit");
+        }
+        public void SearchMenuOption()
         {
-            public void SearchMenu()
-            {
-                while (true)
-                {
-                    Console.WriteLine("Search Menu:");
-                    Console.WriteLine("1. Search by Name");
-                    Console.WriteLine("2. Search by Category");
-                    Console.WriteLine("3. Back to List Products");
-                    Console.WriteLine("4. Quit");
-                    Console.Write("Enter your choice: ");
-
-                    string choice = Console.ReadLine();
-
-                    switch (choice)
-                    {
-                        case "1":
-                            SearchByName();
-                            break;
-                        case "2":
-                            SearchByCategory();
-                            break;
-                        case "3":
-                            return; // Exit 
-                        case "4":
-                            Environment.Exit(0); // Quit 
-                            break;
-                        default:
-                            Console.WriteLine("Invalid choice. Please enter a number between 1 and 4.");
-                            break;
-                    }
-                }
-            }
-
-            private void SearchByName()
-            {
-                Console.Write("Enter the name to search: ");
-                string name = Console.ReadLine();
-                Console.WriteLine($"Searching by name: {name}");
-            }
-
-            private void SearchByCategory()
-            {
-                Console.Write("Enter the category to search: ");
-                string category = Console.ReadLine();
-                Console.WriteLine($"Searching by category: {category}");
-            }
+            Console.WriteLine("1. Next page");
+            Console.WriteLine("2. Previous page");
+            Console.WriteLine("3. Go to page");
+            Console.WriteLine("4. View details product");
+            Console.WriteLine("5. Add product to cart");
+            Console.WriteLine("6. Quit");
         }
     }
 }

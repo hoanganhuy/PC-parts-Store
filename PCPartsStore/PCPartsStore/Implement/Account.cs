@@ -8,6 +8,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using static Program;
 
 namespace PC_Part_Store.Implement
 {
@@ -15,7 +16,7 @@ namespace PC_Part_Store.Implement
     {
         public int idCustomer { get; set; }
         public int idEmployee { get; set; }
-        public string userName { get; set; }
+        public string username { get; set; }
         public string password { get; set; }
         public string phoneNumber { get; set; }
         public string email { get; set; }
@@ -26,16 +27,16 @@ namespace PC_Part_Store.Implement
         {
             Console.WriteLine("Enter new infomation employee:");
             Console.Write("Enter user name employee:");
-            userName = Console.ReadLine();
-            while (!validations.UsernameFormCheck(userName))
+            username = Console.ReadLine();
+            while (!validations.UsernameFormCheck(username))
             {
                 Console.Write("Invalid username form, please enter again: ");
-                userName = Console.ReadLine();
+                username = Console.ReadLine();
             }
-            while (!validations.EmployeeUsernameDuplicateCheck(userName))
+            while (!validations.EmployeeUsernameDuplicateCheck(username))
             {
                 Console.Write("Duplicated username, please enter again: ");
-                userName = Console.ReadLine();
+                username = Console.ReadLine();
             }
             Console.Write("Enter password:");
             password = Console.ReadLine();
@@ -47,10 +48,10 @@ namespace PC_Part_Store.Implement
             email = Console.ReadLine();
             Console.Write("Enter phone number: ");
             phoneNumber = Console.ReadLine();
-            string query = "INSERT INTO employee (userName,password,name, address, phoneNumber, email) VALUES (@userName ,@password, @name, @address, @phoneNumber, @email)";
+            string query = "INSERT INTO employee (username,password,Employee_name, address, phoneNumber, email) VALUES (@username ,@password, @name, @address, @phoneNumber, @email)";
             using (MySqlCommand cmd = new MySqlCommand(query, connection))
             {
-                cmd.Parameters.AddWithValue("@userName", userName);
+                cmd.Parameters.AddWithValue("@username", username);
                 cmd.Parameters.AddWithValue("@password", password);
                 cmd.Parameters.AddWithValue("@name", name);
                 cmd.Parameters.AddWithValue("@address", address);
@@ -74,55 +75,60 @@ namespace PC_Part_Store.Implement
         }
         public string Login(MySqlConnection connection)
         {
+            connection.Open ();
             Console.WriteLine("Screen login");
             Console.Write("Enter user name :");
-            userName = Console.ReadLine();
+            username = Console.ReadLine();
             Console.Write("Enter password: ");
             password = Console.ReadLine();
-            while (!validations.AccountExistCheck(userName, password))
+            while (!validations.AccountExistCheck(username, password))
             {
-                Console.WriteLine("Account is not exist, please enter again: ");
+                
                 Console.Write("Username: ");
-                userName = Console.ReadLine();
+                username = Console.ReadLine();
                 Console.Write("Password: ");
                 password = Console.ReadLine();
             }
-            string queryCustomer = "SELECT customerId FROM customer WHERE userName = @userName AND password = @password";
+            string queryCustomer = "SELECT Customer_Id FROM customer WHERE username = @username AND password = @password";
             using (MySqlCommand cmd = new MySqlCommand(queryCustomer, connection))
             {
-                cmd.Parameters.AddWithValue("@userName", userName);
+                cmd.Parameters.AddWithValue("@username", username);
                 cmd.Parameters.AddWithValue("@password", password);
 
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     if (reader.Read())
                     {
-                        idCustomer = reader.GetInt32("customerId");
+                        
+                        idCustomer = reader.GetInt32("Customer_Id");
+                        Program.customerIdCurrent = idCustomer;
                         Console.WriteLine("Login successful");
+                        connection.Close();
                         return "customer";
                     }
                 }
             }
-            string queryEmployee = "SELECT employeeId FROM employee WHERE userName = @userName AND password = @password";
+            string queryEmployee = "SELECT Employee_Id FROM employee WHERE username = @username AND password = @password";
             using (MySqlCommand cmdEmployee = new MySqlCommand(queryEmployee, connection))
             {
-                cmdEmployee.Parameters.AddWithValue("@userName", userName);
+                cmdEmployee.Parameters.AddWithValue("@username", username);
                 cmdEmployee.Parameters.AddWithValue("@password", password);
 
                 using (MySqlDataReader reader = cmdEmployee.ExecuteReader())
                 {
                     if (reader.Read())
                     {
-                        idEmployee = reader.GetInt32("employeeId");
+                        idEmployee = reader.GetInt32("Employee_Id");
                         Console.WriteLine("Login employee successful");
+                        connection.Close();
                         return "employee";
                     }
                 }
             }
-            string queryAdmin = "SELECT adminId FROM admin WHERE userName = @userName AND password = @password";
+            string queryAdmin = "SELECT Admin_Id FROM admin WHERE username = @username AND password = @password";
             using (MySqlCommand cmdAdmin = new MySqlCommand(queryAdmin, connection))
             {
-                cmdAdmin.Parameters.AddWithValue("@userName", userName);
+                cmdAdmin.Parameters.AddWithValue("@username", username);
                 cmdAdmin.Parameters.AddWithValue("@password", password);
 
                 using (MySqlDataReader reader = cmdAdmin.ExecuteReader())
@@ -130,32 +136,34 @@ namespace PC_Part_Store.Implement
                     if (reader.Read())
                     {
                         Console.WriteLine("Login admin successful");
+                        connection.Close();
                         return "admin";
                     }
                 }
             }
 
             Console.WriteLine("Invalid username or password.");
+            connection.Close();
             return null;
         }
         public void Register(MySqlConnection connection)
         {
             Console.WriteLine("Screen register");
-            Console.Write("Enter user name:");
-            userName = Console.ReadLine();
-            while (!validations.UsernameFormCheck(userName))
+            Console.Write("Enter user name: ");
+            username = Console.ReadLine();
+            while (!validations.UsernameFormCheck(username))
             {
                 Console.Write("Invalid username form, please enter again: ");
-                userName = Console.ReadLine();
+                username = Console.ReadLine();
             }
-            while (!validations.CustomerUsernameDuplicateCheck(userName))
+            while (validations.CustomerUsernameDuplicateCheck(username))
             {
                 Console.Write("Duplicated username, please enter again: ");
-                userName = Console.ReadLine();
+                username = Console.ReadLine();
             }
-            Console.Write("Enter password:");
+            Console.Write("Enter password: ");
             password = Console.ReadLine();
-            Console.Write("Enter name:");
+            Console.Write("Enter name: ");
             name = Console.ReadLine();
             Console.Write("Enter email: ");
             email = Console.ReadLine();
@@ -163,11 +171,11 @@ namespace PC_Part_Store.Implement
             phoneNumber = Console.ReadLine();
             Console.Write("Enter address: ");
             address = Console.ReadLine();
-            string query = "INSERT INTO customer (username, password, name, email, phoneNnumber, address) " +
-                       "VALUES (@userName, @password, @name, @email, @phoneNumber, @address)";
+            string query = "INSERT INTO customer (username, password, Customer_name, email, phone_number, address) " +
+                       "VALUES (@username, @password, @name, @email, @phoneNumber, @address)";
             using (MySqlCommand cmd = new MySqlCommand(query, connection))
             {
-                cmd.Parameters.AddWithValue("@userName", userName);
+                cmd.Parameters.AddWithValue("@username", username);
                 cmd.Parameters.AddWithValue("@password", password);
                 cmd.Parameters.AddWithValue("@name", name);
                 cmd.Parameters.AddWithValue("@email", email);
@@ -204,9 +212,9 @@ namespace PC_Part_Store.Implement
             string address = Console.ReadLine();
             string query = "UPDATE customer SET ";
             List<string> updates = new List<string>();
-            if (!string.IsNullOrEmpty(name)) updates.Add("name = @name");
+            if (!string.IsNullOrEmpty(name)) updates.Add("Customer_name = @name");
             if (!string.IsNullOrEmpty(email)) updates.Add("email = @email");
-            if (!string.IsNullOrEmpty(phoneNumber)) updates.Add("phoneNumber = @phoneNumber");
+            if (!string.IsNullOrEmpty(phoneNumber)) updates.Add("phone_number = @phoneNumber");
             if (!string.IsNullOrEmpty(address)) updates.Add("address = @address");
             if (updates.Count == 0)
             {
@@ -252,9 +260,9 @@ namespace PC_Part_Store.Implement
             string email = Console.ReadLine();
             string query = "UPDATE employee SET ";
             List<string> updates = new List<string>();
-            if (!string.IsNullOrEmpty(name)) updates.Add("name = @name");
+            if (!string.IsNullOrEmpty(name)) updates.Add("Employee_name = @name");
             if (!string.IsNullOrEmpty(email)) updates.Add("email = @email");
-            if (!string.IsNullOrEmpty(phoneNumber)) updates.Add("phoneNumber = @phoneNumber");
+            if (!string.IsNullOrEmpty(phoneNumber)) updates.Add("phone_number = @phoneNumber");
             if (!string.IsNullOrEmpty(address)) updates.Add("address = @address");
             if (updates.Count == 0)
             {

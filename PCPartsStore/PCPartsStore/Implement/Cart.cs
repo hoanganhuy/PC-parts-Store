@@ -183,34 +183,5 @@ namespace PC_Part_Store.Implement
         {
             throw new NotImplementedException();
         }
-        public void ManageCart(int customerId, MySqlConnection connection)
-        {
-            bool manageCart = true;
-            while (manageCart)
-            {
-                Console.WriteLine("1. Enter product ID");
-                Console.WriteLine("2. Back");
-                Console.WriteLine("3. Quit");
-                Console.Write("Choose an option: ");
-                string cartOption = Console.ReadLine();
-
-                switch (cartOption)
-                {
-                    case "1":
-                        Console.Write("Enter product ID: ");
-                        int cartProductId = int.Parse(Console.ReadLine());
-                        break;
-                    case "2":
-                        manageCart = false;
-                        break;
-                    case "3":
-                        Environment.Exit(0); // Exit
-                        break;
-                    default:
-                        Console.WriteLine("Invalid option. Please try again.");
-                        break;
-                }
-            }
-        }
     }
 }
