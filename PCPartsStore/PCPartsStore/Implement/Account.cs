@@ -25,8 +25,8 @@ namespace PC_Part_Store.Implement
         public Validations validations = new Validations();
         public void CreateAccountEmloyee(MySqlConnection connection)
         {
-            Console.WriteLine("Enter new infomation employee:");
-            Console.Write("Enter user name employee:");
+            Console.WriteLine("Enter new infomation employee");
+            Console.Write("Enter user name employee: ");
             username = Console.ReadLine();
             while (!validations.UsernameFormCheck(username))
             {
@@ -77,7 +77,7 @@ namespace PC_Part_Store.Implement
         {
             connection.Open ();
             Console.WriteLine("Screen login");
-            Console.Write("Enter user name :");
+            Console.Write("Enter user name: ");
             username = Console.ReadLine();
             Console.Write("Enter password: ");
             password = Console.ReadLine();
@@ -202,51 +202,82 @@ namespace PC_Part_Store.Implement
         public void UpdateInformationCustomer(int id, MySqlConnection connection)
         {
             Console.WriteLine("Update Customer Information (or press Enter to skip)");
-            Console.Write("Enter new name : ");
+            Console.Write("Enter new name: ");
             string name = Console.ReadLine();
-            Console.Write("Enter new email : ");
+            Console.Write("Enter new email: ");
             string email = Console.ReadLine();
-            Console.Write("Enter new phone number : ");
+            Console.Write("Enter new phone number: ");
             string phoneNumber = Console.ReadLine();
-            Console.Write("Enter new address : ");
+            Console.Write("Enter new address: ");
             string address = Console.ReadLine();
+
             string query = "UPDATE customer SET ";
             List<string> updates = new List<string>();
-            if (!string.IsNullOrEmpty(name)) updates.Add("Customer_name = @name");
-            if (!string.IsNullOrEmpty(email)) updates.Add("email = @email");
-            if (!string.IsNullOrEmpty(phoneNumber)) updates.Add("phone_number = @phoneNumber");
-            if (!string.IsNullOrEmpty(address)) updates.Add("address = @address");
-            if (updates.Count == 0)
+            if (!string.IsNullOrEmpty(name))
+            {
+                query += "Customer_name = @name, ";
+            }
+            if (!string.IsNullOrEmpty(email))
+            {
+                query += "email = @email, ";
+            }
+            if (!string.IsNullOrEmpty(phoneNumber))
+            {
+                query += "phone_number = @phoneNumber, ";
+            }
+            if (!string.IsNullOrEmpty(address))
+            {
+                query += "address = @address, ";
+            }
+
+            // Remove the trailing comma and space if any updates were added
+            if (updates.Count != null)
+            {
+                query = query.Substring(0, query.Length - 2); // Remove last ", "
+                query += " WHERE Customer_ID = @id";
+
+                using (MySqlCommand cmd = new MySqlCommand(query, connection))
+                {
+                    if (!string.IsNullOrEmpty(name))
+                    {
+                        cmd.Parameters.AddWithValue("@name", name);
+                    }
+                    if (!string.IsNullOrEmpty(email))
+                    {
+                        cmd.Parameters.AddWithValue("@email", email);
+                    }
+                    if (!string.IsNullOrEmpty(phoneNumber))
+                    {
+                        cmd.Parameters.AddWithValue("@phoneNumber", phoneNumber);
+                    }
+                    if (!string.IsNullOrEmpty(address))
+                    {
+                        cmd.Parameters.AddWithValue("@address", address);
+                    }
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    try
+                    {
+                        connection.Open();
+                        cmd.ExecuteNonQuery();
+                        Console.WriteLine("Customer information updated successfully!");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error: " + ex.Message);
+                    }
+                    finally
+                    {
+                        connection.Close();
+                    }
+                }
+            }
+            else
             {
                 Console.WriteLine("No information to update.");
-                return;
-            }
-
-            query += string.Join(", ", updates) + " WHERE customerId = @id";
-            using (MySqlCommand cmd = new MySqlCommand(query, connection))
-            {
-                if (!string.IsNullOrEmpty(name)) cmd.Parameters.AddWithValue("@name", name);
-                if (!string.IsNullOrEmpty(email)) cmd.Parameters.AddWithValue("@email", email);
-                if (!string.IsNullOrEmpty(phoneNumber)) cmd.Parameters.AddWithValue("@phoneNumber", phoneNumber);
-                if (!string.IsNullOrEmpty(address)) cmd.Parameters.AddWithValue("@address", address);
-                cmd.Parameters.AddWithValue("@customerId", id);
-
-                try
-                {
-                    connection.Open();
-                    cmd.ExecuteNonQuery();
-                    Console.WriteLine("Customer information updated successfully!");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Error: " + ex.Message);
-                }
-                finally
-                {
-                    connection.Close();
-                }
             }
         }
+
         public void UpdateInformationEmployee(int id, MySqlConnection connection)
         {
             Console.WriteLine("Update Employee information (or press Enter to skip)");
@@ -293,6 +324,45 @@ namespace PC_Part_Store.Implement
                     connection.Close();
                 }
             }
+        }
+
+        public void ViewInformationCustomer(int customerId, MySqlConnection connection)
+        {
+            string queryCustomer = "SELECT Customer_name,Email,Address,phone_number FROM customer WHERE Customer_ID=@customerId";
+            try
+            {
+                connection.Open();
+                using(MySqlCommand cmdCustomer = new MySqlCommand(queryCustomer, connection))
+                {
+                    cmdCustomer.Parameters.AddWithValue("@customerId", customerId);
+                    using (MySqlDataReader reader = cmdCustomer.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            string customerName = reader.GetString("Customer_name");
+                            string customerPhoneNumber = reader.GetString("phone_number");
+                            string customerEmail = reader.GetString("Email");
+                            string customerAddress = reader.GetString("Address");
+                            Console.WriteLine($"Name: {customerName}");
+                            Console.WriteLine($"Phone Number: {customerPhoneNumber}");
+                            Console.WriteLine($"Email: {customerEmail}");
+                            Console.WriteLine($"Address: {customerAddress}");
+                        }
+                    }
+                }
+            }catch(Exception ex) 
+            {
+                Console.WriteLine("Cannot connect to database: " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        public void ViewInformationEmployee(int employeeId, MySqlConnection connection)
+        {
+            throw new NotImplementedException();
         }
     }
 }

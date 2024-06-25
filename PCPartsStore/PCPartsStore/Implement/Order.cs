@@ -26,7 +26,7 @@ namespace PC_Part_Store.Implement
                     try
                     {
                         // Get Cart ID
-                        string queryGetCartId = "SELECT cartId FROM cart WHERE Customer_ID = @customerId";
+                        string queryGetCartId = "SELECT cart_ID FROM cart WHERE Customer_ID = @customerId";
                         int cartId;
                         using (MySqlCommand cmdGetCartId = new MySqlCommand(queryGetCartId, connection, transaction))
                         {
@@ -43,17 +43,19 @@ namespace PC_Part_Store.Implement
                             }
                         }
 
-                        // Cập nhật thông tin khách hàng nếu cần
+                        // Update Customer Information if needed
                         Console.Write("Do you want to update your personal information? (1.yes/2.no): ");
                         int updateInfo = int.Parse(Console.ReadLine());
                         if (updateInfo == 1)
                         {
                             Account account = new Account();
+                            connection.Close();
                             account.UpdateInformationCustomer(customerId, connection);
+                            connection.Open();
                         }
 
-                        // Truy xuất thông tin khách hàng
-                        string queryCustomer = "SELECT Customer_Name, Email, Address, phone_number FROM customers WHERE customer_ID = @customerId;";
+                        // Retrieve Customer Information
+                        string queryCustomer = "SELECT Customer_Name, Email, Address, phone_number FROM customer WHERE customer_ID = @customerId;";
                         string customerName = "", customerEmail = "", customerAddress = "", customerPhoneNumber = "";
                         using (MySqlCommand cmdCustomer = new MySqlCommand(queryCustomer, connection, transaction))
                         {
@@ -62,15 +64,15 @@ namespace PC_Part_Store.Implement
                             {
                                 if (reader.Read())
                                 {
-                                    customerName = reader.GetString("name");
+                                    customerName = reader.GetString("Customer_name");
                                     customerEmail = reader.GetString("email");
                                     customerAddress = reader.GetString("address");
-                                    customerPhoneNumber = reader.GetString("phone");
+                                    customerPhoneNumber = reader.GetString("phone_number");
                                 }
                             }
                         }
 
-                        // Hiển thị thông tin khách hàng
+                        // Display Customer Information
                         Console.WriteLine("Customer Information:");
                         Console.WriteLine($"Name: {customerName}");
                         Console.WriteLine($"Email: {customerEmail}");
@@ -80,7 +82,8 @@ namespace PC_Part_Store.Implement
                         // Retrieve and Display Order Information
                         Console.WriteLine("Order Information:");
                         Console.WriteLine("Product ID | Quantity | Unit Price | Total Price");
-                        string queryCartItems = "SELECT cd.productId, cd.amount, p.price FROM cartDetails cd JOIN product p ON cd.productId = p.productId WHERE cd.cartId = @cartId;";
+                        string queryCartItems = "SELECT cd.product_ID, cd.amount, p.price FROM cart_Detail cd JOIN product p ON cd.product_ID = p.product_ID WHERE cd.cart_ID = @cartId;";
+                        List<(int productId, int amount, decimal price)> cartItems = new List<(int, int, decimal)>();
                         decimal totalOrderPrice = 0;
                         using (MySqlCommand cmdCartItems = new MySqlCommand(queryCartItems, connection, transaction))
                         {
@@ -89,20 +92,23 @@ namespace PC_Part_Store.Implement
                             {
                                 while (reader.Read())
                                 {
-                                    int productId = reader.GetInt32("productId");
+                                    int productId = reader.GetInt32("product_ID");
                                     int amount = reader.GetInt32("amount");
                                     decimal price = reader.GetDecimal("price");
                                     decimal totalPrice = amount * price;
 
                                     totalOrderPrice += totalPrice;
-                                    Console.WriteLine($"{productId} | {amount} | {price:C} | {totalPrice:C}");
+                                    Console.WriteLine($"{productId} | {amount} | {price:F2} | {totalPrice:F2}");
+
+                                    // Add to cartItems list for later update
+                                    cartItems.Add((productId, amount, price));
                                 }
                             }
                         }
 
-                        Console.WriteLine($"Total Order Price: {totalOrderPrice:C}");
+                        Console.WriteLine($"Total Order Price: {totalOrderPrice:F2}");
 
-                        // đồng ý thanh toán 
+                        // Confirm Payment
                         Console.Write("Do you want to proceed with the payment? (1.yes/2.no): ");
                         int confirmation = int.Parse(Console.ReadLine());
                         if (confirmation != 1)
@@ -112,7 +118,7 @@ namespace PC_Part_Store.Implement
                         }
 
                         // Create Order
-                        string queryCreateOrder = "INSERT INTO orders (Customer_ID, Customer_Name, Customer_Phone_Number, Customer_email, Customer_Address, Verified, Accepted) VALUES (@customerId, @customerName, @customerPhoneNumber, @customerEmail, @customerAddress, false, false);";
+                        string queryCreateOrder = "INSERT INTO orders(Customer_ID,Customer_name, Customer_phone_number, Customer_email, Customer_Address,Total_Price,Verified, Accepted)" + "VALUES (@customerId, @customerName, @customerPhoneNumber, @customerEmail, @customerAddress,@totalPrice, false, false)";
                         using (MySqlCommand cmdCreateOrder = new MySqlCommand(queryCreateOrder, connection, transaction))
                         {
                             cmdCreateOrder.Parameters.AddWithValue("@customerId", customerId);
@@ -120,28 +126,24 @@ namespace PC_Part_Store.Implement
                             cmdCreateOrder.Parameters.AddWithValue("@customerPhoneNumber", customerPhoneNumber);
                             cmdCreateOrder.Parameters.AddWithValue("@customerEmail", customerEmail);
                             cmdCreateOrder.Parameters.AddWithValue("@customerAddress", customerAddress);
+                            cmdCreateOrder.Parameters.AddWithValue("@totalPrice", totalOrderPrice);
                             cmdCreateOrder.ExecuteNonQuery();
                         }
+
                         // Update Product Quantities
-                        using (MySqlCommand cmdGetCartItems = new MySqlCommand(queryCartItems, connection, transaction))
+                        foreach (var item in cartItems)
                         {
-                            cmdGetCartItems.Parameters.AddWithValue("@cartId", cartId);
-                            using (MySqlDataReader reader = cmdGetCartItems.ExecuteReader())
+                            int productId = item.productId;
+                            int amount = item.amount;
+                            string queryUpdateQuantity = "UPDATE product SET Quantity = Quantity - @Amount WHERE Product_ID = @productId;";
+                            using (MySqlCommand cmdUpdateQuantity = new MySqlCommand(queryUpdateQuantity, connection, transaction))
                             {
-                                while (reader.Read())
-                                {
-                                    int productId = reader.GetInt32("Product_ID");
-                                    int amount = reader.GetInt32("Amount");
-                                    string queryUpdateQuantity = "UPDATE product SET Quantity = Quantity - @Amount WHERE Product_ID = @Product_ID;";
-                                    using (MySqlCommand cmdUpdateQuantity = new MySqlCommand(queryUpdateQuantity, connection, transaction))
-                                    {
-                                        cmdUpdateQuantity.Parameters.AddWithValue("@amount", amount);
-                                        cmdUpdateQuantity.Parameters.AddWithValue("@productId", productId);
-                                        cmdUpdateQuantity.ExecuteNonQuery();
-                                    }
-                                }
+                                cmdUpdateQuantity.Parameters.AddWithValue("@amount", amount);
+                                cmdUpdateQuantity.Parameters.AddWithValue("@productId", productId);
+                                cmdUpdateQuantity.ExecuteNonQuery();
                             }
                         }
+
                         // Commit Transaction
                         transaction.Commit();
                         Console.WriteLine("Payment successful, order created.");
@@ -162,12 +164,150 @@ namespace PC_Part_Store.Implement
                 connection.Close();
             }
         }
+
         //hien thi don hang cua khach hang
         public void ViewOrder(MySqlConnection connection, int customerId)
         {
-            throw new NotImplementedException();
-        }
+            try
+            {
+                connection.Open();
 
+                // Get cart ID for the customer
+                string queryGetCartId = "SELECT cart_ID FROM cart WHERE Customer_ID = @customerId";
+                int cartId = 0;
+                using (MySqlCommand cmdGetCartId = new MySqlCommand(queryGetCartId, connection))
+                {
+                    cmdGetCartId.Parameters.AddWithValue("@customerId", customerId);
+                    var result = cmdGetCartId.ExecuteScalar();
+                    if (result != null)
+                    {
+                        cartId = Convert.ToInt32(result);
+                    }
+                    else
+                    {
+                        Console.WriteLine("No active cart found for the customer.");
+                        return;
+                    }
+                }
+
+                // Retrieve order details
+                string queryOrder = @"
+                SELECT Customer_name, Customer_phone_number, Customer_email, Customer_Address, Total_Price, Verified, Accepted
+                FROM orders 
+                WHERE Customer_ID = @customerId";
+
+                using (MySqlCommand cmdOrder = new MySqlCommand(queryOrder, connection))
+                {
+                    cmdOrder.Parameters.AddWithValue("@customerId", customerId);
+
+                    using (MySqlDataReader reader = cmdOrder.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                string customerName = reader.GetString("Customer_name");
+                                string customerPhoneNumber = reader.GetString("Customer_phone_number");
+                                string customerEmail = reader.GetString("Customer_email");
+                                string customerAddress = reader.GetString("Customer_Address");
+                                decimal totalPrice = reader.GetDecimal("Total_Price");
+                                bool verified = reader.GetBoolean("Verified");
+                                bool accepted = reader.GetBoolean("Accepted");                                
+
+                                Console.WriteLine($"Name: {customerName}");
+                                Console.WriteLine($"Phone Number: {customerPhoneNumber}");
+                                Console.WriteLine($"Email: {customerEmail}");
+                                Console.WriteLine($"Address: {customerAddress}");
+                                
+                                connection.Close();
+                                ViewOrderDetails(customerId, connection);
+                                Console.WriteLine($"Total Price: {totalPrice}");
+                                Console.WriteLine($"Verified: {verified}");
+                                Console.WriteLine($"Accepted: {accepted}");
+                            }         
+                        }
+                        else
+                        {
+                            Console.WriteLine("No orders found for the given customer ID.");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Cannot connect to database: " + ex.Message);
+            }
+            finally
+            {
+                //connection.Close();
+            }
+        }
+        public void ViewOrderDetails(int customerId, MySqlConnection connection)
+        {
+            try
+            {
+                connection.Open();
+
+                // Kiểm tra xem khách hàng có giỏ hàng hay không
+                string checkCartQuery = "SELECT Cart_ID FROM cart WHERE Customer_ID = @customerId";
+                int cartId = 0;
+
+                using (MySqlCommand checkCartCmd = new MySqlCommand(checkCartQuery, connection))
+                {
+                    checkCartCmd.Parameters.AddWithValue("@customerId", customerId);
+                    object result = checkCartCmd.ExecuteScalar();
+
+                    if (result != null)
+                    {
+                        cartId = Convert.ToInt32(result);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Cart not found for the customer.");
+                        return;
+                    }
+                }
+
+                // Câu truy vấn để lấy thông tin chi tiết sản phẩm từ giỏ hàng, bao gồm giá tiền
+                string query = "SELECT cd.Product_Id, p.Product_Name, p.Price, cd.Amount " +
+                               "FROM cart_Detail cd " +
+                               "JOIN product p ON cd.Product_Id = p.Product_ID " +
+                               "WHERE cd.Cart_ID = @cartId";
+
+                using (MySqlCommand cmd = new MySqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@cartId", cartId);
+
+                    // Sử dụng MySqlDataReader để đọc các dòng kết quả
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        Console.WriteLine("Order Information:");
+                        Console.WriteLine("------------------------------------------");
+                        decimal totalCost = 0;
+                        while (reader.Read())
+                        {
+                            int productId = reader.GetInt32("Product_Id");
+                            string productName = reader.GetString("Product_Name");
+                            decimal price = reader.GetDecimal("Price");
+                            int amount = reader.GetInt32("Amount");
+                            decimal cost = price * amount;
+
+                            Console.WriteLine($"Product ID: {productId}, Name: {productName}, Price: {price:F2}, Amount: {amount}, Cost: {cost:F2}");
+                            totalCost += cost;
+                        }
+                        Console.WriteLine("------------------------------------------");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
         public void Accepted(MySqlConnection connection)
         {
             try

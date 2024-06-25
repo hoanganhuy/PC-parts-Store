@@ -1,6 +1,7 @@
 ﻿using Helpers;
 using MySql.Data.MySqlClient;
 using PC_Part_Store.Interface;
+using System.Data;
 using System.Transactions;
 using static Program;
 
@@ -326,8 +327,67 @@ namespace PC_Part_Store.Implement
 
         public void SearchProductByName(string name, MySqlConnection connection)
         {
-            throw new NotImplementedException();
+            string queryProducts = @"
+            SELECT Product_ID, Product_Name, Price, Description 
+            FROM product 
+            WHERE Product_Name LIKE @name";
+
+            string queryCategoryName = @"
+            SELECT Category_Name 
+            FROM category 
+            WHERE Category_ID = (SELECT Category_ID FROM product WHERE Product_Name LIKE @name LIMIT 1)";
+
+            List<Product> products = new List<Product>();
+
+            try
+            {
+                connection.Open();
+
+                // Fetch category name
+                string categoryNameSearch = "";
+                using (MySqlCommand cmdCategoryName = new MySqlCommand(queryCategoryName, connection))
+                {
+                    cmdCategoryName.Parameters.AddWithValue("@name", name);
+                    categoryNameSearch = cmdCategoryName.ExecuteScalar()?.ToString();
+                }
+
+                // Fetch products
+                using (MySqlCommand cmdProducts = new MySqlCommand(queryProducts, connection))
+                {
+                    cmdProducts.Parameters.AddWithValue("@name", "%" + name + "%");
+
+                    using (MySqlDataReader reader = cmdProducts.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Product product = new Product
+                            {
+                                productId = reader.GetInt32("Product_ID"),
+                                productName = reader.GetString("Product_Name"),
+                                descriptionProduct = reader.GetString("Description"),
+                                price = reader.GetDecimal("Price"),
+                                categoryName = categoryNameSearch
+                            };
+                            products.Add(product);
+                        }
+                    }
+                }
+
+                // Display products
+                Console.WriteLine($"Search results for products containing '{name}':");
+                DisplayProductsByPage(products, connection);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                throw; // Optionally handle or log the exception
+            }
+            finally
+            {             
+               connection.Close();
+            }
         }
+
 
         public override void Update(MySqlConnection connection, int id)
         {

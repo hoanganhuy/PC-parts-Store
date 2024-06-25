@@ -9,7 +9,7 @@ namespace PC_Part_Store.Interface
 {
     internal interface ICart
     {
-        public void ViewCart(int idCart, MySqlConnection connection);
+        public void ViewCart(int customerId, MySqlConnection connection);
         public void UpdateProductToCart(int customerId, MySqlConnection connection);
 
     }
