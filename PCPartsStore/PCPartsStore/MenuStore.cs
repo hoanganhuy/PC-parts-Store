@@ -26,8 +26,8 @@ namespace PC_Part_Store
             Console.WriteLine("6. View cart");
             Console.WriteLine("7. View infomation customer");
             Console.WriteLine("8. Add product to cart");
-            Console.WriteLine("9. View order");
-            Console.WriteLine("10. Quit");
+            //Console.WriteLine("9. View order");
+            Console.WriteLine("10. Back");
         }
         public void EmployeeMenu()
         {
@@ -35,7 +35,18 @@ namespace PC_Part_Store
             Console.WriteLine("1. Approve application");
             Console.WriteLine("2. Product management");
             Console.WriteLine("3. Back");
-            Console.WriteLine("4. Quit");
+            //Console.WriteLine("4. Back");
+        }
+        public void ProductManagemnt()
+        {
+            Console.WriteLine("Product management.");
+            Console.WriteLine("1. Next page");
+            Console.WriteLine("2. Previous page");
+            Console.WriteLine("3. Go to");
+            Console.WriteLine("4. View details product");
+            Console.WriteLine("5. Search product");
+            Console.WriteLine("6. Add product");
+            Console.WriteLine("7. Back");
         }
         public void AdminMenu()
         {
@@ -46,7 +57,7 @@ namespace PC_Part_Store
             Console.WriteLine("4. Update Employee Information by ID");
             Console.WriteLine("5. Search Employee");
             Console.WriteLine("6. Back");
-            Console.WriteLine("7. Quit");
+            //Console.WriteLine("7. Quit");
         }
         
         public void SearchMenu()
@@ -54,7 +65,7 @@ namespace PC_Part_Store
             Console.WriteLine("Search Menu:");
             Console.WriteLine("1. Search by Name");
             Console.WriteLine("2. Search by Category"); ;
-            Console.WriteLine("3. Quit");
+            Console.WriteLine("3. Back");
         }
         public void SearchMenuOption()
         {
@@ -63,7 +74,7 @@ namespace PC_Part_Store
             Console.WriteLine("3. Go to page");
             Console.WriteLine("4. View details product");
             Console.WriteLine("5. Add product to cart");
-            Console.WriteLine("6. Quit");
+            Console.WriteLine("6. Back");
         }
     }
 }

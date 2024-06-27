@@ -77,7 +77,7 @@ namespace PC_Part_Store.Implement
                             }
                         }
                         Console.WriteLine("1.Update amount");
-                        Console.WriteLine("2.Remove product to cart");
+                        Console.WriteLine("2.Remove product from cart");
                         Console.WriteLine("3.Cancel update");
                         Console.Write("Choose an option: ");
                         int option = int.Parse(Console.ReadLine());
@@ -85,8 +85,20 @@ namespace PC_Part_Store.Implement
                         {
                             case 1:
                                 {
-                                    Console.Write("Enter the new amount: ");
-                                    int newAmount = int.Parse(Console.ReadLine());
+                                    int newAmount;
+                                    do
+                                    {
+                                        Console.Write("Enter the new amount: ");
+                                        newAmount = int.Parse(Console.ReadLine());
+                                        if (newAmount > 0)
+                                        {
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Amount isvalid");
+                                        }
+                                    } while (true);
                                     //kiem tra so luong san pham hien tai trong kho
                                     string queryCheckAmountProduct = "SELECT Quantity FROM product WHERE Product_ID = @productId";
                                     using (MySqlCommand cmdCheckAmountProduct = new MySqlCommand(queryCheckAmountProduct, connection, transaction))
@@ -103,11 +115,10 @@ namespace PC_Part_Store.Implement
                                             return;
                                         }
                                     }
-                                    int quantityChange = newAmount - currentQuantity;
-                                    //kiem tra so luong san pham moi co lon hon so luong san pham trong kho khong
-                                    if (quantityChange > 0 && currentQuantity < quantityChange)
+                                    if (newAmount > currentQuantity)
                                     {
-                                        throw new Exception("Not enough stock available.");
+                                        Console.WriteLine("Insufficient products in stock");
+                                        return;
                                     }
                                     string queryUpdateAmount = "UPDATE cart_Detail SET Amount = @newAmount WHERE Cart_ID = @cartId AND Product_ID = @productId";
                                     using (MySqlCommand cmdUpdateAmount = new MySqlCommand(queryUpdateAmount, connection, transaction))

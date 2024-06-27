@@ -19,12 +19,7 @@ namespace PC_Part_Store.Implement
         public string categoryName { get; set; }
         public override void Add(MySqlConnection connection)
         {
-            connection = DBHelper.GetConnection();
-            {
-                if (connection == null)
-                {
-                    throw new ArgumentNullException(nameof(connection));
-                }
+            {              
 
                 Console.WriteLine("Add product");
                 Console.Write("Enter Id Product: ");
@@ -43,7 +38,7 @@ namespace PC_Part_Store.Implement
                 categoryId = int.Parse(Console.ReadLine());
                 //Might need to check product information
 
-                string query = "INSERT INTO product (Product_ID,Product_Name,Description , Price, Quantity,Brand,Category_Id) " +
+                string query = "INSERT INTO product (Product_ID,Product_Name,Description,Price, Quantity,Brand,Category_Id) " +
                                "VALUES (@productId,@productName,@description,@price,@quantity,@brand,@categoryId)";
 
                 using (MySqlCommand cmd = new MySqlCommand(query, connection))
@@ -65,6 +60,10 @@ namespace PC_Part_Store.Implement
                     {
                         Console.WriteLine($"An error occurred: {ex.Message}");
                         throw;
+                    }
+                    finally
+                    {
+                        connection.Close();
                     }
                 }
             }
@@ -233,7 +232,7 @@ namespace PC_Part_Store.Implement
         {
 
 
-            string query = "DELETE FROM product WHERE productId = @id";
+            string query = "DELETE FROM product WHERE Product_ID = @id";
 
             using (MySqlCommand cmd = new MySqlCommand(query, connection))
             {
@@ -391,52 +390,102 @@ namespace PC_Part_Store.Implement
 
         public override void Update(MySqlConnection connection, int id)
         {
-            Console.WriteLine("Update product");
+            Console.WriteLine("Update Product (or press Enter to skip)");
             Console.Write("Enter new name product: ");
             string newProductName = Console.ReadLine();
             Console.Write("Enter new description product: ");
             string newDescriptionProduct = Console.ReadLine();
             Console.Write("Enter new price product: ");
-            decimal newPrice = decimal.Parse(Console.ReadLine());
+            string newPriceInput = Console.ReadLine();
+            decimal newPrice;
+            bool isPriceValid = decimal.TryParse(newPriceInput, out newPrice);
             Console.Write("Enter new quantity product: ");
-            int newQuantity = int.Parse(Console.ReadLine());
+            string newQuantityInput = Console.ReadLine();
+            int newQuantity;
+            bool isQuantityValid = int.TryParse(newQuantityInput, out newQuantity);
             Console.Write("Enter new brand product: ");
             string newBrand = Console.ReadLine();
             Console.Write("Enter new category id: ");
-            int newCategoryId = int.Parse(Console.ReadLine());
-            string query = "UPDATE product SET name = @name, description = @description, price = @price, " +
-                       "quantity = @quantity, brand = @brand, categoriesId = @categoriesId WHERE productId = @productId";
-            using (MySqlCommand cmd = new MySqlCommand(query, connection))
+            string newCategoryIdInput = Console.ReadLine();
+            int newCategoryId;
+            bool isCategoryIdValid = int.TryParse(newCategoryIdInput, out newCategoryId);
+            //string query = "UPDATE product SET ";
+            List<string> update= new List<string>();
+            if (!string.IsNullOrEmpty(newProductName)) 
+            {        
+                update.Add("Product_name = @name");
+            }
+            if (!string.IsNullOrEmpty(newDescriptionProduct))
             {
-                cmd.Parameters.AddWithValue("@productName", newProductName);
-                cmd.Parameters.AddWithValue("@description", newDescriptionProduct);
-                cmd.Parameters.AddWithValue("@price", newPrice);
-                cmd.Parameters.AddWithValue("@quantity", newQuantity);
-                cmd.Parameters.AddWithValue("@brand", newBrand);
-                cmd.Parameters.AddWithValue("@categoriesId", newCategoryId);
-                cmd.Parameters.AddWithValue("@productId", id);
-                try
+                update.Add("Description = @description");
+            }
+            if (isPriceValid)
+            {
+                update.Add("Price = @price");
+            }
+            if (isQuantityValid)
+            {
+                update.Add("Quantity = @quantity");
+            }
+            if (!string.IsNullOrEmpty(newBrand))
+            {
+                update.Add("Brand = @brand");
+            }
+            if (isCategoryIdValid)
+            {
+                update.Add("Category_ID = @categoryId");
+            }
+            if (update.Count != null)
+            {
+                //query = query.Substring(0, query.Length - 1);
+                //query += "WHERE Product_ID=@productId";
+                string query = "UPDATE product SET " + string.Join(", ", update) + " WHERE Product_ID = @productId";
+                using (MySqlCommand cmd = new MySqlCommand(query, connection))
                 {
-                    connection.Open();
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                    if (rowsAffected > 0)
+                    cmd.Parameters.AddWithValue("@productId",id);
+                    if (!string.IsNullOrEmpty(newProductName))
                     {
-                        Console.WriteLine("Record update sucessfully.");
+                        cmd.Parameters.AddWithValue("@name", newProductName);
                     }
-                    else
+                    if (!string.IsNullOrEmpty(newDescriptionProduct))
                     {
-                        Console.WriteLine("No record found with the specified Id");
+                        cmd.Parameters.AddWithValue("@description", newDescriptionProduct);
+                    }
+                    if (isPriceValid)
+                    {
+                        cmd.Parameters.AddWithValue("@price", newPrice);
+                    }
+                    if (isQuantityValid)
+                    {
+                        cmd.Parameters.AddWithValue("@quantity", newQuantity);
+                    }
+                    if (!string.IsNullOrEmpty(newBrand))
+                    {
+                        cmd.Parameters.AddWithValue("@brand", newBrand);
+                    }
+                    if (isCategoryIdValid)
+                    {
+                        cmd.Parameters.AddWithValue("@categoryId", newCategoryId);
+                    }
+                    try
+                    {
+                        connection.Open();
+                        cmd.ExecuteNonQuery();
+                        Console.WriteLine("Product updated successfully!");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error: " + ex.Message);
+                    }
+                    finally
+                    {
+                        connection.Close();
                     }
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"An error occurred: {ex.Message}");
-                    throw;
-                }
-                finally
-                {
-                    connection.Close();
-                }
+            }
+            else
+            {
+                Console.WriteLine("No information to update.");
             }
         }
         public void ViewAllProduct(MySqlConnection connection)
