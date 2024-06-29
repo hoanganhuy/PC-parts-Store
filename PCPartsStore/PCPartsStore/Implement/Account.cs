@@ -26,16 +26,16 @@ namespace PC_Part_Store.Implement
         public Validations validations = new Validations();
         public void CreateAccountEmloyee(MySqlConnection connection)
         {
-            Console.WriteLine("Enter new infomation employee");
+            Console.WriteLine("Enter new information employee");
             Console.Write("Enter user name employee: ");
             username = Console.ReadLine();
-            Console.Write("Enter password:");
+            Console.Write("Enter password: ");
             password = Console.ReadLine();
-            Console.Write("Enter name employee:");
+            Console.Write("Enter name employee: ");
             name = Console.ReadLine();
-            Console.Write("Enter address employee:");
+            Console.Write("Enter address employee: ");
             address = Console.ReadLine();
-            Console.Write("Enter email employee:");
+            Console.Write("Enter email employee: ");
             email = Console.ReadLine();
             Console.Write("Enter phone number: ");
             phoneNumber = Console.ReadLine();
@@ -52,7 +52,7 @@ namespace PC_Part_Store.Implement
                 {
                     connection.Open();
                     cmd.ExecuteNonQuery();
-                    Console.WriteLine("Create account employee sucessful!");
+                    Console.WriteLine("Create account employee successful!");
                 }
                 catch (Exception ex)
                 {

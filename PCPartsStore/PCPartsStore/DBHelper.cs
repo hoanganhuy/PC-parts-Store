@@ -5,7 +5,7 @@ namespace Helpers
     public static class DBHelper
     {
 #if DEBUG
-        private static string defaultConnectionString = "Server=localhost;Database=pcshop;User ID=root;Password=Luong@2408;";
+        private static string defaultConnectionString = "Server=localhost;Database=pcshop;User ID=root;Password=Ruildofsuvi1;";
 #else
         private static string defaultConnectionString = "Your_Release_Mode_Connection_String_Here";
 #endif

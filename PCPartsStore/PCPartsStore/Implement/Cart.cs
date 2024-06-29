@@ -96,7 +96,7 @@ namespace PC_Part_Store.Implement
                                         }
                                         else
                                         {
-                                            Console.WriteLine("Amount isvalid");
+                                            Console.WriteLine("Amount Invalid");
                                         }
                                     } while (true);
                                     //kiem tra so luong san pham hien tai trong kho
@@ -157,7 +157,7 @@ namespace PC_Part_Store.Implement
                                         cmdReStoreQuantity.Parameters.AddWithValue("@productId", productId);
                                         cmdReStoreQuantity.ExecuteNonQuery();
                                     }*/
-                                    Console.WriteLine("Remove product succesful.");
+                                    Console.WriteLine("Remove product successful.");
                                     break;
                                 }
                             case 3:

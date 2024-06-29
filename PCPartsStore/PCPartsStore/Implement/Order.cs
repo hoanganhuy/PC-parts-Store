@@ -350,7 +350,7 @@ namespace PC_Part_Store.Implement
                         }
                     }
                 }
-                Console.Write("Enter the Order ID to view details:");
+                Console.Write("Enter the Order ID to view details: ");
                 int selectedOrderId = int.Parse(Console.ReadLine());
                 
                 //get Id customer

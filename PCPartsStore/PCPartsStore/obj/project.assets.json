@@ -1786,19 +1786,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ngiemluong\\.nuget\\packages\\": {}
+    "C:\\Users\\ADMIN\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ngiemluong\\source\\repos\\PC-parts-Store\\PCPartsStore\\PCPartsStore\\PCPartsStore.csproj",
+      "projectUniqueName": "D:\\Thư mục mới\\PC-parts-Store\\PCPartsStore\\PCPartsStore\\PCPartsStore.csproj",
       "projectName": "PCPartsStore",
-      "projectPath": "C:\\Users\\ngiemluong\\source\\repos\\PC-parts-Store\\PCPartsStore\\PCPartsStore\\PCPartsStore.csproj",
-      "packagesPath": "C:\\Users\\ngiemluong\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ngiemluong\\source\\repos\\PC-parts-Store\\PCPartsStore\\PCPartsStore\\obj\\",
+      "projectPath": "D:\\Thư mục mới\\PC-parts-Store\\PCPartsStore\\PCPartsStore\\PCPartsStore.csproj",
+      "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
+      "outputPath": "D:\\Thư mục mới\\PC-parts-Store\\PCPartsStore\\PCPartsStore\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\ngiemluong\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

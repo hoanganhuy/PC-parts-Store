@@ -59,11 +59,11 @@ public static class Program
                                             int pageNumber;
                                             do
                                             {
-                                                Console.Write("Select tha page you want to go to: ");
+                                                Console.Write("Select the page you want to go to: ");
                                                 string check = Console.ReadLine();
                                                 if (!int.TryParse(check, out pageNumber))
                                                 {
-                                                    Console.WriteLine("Selection Isvalid");
+                                                    Console.WriteLine("Selection Invalid");
                                                 }
                                                 else pageNumberCurrent = pageNumber; break;
                                             } while (true);
@@ -78,7 +78,7 @@ public static class Program
                                                 string check = Console.ReadLine();
                                                 if (!int.TryParse(check, out viewDetailsId))
                                                 {
-                                                    Console.WriteLine("Id Isvalid");
+                                                    Console.WriteLine("Id Invalid");
                                                 }
                                                 else break;
                                             } while (true);
@@ -98,7 +98,14 @@ public static class Program
                                                             Console.Write("Enter quantity to add to cart: ");
                                                             if (int.TryParse(Console.ReadLine(), out int quantity))
                                                             {
-                                                                productHandler.AddToCart(viewDetailsId, customerIdCurrent, quantity, connection);
+                                                                if (quantity > 0)
+                                                                {
+                                                                    productHandler.AddToCart(viewDetailsId, customerIdCurrent, quantity, connection);
+                                                                }
+                                                                else
+                                                                {
+                                                                    Console.WriteLine("Quantity must be a positive number.");
+                                                                }
                                                             }
                                                             else
                                                             {
@@ -161,11 +168,11 @@ public static class Program
                                                                             int pageNumber;
                                                                             do
                                                                             {
-                                                                                Console.Write("Select tha page you want to go to: ");
+                                                                                Console.Write("Select the page you want to go to: ");
                                                                                 string check = Console.ReadLine();
                                                                                 if (!int.TryParse(check, out pageNumber))
                                                                                 {
-                                                                                    Console.WriteLine("Selection Isvalid");
+                                                                                    Console.WriteLine("Selection Invalid");
                                                                                 }
                                                                                 else pageNumberCurrent = pageNumber; break;
                                                                             } while (true);
@@ -176,11 +183,11 @@ public static class Program
                                                                             int viewDetailsId;
                                                                             do
                                                                             {
-                                                                                Console.Write("Enter the porduct id you want to view details: ");
+                                                                                Console.Write("Enter the product id you want to view details: ");
                                                                                 string check = Console.ReadLine();
                                                                                 if (!int.TryParse(check, out viewDetailsId))
                                                                                 {
-                                                                                    Console.WriteLine("Id Isvalid");
+                                                                                    Console.WriteLine("Id Invalid");
                                                                                 }
                                                                                 else break;
                                                                             } while (true);
@@ -200,13 +207,21 @@ public static class Program
                                                                                             Console.Write("Enter quantity to add to cart: ");
                                                                                             if (int.TryParse(Console.ReadLine(), out int quantity))
                                                                                             {
-                                                                                                productHandler.AddToCart(viewDetailsId, customerIdCurrent, quantity, connection);
+                                                                                                if (quantity > 0)
+                                                                                                {
+                                                                                                    productHandler.AddToCart(viewDetailsId, customerIdCurrent, quantity, connection);
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    Console.WriteLine("Quantity must be a positive number.");
+                                                                                                }
                                                                                             }
                                                                                             else
                                                                                             {
                                                                                                 Console.WriteLine("Invalid quantity. Please enter a valid number.");
                                                                                             }
                                                                                             break;
+
                                                                                         case "2":
                                                                                             // Exit 
                                                                                             break;
@@ -223,11 +238,11 @@ public static class Program
                                                                             int addProductIdCart;
                                                                             do
                                                                             {
-                                                                                Console.Write("Enter the porduct id you want add to cart: ");
+                                                                                Console.Write("Enter the product id you want add to cart: ");
                                                                                 string check = Console.ReadLine();
                                                                                 if (!int.TryParse(check, out addProductIdCart))
                                                                                 {
-                                                                                    Console.WriteLine("Id Isvalid. Please enter a valid number");
+                                                                                    Console.WriteLine("Id Invalid. Please enter a valid number");
                                                                                 }
                                                                                 else break;
                                                                             } while (true);
@@ -236,7 +251,14 @@ public static class Program
                                                                                 Console.Write("Enter quantity to add to cart: ");
                                                                                 if (int.TryParse(Console.ReadLine(), out int quantity))
                                                                                 {
-                                                                                    productHandler.AddToCart(addProductIdCart, customerIdCurrent, quantity, connection);
+                                                                                    if (quantity > 0)
+                                                                                    {
+                                                                                        productHandler.AddToCart(addProductIdCart, customerIdCurrent, quantity, connection);
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        Console.WriteLine("Quantity must be a positive number.");
+                                                                                    }
                                                                                 }
                                                                                 else
                                                                                 {
@@ -284,7 +306,7 @@ public static class Program
                                                             string check = Console.ReadLine();
                                                             if (!int.TryParse(check, out categoryIdSearch))
                                                             {
-                                                                Console.WriteLine("Selection Isvalid");
+                                                                Console.WriteLine("Selection Invalid");
                                                             }
                                                             else break;
                                                         } while (true);
@@ -312,11 +334,11 @@ public static class Program
                                                                             int pageNumber;
                                                                             do
                                                                             {
-                                                                                Console.Write("Select tha page you want to go to: ");
+                                                                                Console.Write("Select the page you want to go to: ");
                                                                                 string check = Console.ReadLine();
                                                                                 if (!int.TryParse(check, out pageNumber))
                                                                                 {
-                                                                                    Console.WriteLine("Selection Isvalid");
+                                                                                    Console.WriteLine("Selection Invalid");
                                                                                 }
                                                                                 else pageNumberCurrent = pageNumber; break;
                                                                             } while (true);
@@ -327,11 +349,11 @@ public static class Program
                                                                             int viewDetailsId;
                                                                             do
                                                                             {
-                                                                                Console.Write("Enter the porduct id you want to view details: ");
+                                                                                Console.Write("Enter the product id you want to view details: ");
                                                                                 string check = Console.ReadLine();
                                                                                 if (!int.TryParse(check, out viewDetailsId))
                                                                                 {
-                                                                                    Console.WriteLine("Id Isvalid");
+                                                                                    Console.WriteLine("Id Invalid");
                                                                                 }
                                                                                 else break;
                                                                             } while (true);
@@ -351,7 +373,14 @@ public static class Program
                                                                                             Console.Write("Enter quantity to add to cart: ");
                                                                                             if (int.TryParse(Console.ReadLine(), out int quantity))
                                                                                             {
-                                                                                                productHandler.AddToCart(viewDetailsId, customerIdCurrent, quantity, connection);
+                                                                                                if (quantity > 0)
+                                                                                                {
+                                                                                                    productHandler.AddToCart(viewDetailsId, customerIdCurrent, quantity, connection);
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    Console.WriteLine("Quantity must be a positive number.");
+                                                                                                }
                                                                                             }
                                                                                             else
                                                                                             {
@@ -374,11 +403,11 @@ public static class Program
                                                                             int addProductIdCart;
                                                                             do
                                                                             {
-                                                                                Console.Write("Enter the porduct id you want add to cart: ");
+                                                                                Console.Write("Enter the product id you want add to cart: ");
                                                                                 string check = Console.ReadLine();
                                                                                 if (!int.TryParse(check, out addProductIdCart))
                                                                                 {
-                                                                                    Console.WriteLine("Id Isvalid. Please enter a valid number");
+                                                                                    Console.WriteLine("Id Invalid. Please enter a valid number");
                                                                                 }
                                                                                 else break;
                                                                             } while (true);
@@ -387,7 +416,14 @@ public static class Program
                                                                                 Console.Write("Enter quantity to add to cart: ");
                                                                                 if (int.TryParse(Console.ReadLine(), out int quantity))
                                                                                 {
-                                                                                    productHandler.AddToCart(addProductIdCart, customerIdCurrent, quantity, connection);
+                                                                                    if (quantity > 0)
+                                                                                    {
+                                                                                        productHandler.AddToCart(addProductIdCart, customerIdCurrent, quantity, connection);
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        Console.WriteLine("Quantity must be a positive number.");
+                                                                                    }
                                                                                 }
                                                                                 else
                                                                                 {
@@ -430,7 +466,7 @@ public static class Program
                                                 }
                                             default:
                                                 {
-                                                        Console.WriteLine("selection isvalid");
+                                                        Console.WriteLine("Selection Invalid");
                                                         break;
                                                 }
                                             }
@@ -445,7 +481,7 @@ public static class Program
                                         string optionViewCart;
                                         do
                                         {
-                                            Console.Write("Enter the option:");
+                                            Console.Write("Enter the option: ");
                                             optionViewCart= Console.ReadLine();
                                             if (optionViewCart == "2" || optionViewCart == "1"||optionViewCart=="3")
                                             {
@@ -453,7 +489,7 @@ public static class Program
                                             }
                                             else
                                             {
-                                                Console.WriteLine("Selection isvalid");
+                                                Console.WriteLine("Selection Invalid");
                                             }
                                         }while(true);
                                         switch (optionViewCart)
@@ -496,7 +532,7 @@ public static class Program
                                             }
                                             else
                                             {
-                                                Console.WriteLine("Selection isvalid");
+                                                Console.WriteLine("Selection Invalid");
                                             }
                                         }while(true);
                                         if (optionInformation == "1")
@@ -512,11 +548,11 @@ public static class Program
                                         int addProductId;
                                         do
                                         {
-                                            Console.Write("Enter the porduct id you want add to cart: ");
+                                            Console.Write("Enter the product id you want add to cart: ");
                                             string check = Console.ReadLine();
                                             if (!int.TryParse(check, out addProductId))
                                             {
-                                                Console.WriteLine("Id Isvalid. Please enter a valid number");
+                                                Console.WriteLine("Id Invalid. Please enter a valid number");
                                             }
                                             else break;
                                         } while (true);
@@ -525,7 +561,14 @@ public static class Program
                                             Console.Write("Enter quantity to add to cart: ");
                                             if (int.TryParse(Console.ReadLine(), out int quantity))
                                             {
-                                                productHandler.AddToCart(addProductId, customerIdCurrent, quantity, connection);
+                                                if (quantity > 0)
+                                                {
+                                                    productHandler.AddToCart(addProductId, customerIdCurrent, quantity, connection);
+                                                }
+                                                else
+                                                {
+                                                    Console.WriteLine("Quantity must be a positive number.");
+                                                }
                                             }
                                             else
                                             {
@@ -593,11 +636,11 @@ public static class Program
                                                             int pageNumber;
                                                             do
                                                             {
-                                                                Console.Write("Select tha page you want to go to: ");
+                                                                Console.Write("Select the page you want to go to: ");
                                                                 string check = Console.ReadLine();
                                                                 if (!int.TryParse(check, out pageNumber))
                                                                 {
-                                                                    Console.WriteLine("Selection Isvalid");
+                                                                    Console.WriteLine("Selection Invalid");
                                                                 }
                                                                 else pageNumberCurrent = pageNumber; break;
                                                             } while (true);
@@ -608,11 +651,11 @@ public static class Program
                                                             int viewDetailsId;
                                                             do
                                                             {
-                                                                Console.Write("Enter the porduct id you want to view details: ");
+                                                                Console.Write("Enter the product id you want to view details: ");
                                                                 string check = Console.ReadLine();
                                                                 if (!int.TryParse(check, out viewDetailsId))
                                                                 {
-                                                                    Console.WriteLine("Id Isvalid");
+                                                                    Console.WriteLine("Id Invalid");
                                                                 }
                                                                 else break;
                                                             } while (true);
@@ -620,19 +663,19 @@ public static class Program
                                                             {
                                                                 Console.WriteLine("1. Update product");
                                                                 //Console.WriteLine("2. Remove product");
-                                                                Console.WriteLine("2.Back ");
+                                                                Console.WriteLine("2. Back ");
                                                                 
                                                                 string employeeInput;
                                                                 int checkEmployeeInput;
                                                                 do
                                                                 {
-                                                                    Console.Write("Enter optiton: ");
+                                                                    Console.Write("Enter option: ");
                                                                     employeeInput = Console.ReadLine();
                                                                     if(!int.TryParse(employeeInput, out checkEmployeeInput))
                                                                     {
                                                                         if (checkEmployeeInput != 1 || checkEmployeeInput != 2 || checkEmployeeInput != 3)
                                                                         {
-                                                                            Console.WriteLine("Selection isvalid");
+                                                                            Console.WriteLine("Selection Invalid");
                                                                         }                                                                        
                                                                     }
                                                                     else
@@ -670,7 +713,7 @@ public static class Program
                                                                 case "1"://tim theo ten
                                                                     {
                                                                         pageNumberCurrent = 1;
-                                                                        Console.Write("Enter name product:");
+                                                                        Console.Write("Enter name product: ");
                                                                         string nameSearch = Console.ReadLine();
                                                                         do
                                                                         {
@@ -696,11 +739,11 @@ public static class Program
                                                                                             int pageNumber;
                                                                                             do
                                                                                             {
-                                                                                                Console.Write("Select tha page you want to go to: ");
+                                                                                                Console.Write("Select the page you want to go to: ");
                                                                                                 string check = Console.ReadLine();
                                                                                                 if (!int.TryParse(check, out pageNumber))
                                                                                                 {
-                                                                                                    Console.WriteLine("Selection Isvalid");
+                                                                                                    Console.WriteLine("Selection Invalid");
                                                                                                 }
                                                                                                 else pageNumberCurrent = pageNumber; break;
                                                                                             } while (true);
@@ -711,11 +754,11 @@ public static class Program
                                                                                             int viewDetailsId;
                                                                                             do
                                                                                             {
-                                                                                                Console.Write("Enter the porduct id you want to view details: ");
+                                                                                                Console.Write("Enter the product id you want to view details: ");
                                                                                                 string check = Console.ReadLine();
                                                                                                 if (!int.TryParse(check, out viewDetailsId))
                                                                                                 {
-                                                                                                    Console.WriteLine("Id Isvalid");
+                                                                                                    Console.WriteLine("Id Invalid");
                                                                                                 }
                                                                                                 else break;
                                                                                             } while (true);
@@ -725,9 +768,9 @@ public static class Program
                                                                                                 string input;
                                                                                                 do
                                                                                                 {
-                                                                                                    Console.WriteLine("1 - Update product");
-                                                                                                    Console.WriteLine("2 - Delete product");
-                                                                                                    Console.WriteLine("3 _ Back");
+                                                                                                    Console.WriteLine("1. Update product");
+                                                                                                    Console.WriteLine("2. Delete product");
+                                                                                                    Console.WriteLine("3. Back");
                                                                                                     Console.Write("Options: ");
                                                                                                     input = Console.ReadLine();
                                                                                                     switch (input)
@@ -791,7 +834,7 @@ public static class Program
                                                                             string check = Console.ReadLine();
                                                                             if (!int.TryParse(check, out categoryIdSearch))
                                                                             {
-                                                                                Console.WriteLine("Selection Isvalid");
+                                                                                Console.WriteLine("Selection Invalid");
                                                                             }
                                                                             else break;
                                                                         } while (true);
@@ -819,11 +862,11 @@ public static class Program
                                                                                             int pageNumber;
                                                                                             do
                                                                                             {
-                                                                                                Console.Write("Select tha page you want to go to: ");
+                                                                                                Console.Write("Select the page you want to go to: ");
                                                                                                 string check = Console.ReadLine();
                                                                                                 if (!int.TryParse(check, out pageNumber))
                                                                                                 {
-                                                                                                    Console.WriteLine("Selection Isvalid");
+                                                                                                    Console.WriteLine("Selection Invalid");
                                                                                                 }
                                                                                                 else pageNumberCurrent = pageNumber; break;
                                                                                             } while (true);
@@ -834,11 +877,11 @@ public static class Program
                                                                                             int viewDetailsId;
                                                                                             do
                                                                                             {
-                                                                                                Console.Write("Enter the porduct id you want to view details: ");
+                                                                                                Console.Write("Enter the product id you want to view details: ");
                                                                                                 string check = Console.ReadLine();
                                                                                                 if (!int.TryParse(check, out viewDetailsId))
                                                                                                 {
-                                                                                                    Console.WriteLine("Id Isvalid");
+                                                                                                    Console.WriteLine("Id Invalid");
                                                                                                 }
                                                                                                 else break;
                                                                                             } while (true);
@@ -848,9 +891,9 @@ public static class Program
                                                                                                 string input;
                                                                                                 do
                                                                                                 {
-                                                                                                    Console.WriteLine("1 - Update product");
-                                                                                                    Console.WriteLine("2 - Delete product");
-                                                                                                    Console.WriteLine("3 _ Back");
+                                                                                                    Console.WriteLine("1. Update product");
+                                                                                                    Console.WriteLine("2. Delete product");
+                                                                                                    Console.WriteLine("3. Back");
                                                                                                     Console.Write("Options: ");
                                                                                                     input = Console.ReadLine();
                                                                                                     switch (input)
@@ -962,7 +1005,7 @@ public static class Program
                                     {
                                         account.ViewAllEmployee(connection);
                                         menu.AdminMenu();
-                                        Console.Write("Select an option:");
+                                        Console.Write("Select an option: ");
                                         string chooseAdmin = Console.ReadLine();
                                         switch (chooseAdmin)
                                         {
@@ -981,11 +1024,11 @@ public static class Program
                                                     int pageNumber;
                                                     do
                                                     {
-                                                        Console.Write("Select tha page you want to go to: ");
+                                                        Console.Write("Select the page you want to go to: ");
                                                         string check = Console.ReadLine();
                                                         if (!int.TryParse(check, out pageNumber))
                                                         {
-                                                            Console.WriteLine("Selection Isvalid");
+                                                            Console.WriteLine("Selection Invalid");
                                                         }
                                                         else pageCurrentEmloyee = pageNumber; break;
                                                     } while (true);
@@ -1006,26 +1049,26 @@ public static class Program
                                                         string check = Console.ReadLine();
                                                         if (!int.TryParse(check, out viewDetailsId))
                                                         {
-                                                            Console.WriteLine("Id Isvalid");
+                                                            Console.WriteLine("Id Invalid");
                                                         }
                                                         else break;
                                                     } while (true);
                                                     if (account.ViewInformationEmployee(viewDetailsId, connection) == 1)
                                                     {
-                                                        Console.WriteLine("1. Update infomation");
-                                                        Console.WriteLine("2. Remove infomation");
+                                                        Console.WriteLine("1. Update Employee information");
+                                                        Console.WriteLine("2. Remove Employee ");
                                                         Console.WriteLine("3. Back");
                                                         int adminInput;
                                                         string checkAdminInput;
                                                         do
                                                         {
-                                                            Console.Write("Enter optiton: ");
+                                                            Console.Write("Enter option: ");
                                                             checkAdminInput = Console.ReadLine();
                                                             if (!int.TryParse(checkAdminInput, out adminInput))
                                                             {
                                                                 if (adminInput != 1 || adminInput != 2 || adminInput != 3)
                                                                 {
-                                                                    Console.WriteLine("Selection isvalid");
+                                                                    Console.WriteLine("Selection Invalid");
                                                                 }
                                                             }
                                                             else
@@ -1051,11 +1094,11 @@ public static class Program
                                                     int viewDetailsId;
                                                     do
                                                     {
-                                                        Console.Write("Enter the eployee id you want delete: ");
+                                                        Console.Write("Enter the employee id you want delete: ");
                                                         string check = Console.ReadLine();
                                                         if (!int.TryParse(check, out viewDetailsId))
                                                         {
-                                                            Console.WriteLine("Id Isvalid");
+                                                            Console.WriteLine("Id Invalid");
                                                         }
                                                         else break;
                                                     } while (true);
@@ -1067,11 +1110,11 @@ public static class Program
                                                     int viewDetailsId;
                                                     do
                                                     {
-                                                        Console.Write("Enter the eployee id you want delete: ");
+                                                        Console.Write("Enter the employee id you want delete: ");
                                                         string check = Console.ReadLine();
                                                         if (!int.TryParse(check, out viewDetailsId))
                                                         {
-                                                            Console.WriteLine("Id Isvalid");
+                                                            Console.WriteLine("Id Invalid");
                                                         }
                                                         else break;
                                                     } while (true);
@@ -1082,7 +1125,7 @@ public static class Program
                                                 {
 
                                                     pageCurrentEmloyee = 1;
-                                                    Console.Write("Enter name product:");
+                                                    Console.Write("Enter name employee: ");
                                                     string nameSearch = Console.ReadLine();
                                                     if(account.SearchEmployeeByName(nameSearch, connection)==1)
                                                     {
@@ -1106,11 +1149,11 @@ public static class Program
                                                                     int pageNumber;
                                                                     do
                                                                     {
-                                                                        Console.Write("Select tha page you want to go to: ");
+                                                                        Console.Write("Select the page you want to go to: ");
                                                                         string check = Console.ReadLine();
                                                                         if (!int.TryParse(check, out pageNumber))
                                                                         {
-                                                                            Console.WriteLine("Selection Isvalid");
+                                                                            Console.WriteLine("Selection Invalid");
                                                                         }
                                                                         else pageCurrentEmloyee = pageNumber; break;
                                                                     } while (true);
@@ -1125,26 +1168,26 @@ public static class Program
                                                                         string check = Console.ReadLine();
                                                                         if (!int.TryParse(check, out viewDetailsId))
                                                                         {
-                                                                            Console.WriteLine("Id Isvalid");
+                                                                            Console.WriteLine("Id Invalid");
                                                                         }
                                                                         else break;
                                                                     } while (true);
                                                                     if (account.ViewInformationEmployee(viewDetailsId, connection) == 1)
                                                                     {
-                                                                        Console.WriteLine("1. Update infomation");
-                                                                        Console.WriteLine("2. Remove infomation");
+                                                                        Console.WriteLine("1. Update information");
+                                                                        Console.WriteLine("2. Remove information");
                                                                         Console.WriteLine("3. Back");
                                                                         int adminInput;
                                                                         string checkAdminInput;
                                                                         do
                                                                         {
-                                                                            Console.Write("Enter optiton: ");
+                                                                            Console.Write("Enter option: ");
                                                                             checkAdminInput = Console.ReadLine();
                                                                             if (!int.TryParse(checkAdminInput, out adminInput))
                                                                             {
                                                                                 if (adminInput != 1 || adminInput != 2 || adminInput != 3)
                                                                                 {
-                                                                                    Console.WriteLine("Selection isvalid");
+                                                                                    Console.WriteLine("Selection Invalid");
                                                                                 }
                                                                             }
                                                                             else

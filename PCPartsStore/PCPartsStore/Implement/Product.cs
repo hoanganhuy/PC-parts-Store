@@ -1,6 +1,8 @@
 ﻿using Helpers;
 using MySql.Data.MySqlClient;
+using MySqlX.XDevAPI.Common;
 using PC_Part_Store.Interface;
+using PCPartsStore;
 using System.Data;
 using System.Transactions;
 using static Program;
@@ -17,6 +19,7 @@ namespace PC_Part_Store.Implement
         public string brand { get; set; }
         public int categoryId { get; set; }
         public string categoryName { get; set; }
+        public Validations validations { get; set; }
         public override void Add(MySqlConnection connection)
         {
             {
@@ -24,6 +27,11 @@ namespace PC_Part_Store.Implement
                 Console.WriteLine("Add product");
                 Console.Write("Enter Id Product: ");
                 productId = int.Parse(Console.ReadLine());
+                while (validations.ProductExistCheck(productId))
+                {
+                    Console.Write("Product Id Duplicated, Enter again: ");
+                    Console.ReadLine();
+                }
                 Console.Write("Enter name product: ");
                 productName = Console.ReadLine();
                 Console.Write("Enter description product: ");
@@ -425,32 +433,33 @@ namespace PC_Part_Store.Implement
                 connection.Close();
             }
         }
-        
+
         public override void Update(MySqlConnection connection, int id)
         {
             Console.WriteLine("Update Product (or press Enter to skip)");
-            Console.Write("Enter new name product: ");
+            Console.Write("Enter new product name: ");
             string newProductName = Console.ReadLine();
-            Console.Write("Enter new description product: ");
+            Console.Write("Enter new product description: ");
             string newDescriptionProduct = Console.ReadLine();
-            Console.Write("Enter new price product: ");
+            Console.Write("Enter new product price: ");
             string newPriceInput = Console.ReadLine();
             decimal newPrice;
             bool isPriceValid = decimal.TryParse(newPriceInput, out newPrice);
-            Console.Write("Enter new quantity product: ");
+            Console.Write("Enter new product quantity: ");
             string newQuantityInput = Console.ReadLine();
             int newQuantity;
             bool isQuantityValid = int.TryParse(newQuantityInput, out newQuantity);
-            Console.Write("Enter new brand product: ");
+            Console.Write("Enter new product brand: ");
             string newBrand = Console.ReadLine();
-            Console.Write("Enter new category id: ");
+            Console.Write("Enter new category ID: ");
             string newCategoryIdInput = Console.ReadLine();
             int newCategoryId;
             bool isCategoryIdValid = int.TryParse(newCategoryIdInput, out newCategoryId);
-            //string query = "UPDATE product SET ";
-            List<string> update= new List<string>();
-            if (!string.IsNullOrEmpty(newProductName)) 
-            {        
+
+            List<string> update = new List<string>();
+
+            if (!string.IsNullOrEmpty(newProductName))
+            {
                 update.Add("Product_name = @name");
             }
             if (!string.IsNullOrEmpty(newDescriptionProduct))
@@ -473,14 +482,13 @@ namespace PC_Part_Store.Implement
             {
                 update.Add("Category_ID = @categoryId");
             }
-            if (update.Count != null)
+
+            if (update.Count > 0)
             {
-                //query = query.Substring(0, query.Length - 1);
-                //query += "WHERE Product_ID=@productId";
-                string query = "UPDATE product SET " + string.Join(", ", update) + " WHERE Product_ID = @productId";
+                string query = "UPDATE product SET " + string.Join(", ", update) + " WHERE Product_ID = @id";
                 using (MySqlCommand cmd = new MySqlCommand(query, connection))
                 {
-                    cmd.Parameters.AddWithValue("@productId",id);
+                    cmd.Parameters.AddWithValue("@id", id);
                     if (!string.IsNullOrEmpty(newProductName))
                     {
                         cmd.Parameters.AddWithValue("@name", newProductName);
@@ -505,6 +513,7 @@ namespace PC_Part_Store.Implement
                     {
                         cmd.Parameters.AddWithValue("@categoryId", newCategoryId);
                     }
+
                     try
                     {
                         connection.Open();
@@ -526,6 +535,7 @@ namespace PC_Part_Store.Implement
                 Console.WriteLine("No information to update.");
             }
         }
+
         public void ViewAllProduct(MySqlConnection connection)
         {
             string query = @" SELECT p.Product_ID, p.Product_Name, p.Description, p.Price, p.Quantity, p.Brand, p.Category_ID, c.Category_Name FROM  product p INNER JOIN category c ON p.Category_ID = c.Category_ID";
@@ -619,7 +629,7 @@ namespace PC_Part_Store.Implement
         {
             if (products.Count == 0)
             {
-                Console.WriteLine("List product iss empty");
+                Console.WriteLine("List product is empty");
             }
             else
             {

@@ -24,7 +24,7 @@ namespace PC_Part_Store
             Console.WriteLine("4. View details product");
             Console.WriteLine("5. Search product");
             Console.WriteLine("6. View cart");
-            Console.WriteLine("7. View infomation customer");
+            Console.WriteLine("7. View information customer");
             Console.WriteLine("8. Add product to cart");
             //Console.WriteLine("9. View order");
             Console.WriteLine("10. Back");
@@ -32,7 +32,7 @@ namespace PC_Part_Store
         public void EmployeeMenu()
         {
             Console.WriteLine("Employee Dashboard");
-            Console.WriteLine("1. Approve application");
+            Console.WriteLine("1. Verify Order");
             Console.WriteLine("2. Product management");
             Console.WriteLine("3. Back");
             //Console.WriteLine("4. Back");
@@ -42,7 +42,7 @@ namespace PC_Part_Store
             Console.WriteLine("Product management.");
             Console.WriteLine("1. Next page");
             Console.WriteLine("2. Previous page");
-            Console.WriteLine("3. Go to");
+            Console.WriteLine("3. Go to page");
             Console.WriteLine("4. View details product");
             Console.WriteLine("5. Search product");
             Console.WriteLine("6. Add product");
@@ -84,7 +84,7 @@ namespace PC_Part_Store
             Console.WriteLine("1. Next page");
             Console.WriteLine("2. Previous page");
             Console.WriteLine("3. Go to page");
-            Console.WriteLine("4. View infomation employee");
+            Console.WriteLine("4. View information employee");
             Console.WriteLine("5. Back");
         }
         public void SearchMenuEmployee()
