@@ -19,7 +19,7 @@ namespace PC_Part_Store.Implement
         public string categoryName { get; set; }
         public override void Add(MySqlConnection connection)
         {
-            {              
+            {
 
                 Console.WriteLine("Add product");
                 Console.Write("Enter Id Product: ");
@@ -44,10 +44,10 @@ namespace PC_Part_Store.Implement
                 using (MySqlCommand cmd = new MySqlCommand(query, connection))
                 {
                     cmd.Parameters.AddWithValue("@productId", productId);
-                    cmd.Parameters.AddWithValue("@productName", productName); 
+                    cmd.Parameters.AddWithValue("@productName", productName);
                     cmd.Parameters.AddWithValue("@description", descriptionProduct);
                     cmd.Parameters.AddWithValue("@price", price);
-                    cmd.Parameters.AddWithValue("@quantity", quantity);                                      
+                    cmd.Parameters.AddWithValue("@quantity", quantity);
                     cmd.Parameters.AddWithValue("@brand", brand);
                     cmd.Parameters.AddWithValue("@categoryId", categoryId);
                     try
@@ -258,7 +258,7 @@ namespace PC_Part_Store.Implement
                 }
             }
         }
-        public void SeaProductByCategory(int categoryId, MySqlConnection connection)
+        public int SeaProductByCategory(int categoryId, MySqlConnection connection)
         {
             string queryProducts = "SELECT * FROM product WHERE Category_ID=@categoryId";
             string queryCategoryName = "SELECT Category_Name FROM category WHERE Category_ID=@categoryId";
@@ -266,32 +266,30 @@ namespace PC_Part_Store.Implement
             List<Product> products = new List<Product>();
             string categoryNameSearch = "";
 
-            using (MySqlCommand cmdCategoryName = new MySqlCommand(queryCategoryName, connection))
+            try
             {
-                cmdCategoryName.Parameters.AddWithValue("@categoryId", categoryId);
-                try
-                {
-                    connection.Open();
-                    categoryNameSearch = cmdCategoryName.ExecuteScalar()?.ToString();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"An error occurred while retrieving category name: {ex.Message}");
-                    throw;
-                }
-                finally
-                {
-                    connection.Close();
-                }
-            }
+                connection.Open();
 
-            using (MySqlCommand cmdProducts = new MySqlCommand(queryProducts, connection))
-            {
-                cmdProducts.Parameters.AddWithValue("@categoryId", categoryId);
-
-                try
+                // Fetch category name
+                using (MySqlCommand cmdCategoryName = new MySqlCommand(queryCategoryName, connection))
                 {
-                    connection.Open();
+                    cmdCategoryName.Parameters.AddWithValue("@categoryId", categoryId);
+                    object result = cmdCategoryName.ExecuteScalar();
+                    if (result != null)
+                    {
+                        categoryNameSearch = result.ToString();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Category not found.");
+                        return 1; // No category found with the given ID
+                    }
+                }
+
+                // Fetch products
+                using (MySqlCommand cmdProducts = new MySqlCommand(queryProducts, connection))
+                {
+                    cmdProducts.Parameters.AddWithValue("@categoryId", categoryId);
                     using (MySqlDataReader reader = cmdProducts.ExecuteReader())
                     {
                         while (reader.Read())
@@ -304,67 +302,6 @@ namespace PC_Part_Store.Implement
                                 price = reader.GetDecimal("Price"),
                                 quantity = reader.GetInt32("Quantity"),
                                 brand = reader.GetString("Brand"),
-                                categoryName=categoryNameSearch
-                            };
-                            products.Add(product);
-                        }
-                    }
-                    Console.WriteLine($"Category: {categoryName}");
-                    DisplayProductsByPage(products, connection);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"An error occurred while retrieving products: {ex.Message}");
-                    throw;
-                }
-                finally
-                {
-                    connection.Close();
-                }
-            }
-        }
-
-        public void SearchProductByName(string name, MySqlConnection connection)
-        {
-            string queryProducts = @"
-            SELECT Product_ID, Product_Name, Price, Description 
-            FROM product 
-            WHERE Product_Name LIKE @name";
-
-            string queryCategoryName = @"
-            SELECT Category_Name 
-            FROM category 
-            WHERE Category_ID = (SELECT Category_ID FROM product WHERE Product_Name LIKE @name LIMIT 1)";
-
-            List<Product> products = new List<Product>();
-
-            try
-            {
-                connection.Open();
-
-                // Fetch category name
-                string categoryNameSearch = "";
-                using (MySqlCommand cmdCategoryName = new MySqlCommand(queryCategoryName, connection))
-                {
-                    cmdCategoryName.Parameters.AddWithValue("@name", name);
-                    categoryNameSearch = cmdCategoryName.ExecuteScalar()?.ToString();
-                }
-
-                // Fetch products
-                using (MySqlCommand cmdProducts = new MySqlCommand(queryProducts, connection))
-                {
-                    cmdProducts.Parameters.AddWithValue("@name", "%" + name + "%");
-
-                    using (MySqlDataReader reader = cmdProducts.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            Product product = new Product
-                            {
-                                productId = reader.GetInt32("Product_ID"),
-                                productName = reader.GetString("Product_Name"),
-                                descriptionProduct = reader.GetString("Description"),
-                                price = reader.GetDecimal("Price"),
                                 categoryName = categoryNameSearch
                             };
                             products.Add(product);
@@ -373,21 +310,122 @@ namespace PC_Part_Store.Implement
                 }
 
                 // Display products
-                Console.WriteLine($"Search results for products containing '{name}':");
-                DisplayProductsByPage(products, connection);
+                if (products.Count > 0)
+                {
+                    Console.WriteLine($"Category: {categoryNameSearch}");
+                    DisplayProductsByPage(products,connection);
+                    return 2;
+                }
+                else
+                {
+                    Console.WriteLine("No products found for the given category.");
+                    return 1;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while retrieving data: {ex.Message}");
+                return -1; // Indicating an error occurred
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+        public int SearchProductByName(string name, MySqlConnection connection)
+        {
+            string queryProducts = @"
+    SELECT Product_ID, Product_Name, Price, Description, Quantity, Brand, Category_ID
+    FROM product 
+    WHERE Product_Name LIKE @name";
+
+            string queryCategoryName = "SELECT Category_Name FROM category WHERE Category_ID=@categoryId";
+
+            List<Product> products = new List<Product>();
+
+            try
+            {
+                connection.Open();
+
+                // Fetch products
+                List<(int productId, string productName, decimal price, string description, int quantity, string brand, int categoryId)> tempProducts = new List<(int, string, decimal, string, int, string, int)>();
+
+                using (MySqlCommand cmdProducts = new MySqlCommand(queryProducts, connection))
+                {
+                    cmdProducts.Parameters.AddWithValue("@name", "%" + name + "%");
+
+                    using (MySqlDataReader reader = cmdProducts.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            tempProducts.Add(
+                                (
+                                    reader.GetInt32("Product_ID"),
+                                    reader.GetString("Product_Name"),
+                                    reader.GetDecimal("Price"),
+                                    reader.GetString("Description"),
+                                    reader.GetInt32("Quantity"),
+                                    reader.GetString("Brand"),
+                                    reader.GetInt32("Category_ID")
+                                )
+                            );
+                        }
+                    }
+                }
+
+                // Fetch category names and create products
+                foreach (var tempProduct in tempProducts)
+                {
+                    string categoryName = "Unknown Category";
+
+                    using (MySqlCommand cmdCategoryName = new MySqlCommand(queryCategoryName, connection))
+                    {
+                        cmdCategoryName.Parameters.AddWithValue("@categoryId", tempProduct.categoryId);
+                        object result = cmdCategoryName.ExecuteScalar();
+                        if (result != null)
+                        {
+                            categoryName = result.ToString();
+                        }
+                    }
+
+                    Product product = new Product
+                    {
+                        productId = tempProduct.productId,
+                        productName = tempProduct.productName,
+                        descriptionProduct = tempProduct.description,
+                        price = tempProduct.price,
+                        quantity = tempProduct.quantity,
+                        brand = tempProduct.brand,
+                        categoryName = categoryName
+                    };
+
+                    products.Add(product);
+                }
+
+                // Display products
+                if (products.Count > 0)
+                {
+                    Console.WriteLine($"Search results for products containing '{name}':");
+                    DisplayProductsByPage(products,connection);
+                    return 2;
+                }
+                else
+                {
+                    Console.WriteLine("No products found with the given name.");
+                    return 1;
+                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
-                throw; // Optionally handle or log the exception
+                return -1; // Optionally handle or log the exception
             }
             finally
-            {             
-               connection.Close();
+            {
+                connection.Close();
             }
         }
-
-
+        
         public override void Update(MySqlConnection connection, int id)
         {
             Console.WriteLine("Update Product (or press Enter to skip)");

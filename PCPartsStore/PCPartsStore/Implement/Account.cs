@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using static Program;
@@ -28,16 +29,6 @@ namespace PC_Part_Store.Implement
             Console.WriteLine("Enter new infomation employee");
             Console.Write("Enter user name employee: ");
             username = Console.ReadLine();
-            while (!validations.UsernameFormCheck(username))
-            {
-                Console.Write("Invalid username form, please enter again: ");
-                username = Console.ReadLine();
-            }
-            while (!validations.EmployeeUsernameDuplicateCheck(username))
-            {
-                Console.Write("Duplicated username, please enter again: ");
-                username = Console.ReadLine();
-            }
             Console.Write("Enter password:");
             password = Console.ReadLine();
             Console.Write("Enter name employee:");
@@ -48,7 +39,7 @@ namespace PC_Part_Store.Implement
             email = Console.ReadLine();
             Console.Write("Enter phone number: ");
             phoneNumber = Console.ReadLine();
-            string query = "INSERT INTO employee (username,password,Employee_name, address, phoneNumber, email) VALUES (@username ,@password, @name, @address, @phoneNumber, @email)";
+            string query = "INSERT INTO employee (username,password,Employee_name, address, Phone_number, email) VALUES (@username ,@password, @name, @address, @phoneNumber, @email)";
             using (MySqlCommand cmd = new MySqlCommand(query, connection))
             {
                 cmd.Parameters.AddWithValue("@username", username);
@@ -83,7 +74,7 @@ namespace PC_Part_Store.Implement
             password = Console.ReadLine();
             while (!validations.AccountExistCheck(username, password))
             {
-                
+                Console.WriteLine("Account or password is incorrect");
                 Console.Write("Username: ");
                 username = Console.ReadLine();
                 Console.Write("Password: ");
@@ -300,7 +291,7 @@ namespace PC_Part_Store.Implement
                 Console.WriteLine("No information to update.");
                 return;
             }
-            query += string.Join(", ", updates) + " WHERE employeeId = @id";
+            query += string.Join(", ", updates) + " WHERE Employee_Id = @id";
 
             using (MySqlCommand cmd = new MySqlCommand(query, connection))
             {
@@ -360,9 +351,236 @@ namespace PC_Part_Store.Implement
             }
         }
 
-        public void ViewInformationEmployee(int employeeId, MySqlConnection connection)
+        public int ViewInformationEmployee(int employeeId, MySqlConnection connection)
         {
-            throw new NotImplementedException();
+            string queryCustomer = "SELECT * from employee WHERE Employee_ID=@employeeId";
+            try
+            {
+                connection.Open();
+                using (MySqlCommand cmdCustomer = new MySqlCommand(queryCustomer, connection))
+                {
+                    cmdCustomer.Parameters.AddWithValue("@employeeId", employeeId);
+                    using (MySqlDataReader reader = cmdCustomer.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            idEmployee = reader.GetInt32("Employee_ID");
+                            address = reader.GetString("Address");
+                            name = reader.GetString("Employee_name");
+                            phoneNumber = reader.GetString("Phone_number");
+                            password = reader.GetString("Password");
+                            email = reader.GetString("Email");
+                            username = reader.GetString("username");
+                            Console.WriteLine($"ID: {idEmployee}\n Name: {name}\n Address: {address}\n " +
+                                                                $"Phone number: {phoneNumber}\n Email: {email}\n Username: {username}\n Password: {password}");
+                            return 1;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Employee not found");
+                            return 0;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Cannot connect to database: " + ex.Message);
+                //return 0;
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        public void ViewAllEmployee(MySqlConnection connection)
+        {
+            string query = @" SELECT * FROM employee";
+
+            List<Account> accounts = new List<Account>();
+
+            using (MySqlCommand cmd = new MySqlCommand(query, connection))
+            {
+                try
+                {
+                    connection.Open();
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Account account = new Account
+                            {
+                                idEmployee = reader.GetInt32("Employee_ID"),
+                                address=reader.GetString("Address"),
+                                name=reader.GetString("Employee_name"),
+                                phoneNumber=reader.GetString("Phone_number"),
+                                password=reader.GetString("Password"),
+                                email=reader.GetString("Email"),
+                                username=reader.GetString("username")
+                            };
+                            accounts.Add(account);
+                        }
+                        if (accounts.Count == 0)
+                        {
+                            Console.WriteLine("List employee iss empty");
+                            return;
+                        }
+                        else
+                        {
+                            //chinh sua phan trang muon test
+                            int pageSize = 1;
+                            int totalRecords = accounts.Count;
+                            int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+
+                            if (pageCurrentEmloyee < 1)
+                            {
+                                Console.WriteLine("Page number must be greater than 0. Setting to page 1.");
+                                pageCurrentEmloyee = 1;
+                            }
+                            else if (pageCurrentEmloyee > totalPages)
+                            {
+                                Console.WriteLine("Page number exceeds total pages. Setting to last page.");
+                                pageCurrentEmloyee = totalPages;
+                            }
+
+                            int start = (pageCurrentEmloyee - 1) * pageSize;
+                            int end = Math.Min(start + pageSize, totalRecords);
+
+
+
+                            for (int i = start; i < end; i++)
+                            {
+                                Account account = accounts[i];
+                                Console.WriteLine($"ID: {account.idEmployee}, Name: {account.name}, Address: {account.address}, " +
+                                                                $"Phone number: {account.phoneNumber}, Email: {account.email}, Username: {account.username}, Password: {account.password}");
+                            }
+                            Console.WriteLine($"Page {pageCurrentEmloyee} of {totalPages}");
+                        }
+                    }
+                    
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error occurred: {ex.Message}");
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+        }
+
+        public void DeleteAccountEmployee(int employeeId, MySqlConnection connection)
+        {
+            string deleteQuery = "DELETE FROM employee WHERE Employee_ID=@employeeId";
+            try
+            {
+                connection.Open();
+                using (MySqlCommand cmdDelete = new MySqlCommand(deleteQuery, connection))
+                {
+                    cmdDelete.Parameters.AddWithValue("@employeeId", employeeId);
+                    int rowsAffected = cmdDelete.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        Console.WriteLine("Employee account deleted successfully.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Employee not found.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Cannot connect to database: " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+
+        public int SearchEmployeeByName(string name, MySqlConnection connection)
+        {
+            string queryEmployees = "SELECT * FROM employee WHERE Employee_name LIKE @name";
+            List<Account> accounts = new List<Account>();
+            try
+            {
+                connection.Open();
+                using(MySqlCommand cmdEmployees =new MySqlCommand(queryEmployees, connection))
+                {
+                    cmdEmployees.Parameters.AddWithValue("@name", "%" + name + "%");
+
+                    using (MySqlDataReader reader = cmdEmployees.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Account account = new Account
+                            {
+                                idEmployee = reader.GetInt32("Employee_ID"),
+                                address = reader.GetString("Address"),
+                                name = reader.GetString("Employee_name"),
+                                phoneNumber = reader.GetString("Phone_number"),
+                                password = reader.GetString("Password"),
+                                email = reader.GetString("Email"),
+                                username = reader.GetString("username")
+                            };
+                            accounts.Add(account);
+                        }
+                    }
+                    if (accounts.Count > 0)
+                    {
+                        Console.WriteLine($"Search results for employees with name containing '{name}':");
+                        int pageSize = 1;
+                        int totalRecords = accounts.Count;
+                        int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+
+                        if (pageCurrentEmloyee < 1)
+                        {
+                            Console.WriteLine("Page number must be greater than 0. Setting to page 1.");
+                            pageCurrentEmloyee = 1;
+                        }
+                        else if (pageCurrentEmloyee > totalPages)
+                        {
+                            Console.WriteLine("Page number exceeds total pages. Setting to last page.");
+                            pageCurrentEmloyee = totalPages;
+                        }
+
+                        int start = (pageCurrentEmloyee - 1) * pageSize;
+                        int end = Math.Min(start + pageSize, totalRecords);
+
+
+
+                        for (int i = start; i < end; i++)
+                        {
+                            Account account = accounts[i];
+                            Console.WriteLine($"ID: {account.idEmployee}, Name: {account.name}, Address: {account.address}, " +
+                                                            $"Phone number: {account.phoneNumber}, Email: {account.email}, Username: {account.username}, Password: {account.password}");
+                        }
+                        Console.WriteLine($"Page {pageCurrentEmloyee} of {totalPages}");
+                        return 1;
+                    }
+                    else
+                    {
+                        Console.WriteLine("No employees found with the given name.");
+                        return 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while retrieving employees: {ex.Message}");
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+
         }
     }
 }

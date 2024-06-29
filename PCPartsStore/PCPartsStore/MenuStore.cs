@@ -51,12 +51,15 @@ namespace PC_Part_Store
         public void AdminMenu()
         {
             Console.WriteLine("Admin Menu");
-            Console.WriteLine("1. Add Employee");
-            Console.WriteLine("2. View Employee Details");
-            Console.WriteLine("3. Delete Employee by ID");
-            Console.WriteLine("4. Update Employee Information by ID");
-            Console.WriteLine("5. Search Employee");
-            Console.WriteLine("6. Back");
+            Console.WriteLine("1. Next page");
+            Console.WriteLine("2. Previous page");
+            Console.WriteLine("3. Go to page");
+            Console.WriteLine("4. Create account Employee");
+            Console.WriteLine("5. View Employee Details");
+            Console.WriteLine("6. Delete Employee by ID");
+            Console.WriteLine("7. Update Employee Information by ID");
+            Console.WriteLine("8. Search Employee");
+            Console.WriteLine("9. Back");
             //Console.WriteLine("7. Quit");
         }
         
@@ -75,6 +78,22 @@ namespace PC_Part_Store
             Console.WriteLine("4. View details product");
             Console.WriteLine("5. Add product to cart");
             Console.WriteLine("6. Back");
+        }
+        public void SearchMenuEmployeeOption()
+        {
+            Console.WriteLine("1. Next page");
+            Console.WriteLine("2. Previous page");
+            Console.WriteLine("3. Go to page");
+            Console.WriteLine("4. View infomation employee");
+            Console.WriteLine("5. Back");
+        }
+        public void SearchMenuEmployee()
+        {
+            Console.WriteLine("1. Next page");
+            Console.WriteLine("2. Previous page");
+            Console.WriteLine("3. Go to page");
+            Console.WriteLine("4. View details product");
+            Console.WriteLine("5. Back");
         }
     }
 }

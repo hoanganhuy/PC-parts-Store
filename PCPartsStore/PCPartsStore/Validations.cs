@@ -33,7 +33,10 @@ namespace PCPartsStore
                             exists = Convert.ToInt32(cmd.ExecuteScalar()) > 0;
 
                             if (exists)
+                            {
+                                
                                 break; // If account exists in any table, break the loop
+                            }
                         }
                     }
                 }

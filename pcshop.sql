@@ -24,11 +24,10 @@ DROP TABLE IF EXISTS `admin`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `admin` (
   `Admin_ID` int NOT NULL AUTO_INCREMENT,
-  `Admin_name` varchar(255) DEFAULT NULL,
+  `Username` varchar(255) DEFAULT NULL,
   `Password` varchar(255) DEFAULT NULL,
-  `Email` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`Admin_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -37,6 +36,7 @@ CREATE TABLE `admin` (
 
 LOCK TABLES `admin` WRITE;
 /*!40000 ALTER TABLE `admin` DISABLE KEYS */;
+INSERT INTO `admin` VALUES (1,'luongad','luongad');
 /*!40000 ALTER TABLE `admin` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -90,7 +90,7 @@ CREATE TABLE `cart_detail` (
 
 LOCK TABLES `cart_detail` WRITE;
 /*!40000 ALTER TABLE `cart_detail` DISABLE KEYS */;
-INSERT INTO `cart_detail` VALUES (3,1,40);
+INSERT INTO `cart_detail` VALUES (3,1,90);
 /*!40000 ALTER TABLE `cart_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -163,7 +163,7 @@ CREATE TABLE `employee` (
   `Email` varchar(255) DEFAULT NULL,
   `username` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`Employee_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -172,6 +172,7 @@ CREATE TABLE `employee` (
 
 LOCK TABLES `employee` WRITE;
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
+INSERT INTO `employee` VALUES (1,'ha noi','luongnv','1234567890','luongnv','luong','luongnv');
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -195,7 +196,7 @@ CREATE TABLE `orders` (
   PRIMARY KEY (`Order_ID`),
   KEY `Customer_ID` (`Customer_ID`),
   CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`Customer_ID`) REFERENCES `customer` (`Customer_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -204,7 +205,7 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
-INSERT INTO `orders` VALUES (3,1,'luong','1234567890','luong','hanoi',439.60,0,0);
+INSERT INTO `orders` VALUES (3,1,'luong','1234567890','luong','hanoi',439.60,1,1),(4,1,'luonghz','1234567890','luong','hanoi',714.35,0,0),(5,1,'luonghz','1234567890','luong','hanoi',914.25,0,0),(6,1,'luonghz','1234567890','luong','hanoi',989.10,0,0),(7,1,'luonghz','1234567890','luong','hanoi',989.10,0,0),(8,1,'luonghz','1234567890','luong','hanoi',989.10,0,0);
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -235,7 +236,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1,'Product 1','Description for Product 1',10.99,60,'Brand A',1),(2,'Product 2','Description for Product 2',19.99,200,'Brand B',2),(3,'Product 3','Description for Product 3',5.49,150,'Brand C',1),(4,'Product 4','Description for Product 4',15.99,80,'Brand D',2);
+INSERT INTO `product` VALUES (1,'product','description for product',10.90,100,'brand',2),(2,'Product 2','Description for Product 2',19.99,190,'Brand B',2),(3,'Product 3','Description for Product 3',5.49,150,'Brand C',1),(4,'Product 4','Description for Product 4',15.99,80,'Brand D',2),(5,'luong','luong',10.50,100,'branad',2);
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -248,4 +249,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-26 12:34:02
+-- Dump completed on 2024-06-29 16:32:14

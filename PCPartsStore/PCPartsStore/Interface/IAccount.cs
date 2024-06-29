@@ -15,6 +15,9 @@ namespace PC_Part_Store.Interface
         public void UpdateInformationEmployee(int id, MySqlConnection connection);
         public void CreateAccountEmloyee(MySqlConnection connection);
         public void ViewInformationCustomer(int customerId,MySqlConnection connection);
-        public void ViewInformationEmployee(int employeeId,MySqlConnection connection);
+        public int ViewInformationEmployee(int employeeId,MySqlConnection connection);
+        public void ViewAllEmployee(MySqlConnection connection);
+        public void DeleteAccountEmployee(int employeeId, MySqlConnection connection);
+        public int SearchEmployeeByName(string name,MySqlConnection connection);
     }
 }

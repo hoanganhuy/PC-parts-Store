@@ -9,6 +9,7 @@ public static class Program
 {
     public static int pageNumberCurrent {  get; set; }=1;
     public static int customerIdCurrent { get; set; }
+    public static int pageCurrentEmloyee { get; set; } = 1;
     static void Main()
     {
         using (MySqlConnection connection = DBHelper.GetConnection())
@@ -32,6 +33,7 @@ public static class Program
                         // customer
                         if (result == "customer")
                         {
+                            pageNumberCurrent = 1;
                             string chooseCustomer = "0";
                             while (chooseCustomer != "10")
                             {
@@ -114,7 +116,7 @@ public static class Program
                                             }
                                             break;
                                         }
-                                    case "5":
+                                    case "5"://tim kiem
                                         {
                                             Console.WriteLine("Search product selected.");
                                             menu.SearchMenu();
@@ -137,128 +139,134 @@ public static class Program
                                                         string nameSearch= Console.ReadLine();
                                                         do
                                                         {
-                                                            productHandler.SearchProductByName(nameSearch, connection);
-                                                            menu.SearchMenuOption();
-                                                            Console.Write("Select an option: ");
-                                                            string selectOptionSearch = Console.ReadLine();
-                                                            switch (selectOptionSearch)
+                                                            if(productHandler.SearchProductByName(nameSearch, connection) == 2)
                                                             {
-                                                                case "1":
-                                                                    {
-                                                                        pageNumberCurrent++;
-                                                                        break;
-                                                                    }
-                                                                case "2":
-                                                                    {
-                                                                        pageNumberCurrent--;
-                                                                        break;
-                                                                    }
-                                                                case "3":
-                                                                    {
-                                                                        int pageNumber;
-                                                                        do
+                                                                menu.SearchMenuOption();
+                                                                Console.Write("Select an option: ");
+                                                                string selectOptionSearch = Console.ReadLine();
+                                                                switch (selectOptionSearch)
+                                                                {
+                                                                    case "1":
                                                                         {
-                                                                            Console.Write("Select tha page you want to go to: ");
-                                                                            string check = Console.ReadLine();
-                                                                            if (!int.TryParse(check, out pageNumber))
-                                                                            {
-                                                                                Console.WriteLine("Selection Isvalid");
-                                                                            }
-                                                                            else pageNumberCurrent = pageNumber; break;
-                                                                        } while (true);
-                                                                        break;
-                                                                    }
-                                                                case "4"://xem chi tiet
-                                                                    {
-                                                                        int viewDetailsId;
-                                                                        do
+                                                                            pageNumberCurrent++;
+                                                                            break;
+                                                                        }
+                                                                    case "2":
                                                                         {
-                                                                            Console.Write("Enter the porduct id you want to view details: ");
-                                                                            string check = Console.ReadLine();
-                                                                            if (!int.TryParse(check, out viewDetailsId))
-                                                                            {
-                                                                                Console.WriteLine("Id Isvalid");
-                                                                            }
-                                                                            else break;
-                                                                        } while (true);
-
-                                                                        if (productHandler.ViewProductDetails(viewDetailsId, connection) == 1)
+                                                                            pageNumberCurrent--;
+                                                                            break;
+                                                                        }
+                                                                    case "3":
                                                                         {
-                                                                            string input;
+                                                                            int pageNumber;
                                                                             do
                                                                             {
-                                                                                Console.WriteLine("1 - Add product to cart");
-                                                                                Console.WriteLine("2 - Back");
-                                                                                Console.Write("Options: ");
-                                                                                input = Console.ReadLine();
-                                                                                switch (input)
+                                                                                Console.Write("Select tha page you want to go to: ");
+                                                                                string check = Console.ReadLine();
+                                                                                if (!int.TryParse(check, out pageNumber))
                                                                                 {
-                                                                                    case "1":
-                                                                                        Console.Write("Enter quantity to add to cart: ");
-                                                                                        if (int.TryParse(Console.ReadLine(), out int quantity))
-                                                                                        {
-                                                                                            productHandler.AddToCart(viewDetailsId, customerIdCurrent, quantity, connection);
-                                                                                        }
-                                                                                        else
-                                                                                        {
-                                                                                            Console.WriteLine("Invalid quantity. Please enter a valid number.");
-                                                                                        }
-                                                                                        break;
-                                                                                    case "2":
-                                                                                        // Exit 
-                                                                                        break;
-                                                                                    default:
-                                                                                        Console.WriteLine("Invalid option, please try again.");
-                                                                                        break;
+                                                                                    Console.WriteLine("Selection Isvalid");
                                                                                 }
-                                                                            } while (input != "2" && input != "1");
+                                                                                else pageNumberCurrent = pageNumber; break;
+                                                                            } while (true);
+                                                                            break;
                                                                         }
-                                                                        break;
-                                                                    }
-                                                                case "5"://them gio hang
-                                                                    {
-                                                                        int addProductIdCart;
-                                                                        do
+                                                                    case "4"://xem chi tiet
                                                                         {
-                                                                            Console.Write("Enter the porduct id you want add to cart: ");
-                                                                            string check = Console.ReadLine();
-                                                                            if (!int.TryParse(check, out addProductIdCart))
+                                                                            int viewDetailsId;
+                                                                            do
                                                                             {
-                                                                                Console.WriteLine("Id Isvalid. Please enter a valid number");
+                                                                                Console.Write("Enter the porduct id you want to view details: ");
+                                                                                string check = Console.ReadLine();
+                                                                                if (!int.TryParse(check, out viewDetailsId))
+                                                                                {
+                                                                                    Console.WriteLine("Id Isvalid");
+                                                                                }
+                                                                                else break;
+                                                                            } while (true);
+
+                                                                            if (productHandler.ViewProductDetails(viewDetailsId, connection) == 1)
+                                                                            {
+                                                                                string input;
+                                                                                do
+                                                                                {
+                                                                                    Console.WriteLine("1 - Add product to cart");
+                                                                                    Console.WriteLine("2 - Back");
+                                                                                    Console.Write("Options: ");
+                                                                                    input = Console.ReadLine();
+                                                                                    switch (input)
+                                                                                    {
+                                                                                        case "1":
+                                                                                            Console.Write("Enter quantity to add to cart: ");
+                                                                                            if (int.TryParse(Console.ReadLine(), out int quantity))
+                                                                                            {
+                                                                                                productHandler.AddToCart(viewDetailsId, customerIdCurrent, quantity, connection);
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                Console.WriteLine("Invalid quantity. Please enter a valid number.");
+                                                                                            }
+                                                                                            break;
+                                                                                        case "2":
+                                                                                            // Exit 
+                                                                                            break;
+                                                                                        default:
+                                                                                            Console.WriteLine("Invalid option, please try again.");
+                                                                                            break;
+                                                                                    }
+                                                                                } while (input != "2" && input != "1");
                                                                             }
-                                                                            else break;
-                                                                        } while (true);
-                                                                        if (productHandler.ViewProductDetails(addProductIdCart, connection) == 1)
+                                                                            break;
+                                                                        }
+                                                                    case "5"://them gio hang
                                                                         {
-                                                                            Console.Write("Enter quantity to add to cart: ");
-                                                                            if (int.TryParse(Console.ReadLine(), out int quantity))
+                                                                            int addProductIdCart;
+                                                                            do
                                                                             {
-                                                                                productHandler.AddToCart(addProductIdCart, customerIdCurrent, quantity, connection);
+                                                                                Console.Write("Enter the porduct id you want add to cart: ");
+                                                                                string check = Console.ReadLine();
+                                                                                if (!int.TryParse(check, out addProductIdCart))
+                                                                                {
+                                                                                    Console.WriteLine("Id Isvalid. Please enter a valid number");
+                                                                                }
+                                                                                else break;
+                                                                            } while (true);
+                                                                            if (productHandler.ViewProductDetails(addProductIdCart, connection) == 1)
+                                                                            {
+                                                                                Console.Write("Enter quantity to add to cart: ");
+                                                                                if (int.TryParse(Console.ReadLine(), out int quantity))
+                                                                                {
+                                                                                    productHandler.AddToCart(addProductIdCart, customerIdCurrent, quantity, connection);
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    Console.WriteLine("Invalid quantity. Please enter a valid number.");
+                                                                                }
                                                                             }
                                                                             else
                                                                             {
-                                                                                Console.WriteLine("Invalid quantity. Please enter a valid number.");
+                                                                                Console.WriteLine("Adding product to cart failed");
                                                                             }
+                                                                            break;
                                                                         }
-                                                                        else
+                                                                    case "6"://thoat
                                                                         {
-                                                                            Console.WriteLine("Adding product to cart failed");
+                                                                            Console.WriteLine("Exit search");
+                                                                            pageNumberCurrent = 1;
+                                                                            break;
                                                                         }
-                                                                        break;
-                                                                    }
-                                                                case "6"://thoat
-                                                                    {
-                                                                        Console.WriteLine("Exit search");
-                                                                        pageNumberCurrent = 1;
-                                                                        break;
-                                                                    }
-                                                                default:
-                                                                    {
-                                                                        Console.WriteLine("Selection is valid");
-                                                                        break;
-                                                                    }
+                                                                    default:
+                                                                        {
+                                                                            Console.WriteLine("Selection is valid");
+                                                                            break;
+                                                                        }
+                                                                }
+                                                                if (selectOptionSearch == "4" || selectOptionSearch == "5" || selectOptionSearch == "6")
+                                                                {
+                                                                    break;
+                                                                }
                                                             }
-                                                            if (selectOptionSearch == "4" || selectOptionSearch == "5" || selectOptionSearch == "6")
+                                                            else
                                                             {
                                                                 break;
                                                             }
@@ -282,131 +290,137 @@ public static class Program
                                                         } while (true);
                                                         do
                                                         {
-                                                            productHandler.SeaProductByCategory(categoryIdSearch, connection);
-                                                            menu.SearchMenuOption();
-                                                            Console.Write("Select an option: ");
-                                                            string selectOptionSearch = Console.ReadLine();
-                                                            switch (selectOptionSearch)
+                                                            if (productHandler.SeaProductByCategory(categoryIdSearch, connection) == 2)
                                                             {
-                                                                case "1":
-                                                                    {
-                                                                        pageNumberCurrent++;
-                                                                        break;
-                                                                    }
-                                                                case "2":
-                                                                    {
-                                                                        pageNumberCurrent--;
-                                                                        break;
-                                                                    }
-                                                                case "3":
-                                                                    {
-                                                                        int pageNumber;
-                                                                        do
+                                                                menu.SearchMenuOption();
+                                                                Console.Write("Select an option: ");
+                                                                string selectOptionSearch = Console.ReadLine();
+                                                                switch (selectOptionSearch)
+                                                                {
+                                                                    case "1":
                                                                         {
-                                                                            Console.Write("Select tha page you want to go to: ");
-                                                                            string check = Console.ReadLine();
-                                                                            if (!int.TryParse(check, out pageNumber))
-                                                                            {
-                                                                                Console.WriteLine("Selection Isvalid");
-                                                                            }
-                                                                            else pageNumberCurrent = pageNumber; break;
-                                                                        } while (true);
-                                                                        break;
-                                                                    }
-                                                                case "4"://xem chi tiet
-                                                                    {
-                                                                        int viewDetailsId;
-                                                                        do
+                                                                            pageNumberCurrent++;
+                                                                            break;
+                                                                        }
+                                                                    case "2":
                                                                         {
-                                                                            Console.Write("Enter the porduct id you want to view details: ");
-                                                                            string check = Console.ReadLine();
-                                                                            if (!int.TryParse(check, out viewDetailsId))
-                                                                            {
-                                                                                Console.WriteLine("Id Isvalid");
-                                                                            }
-                                                                            else break;
-                                                                        } while (true);
-
-                                                                        if (productHandler.ViewProductDetails(viewDetailsId, connection) == 1)
+                                                                            pageNumberCurrent--;
+                                                                            break;
+                                                                        }
+                                                                    case "3":
                                                                         {
-                                                                            string input;
+                                                                            int pageNumber;
                                                                             do
                                                                             {
-                                                                                Console.WriteLine("1 - Add product to cart");
-                                                                                Console.WriteLine("2 - Back");
-                                                                                Console.Write("Options: ");
-                                                                                input = Console.ReadLine();
-                                                                                switch (input)
+                                                                                Console.Write("Select tha page you want to go to: ");
+                                                                                string check = Console.ReadLine();
+                                                                                if (!int.TryParse(check, out pageNumber))
                                                                                 {
-                                                                                    case "1":
-                                                                                        Console.Write("Enter quantity to add to cart: ");
-                                                                                        if (int.TryParse(Console.ReadLine(), out int quantity))
-                                                                                        {
-                                                                                            productHandler.AddToCart(viewDetailsId, customerIdCurrent, quantity, connection);
-                                                                                        }
-                                                                                        else
-                                                                                        {
-                                                                                            Console.WriteLine("Invalid quantity. Please enter a valid number.");
-                                                                                        }
-                                                                                        break;
-                                                                                    case "2":
-                                                                                        // Exit 
-                                                                                        break;
-                                                                                    default:
-                                                                                        Console.WriteLine("Invalid option, please try again.");
-                                                                                        break;
+                                                                                    Console.WriteLine("Selection Isvalid");
                                                                                 }
-                                                                            } while (input != "2" && input != "1");
+                                                                                else pageNumberCurrent = pageNumber; break;
+                                                                            } while (true);
+                                                                            break;
                                                                         }
-                                                                        break;
-                                                                    }
-                                                                case "5"://them gio hang
-                                                                    {
-                                                                        int addProductIdCart;
-                                                                        do
+                                                                    case "4"://xem chi tiet
                                                                         {
-                                                                            Console.Write("Enter the porduct id you want add to cart: ");
-                                                                            string check = Console.ReadLine();
-                                                                            if (!int.TryParse(check, out addProductIdCart))
+                                                                            int viewDetailsId;
+                                                                            do
                                                                             {
-                                                                                Console.WriteLine("Id Isvalid. Please enter a valid number");
+                                                                                Console.Write("Enter the porduct id you want to view details: ");
+                                                                                string check = Console.ReadLine();
+                                                                                if (!int.TryParse(check, out viewDetailsId))
+                                                                                {
+                                                                                    Console.WriteLine("Id Isvalid");
+                                                                                }
+                                                                                else break;
+                                                                            } while (true);
+
+                                                                            if (productHandler.ViewProductDetails(viewDetailsId, connection) == 1)
+                                                                            {
+                                                                                string input;
+                                                                                do
+                                                                                {
+                                                                                    Console.WriteLine("1 - Add product to cart");
+                                                                                    Console.WriteLine("2 - Back");
+                                                                                    Console.Write("Options: ");
+                                                                                    input = Console.ReadLine();
+                                                                                    switch (input)
+                                                                                    {
+                                                                                        case "1":
+                                                                                            Console.Write("Enter quantity to add to cart: ");
+                                                                                            if (int.TryParse(Console.ReadLine(), out int quantity))
+                                                                                            {
+                                                                                                productHandler.AddToCart(viewDetailsId, customerIdCurrent, quantity, connection);
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                Console.WriteLine("Invalid quantity. Please enter a valid number.");
+                                                                                            }
+                                                                                            break;
+                                                                                        case "2":
+                                                                                            // Exit 
+                                                                                            break;
+                                                                                        default:
+                                                                                            Console.WriteLine("Invalid option, please try again.");
+                                                                                            break;
+                                                                                    }
+                                                                                } while (input != "2" && input != "1");
                                                                             }
-                                                                            else break;
-                                                                        } while (true);
-                                                                        if (productHandler.ViewProductDetails(addProductIdCart, connection) == 1)
+                                                                            break;
+                                                                        }
+                                                                    case "5"://them gio hang
                                                                         {
-                                                                            Console.Write("Enter quantity to add to cart: ");
-                                                                            if (int.TryParse(Console.ReadLine(), out int quantity))
+                                                                            int addProductIdCart;
+                                                                            do
                                                                             {
-                                                                                productHandler.AddToCart(addProductIdCart, customerIdCurrent, quantity, connection);
+                                                                                Console.Write("Enter the porduct id you want add to cart: ");
+                                                                                string check = Console.ReadLine();
+                                                                                if (!int.TryParse(check, out addProductIdCart))
+                                                                                {
+                                                                                    Console.WriteLine("Id Isvalid. Please enter a valid number");
+                                                                                }
+                                                                                else break;
+                                                                            } while (true);
+                                                                            if (productHandler.ViewProductDetails(addProductIdCart, connection) == 1)
+                                                                            {
+                                                                                Console.Write("Enter quantity to add to cart: ");
+                                                                                if (int.TryParse(Console.ReadLine(), out int quantity))
+                                                                                {
+                                                                                    productHandler.AddToCart(addProductIdCart, customerIdCurrent, quantity, connection);
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    Console.WriteLine("Invalid quantity. Please enter a valid number.");
+                                                                                }
                                                                             }
                                                                             else
                                                                             {
-                                                                                Console.WriteLine("Invalid quantity. Please enter a valid number.");
+                                                                                Console.WriteLine("Adding product to cart failed");
                                                                             }
+                                                                            break;
                                                                         }
-                                                                        else
+                                                                    case "6"://thoat
                                                                         {
-                                                                            Console.WriteLine("Adding product to cart failed");
+                                                                            Console.WriteLine("Exit search");
+                                                                            pageNumberCurrent = 1;
+                                                                            break;
                                                                         }
-                                                                        break;
-                                                                    }
-                                                                case "6"://thoat
-                                                                    {
-                                                                        Console.WriteLine("Exit search");
-                                                                        pageNumberCurrent = 1;
-                                                                        break;
-                                                                    }
-                                                                default:
-                                                                    {
-                                                                        Console.WriteLine("Selection is valid");
-                                                                        break;
-                                                                    }
+                                                                    default:
+                                                                        {
+                                                                            Console.WriteLine("Selection is valid");
+                                                                            break;
+                                                                        }
+                                                                }
+                                                                if (selectOptionSearch == "4" || selectOptionSearch == "5" || selectOptionSearch == "6")
+                                                                {
+                                                                    break;
+                                                                }
                                                             }
-                                                            if (selectOptionSearch=="4"||selectOptionSearch=="5"||selectOptionSearch=="6")
+                                                            else
                                                             {
                                                                 break;
-                                                            }
+                                                            }                                               
                                                         } while (true);
                                                         break;
                                                     }
@@ -540,6 +554,7 @@ public static class Program
                             // employee
                             if (result == "employee")
                             {
+                                pageNumberCurrent = 1;
                                 do
                                 {
                                     menu.EmployeeMenu();
@@ -605,7 +620,7 @@ public static class Program
                                                             {
                                                                 Console.WriteLine("1. Update product");
                                                                 //Console.WriteLine("2. Remove product");
-                                                                Console.WriteLine("3.Back ");
+                                                                Console.WriteLine("2.Back ");
                                                                 
                                                                 string employeeInput;
                                                                 int checkEmployeeInput;
@@ -638,6 +653,266 @@ public static class Program
                                                         }
                                                     case "5"://tim kiem
                                                         {
+                                                            Console.WriteLine("Search product selected.");
+                                                            menu.SearchMenu();
+                                                            string selectSearch;
+                                                            do
+                                                            {
+                                                                Console.Write("Enter selection: ");
+                                                                selectSearch = Console.ReadLine();
+                                                                if (selectSearch != "1" || selectSearch != "2" || selectSearch != "3")
+                                                                {
+                                                                    break;
+                                                                }
+                                                            } while (true);
+                                                            switch (selectSearch)
+                                                            {
+                                                                case "1"://tim theo ten
+                                                                    {
+                                                                        pageNumberCurrent = 1;
+                                                                        Console.Write("Enter name product:");
+                                                                        string nameSearch = Console.ReadLine();
+                                                                        do
+                                                                        {
+                                                                            if (productHandler.SearchProductByName(nameSearch, connection) == 2)
+                                                                            {
+                                                                                menu.SearchMenuEmployee();
+                                                                                Console.Write("Select an option: ");
+                                                                                string selectOptionSearch = Console.ReadLine();
+                                                                                switch (selectOptionSearch)
+                                                                                {
+                                                                                    case "1":
+                                                                                        {
+                                                                                            pageNumberCurrent++;
+                                                                                            break;
+                                                                                        }
+                                                                                    case "2":
+                                                                                        {
+                                                                                            pageNumberCurrent--;
+                                                                                            break;
+                                                                                        }
+                                                                                    case "3":
+                                                                                        {
+                                                                                            int pageNumber;
+                                                                                            do
+                                                                                            {
+                                                                                                Console.Write("Select tha page you want to go to: ");
+                                                                                                string check = Console.ReadLine();
+                                                                                                if (!int.TryParse(check, out pageNumber))
+                                                                                                {
+                                                                                                    Console.WriteLine("Selection Isvalid");
+                                                                                                }
+                                                                                                else pageNumberCurrent = pageNumber; break;
+                                                                                            } while (true);
+                                                                                            break;
+                                                                                        }
+                                                                                    case "4"://xem chi tiet
+                                                                                        {
+                                                                                            int viewDetailsId;
+                                                                                            do
+                                                                                            {
+                                                                                                Console.Write("Enter the porduct id you want to view details: ");
+                                                                                                string check = Console.ReadLine();
+                                                                                                if (!int.TryParse(check, out viewDetailsId))
+                                                                                                {
+                                                                                                    Console.WriteLine("Id Isvalid");
+                                                                                                }
+                                                                                                else break;
+                                                                                            } while (true);
+
+                                                                                            if (productHandler.ViewProductDetails(viewDetailsId, connection) == 1)
+                                                                                            {
+                                                                                                string input;
+                                                                                                do
+                                                                                                {
+                                                                                                    Console.WriteLine("1 - Update product");
+                                                                                                    Console.WriteLine("2 - Delete product");
+                                                                                                    Console.WriteLine("3 _ Back");
+                                                                                                    Console.Write("Options: ");
+                                                                                                    input = Console.ReadLine();
+                                                                                                    switch (input)
+                                                                                                    {
+                                                                                                        case "1":
+                                                                                                            {
+                                                                                                                productHandler.Update(connection, viewDetailsId);
+                                                                                                                break;
+                                                                                                            }
+                                                                                                        case "2":
+                                                                                                            {
+                                                                                                                productHandler.Remove(connection,viewDetailsId);
+                                                                                                                break;
+                                                                                                            }
+                                                                                                        case "3":
+                                                                                                            {
+                                                                                                                break;
+                                                                                                            }
+                                                                                                        default:
+                                                                                                            {
+                                                                                                                Console.WriteLine("Invalid option, please try again.");
+                                                                                                                break;
+                                                                                                            }
+                                                                                                    }
+                                                                                                } while (input != "2" && input != "1");
+                                                                                            }
+                                                                                            break;
+                                                                                        }                                                                                 
+                                                                                    case "5"://thoat
+                                                                                        {
+                                                                                            Console.WriteLine("Exit search");
+                                                                                            pageNumberCurrent = 1;
+                                                                                            break;
+                                                                                        }
+                                                                                    default:
+                                                                                        {
+                                                                                            Console.WriteLine("Selection is valid");
+                                                                                            break;
+                                                                                        }
+                                                                                }
+                                                                                if (selectOptionSearch == "4" || selectOptionSearch == "5" )
+                                                                                {
+                                                                                    break;
+                                                                                }
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                break;
+                                                                            }
+                                                                        } while (true);
+                                                                        break;
+                                                                    }
+                                                                case "2":// tim kiem theo category
+                                                                    {
+                                                                        pageNumberCurrent = 1;
+                                                                        productHandler.DisplayAllCategory(connection);
+                                                                        int categoryIdSearch;
+                                                                        do
+                                                                        {
+                                                                            Console.Write("Enter the id category: ");
+                                                                            string check = Console.ReadLine();
+                                                                            if (!int.TryParse(check, out categoryIdSearch))
+                                                                            {
+                                                                                Console.WriteLine("Selection Isvalid");
+                                                                            }
+                                                                            else break;
+                                                                        } while (true);
+                                                                        do
+                                                                        {
+                                                                            if (productHandler.SeaProductByCategory(categoryIdSearch,connection)==2)
+                                                                            {
+                                                                                menu.SearchMenuEmployee();
+                                                                                Console.Write("Select an option: ");
+                                                                                string selectOptionSearch = Console.ReadLine();
+                                                                                switch (selectOptionSearch)
+                                                                                {
+                                                                                    case "1":
+                                                                                        {
+                                                                                            pageNumberCurrent++;
+                                                                                            break;
+                                                                                        }
+                                                                                    case "2":
+                                                                                        {
+                                                                                            pageNumberCurrent--;
+                                                                                            break;
+                                                                                        }
+                                                                                    case "3":
+                                                                                        {
+                                                                                            int pageNumber;
+                                                                                            do
+                                                                                            {
+                                                                                                Console.Write("Select tha page you want to go to: ");
+                                                                                                string check = Console.ReadLine();
+                                                                                                if (!int.TryParse(check, out pageNumber))
+                                                                                                {
+                                                                                                    Console.WriteLine("Selection Isvalid");
+                                                                                                }
+                                                                                                else pageNumberCurrent = pageNumber; break;
+                                                                                            } while (true);
+                                                                                            break;
+                                                                                        }
+                                                                                    case "4"://xem chi tiet
+                                                                                        {
+                                                                                            int viewDetailsId;
+                                                                                            do
+                                                                                            {
+                                                                                                Console.Write("Enter the porduct id you want to view details: ");
+                                                                                                string check = Console.ReadLine();
+                                                                                                if (!int.TryParse(check, out viewDetailsId))
+                                                                                                {
+                                                                                                    Console.WriteLine("Id Isvalid");
+                                                                                                }
+                                                                                                else break;
+                                                                                            } while (true);
+
+                                                                                            if (productHandler.ViewProductDetails(viewDetailsId, connection) == 1)
+                                                                                            {
+                                                                                                string input;
+                                                                                                do
+                                                                                                {
+                                                                                                    Console.WriteLine("1 - Update product");
+                                                                                                    Console.WriteLine("2 - Delete product");
+                                                                                                    Console.WriteLine("3 _ Back");
+                                                                                                    Console.Write("Options: ");
+                                                                                                    input = Console.ReadLine();
+                                                                                                    switch (input)
+                                                                                                    {
+                                                                                                        case "1":
+                                                                                                            {
+                                                                                                                productHandler.Update(connection, viewDetailsId);
+                                                                                                                break;
+                                                                                                            }
+                                                                                                        case "2":
+                                                                                                            {
+                                                                                                                productHandler.Remove(connection, viewDetailsId);
+                                                                                                                break;
+                                                                                                            }
+                                                                                                        case "3":
+                                                                                                            {
+                                                                                                                break;
+                                                                                                            }
+                                                                                                        default:
+                                                                                                            {
+                                                                                                                Console.WriteLine("Invalid option, please try again.");
+                                                                                                                break;
+                                                                                                            }
+                                                                                                    }
+                                                                                                } while (input != "2" && input != "1");
+                                                                                            }
+                                                                                            break;
+                                                                                        }
+                                                                                    case "5"://thoat
+                                                                                        {
+                                                                                            Console.WriteLine("Exit search");
+                                                                                            pageNumberCurrent = 1;
+                                                                                            break;
+                                                                                        }
+                                                                                    default:
+                                                                                        {
+                                                                                            Console.WriteLine("Selection is valid");
+                                                                                            break;
+                                                                                        }
+                                                                                }
+                                                                                if (selectOptionSearch == "4" || selectOptionSearch == "5")
+                                                                                {
+                                                                                    break;
+                                                                                }
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                break;
+                                                                            }
+                                                                        } while (true);
+                                                                        break;
+                                                                    }
+                                                                case "3":
+                                                                    {
+                                                                        break;
+                                                                    }
+                                                                default:
+                                                                    {
+                                                                        Console.WriteLine("Selection is valid");
+                                                                        break;
+                                                                    }
+                                                            }
                                                             break;
                                                         }
                                                     case "6"://them
@@ -661,11 +936,15 @@ public static class Program
                                             } while (true);
                                             break;                                       
                                         case "3":
-                                            Console.WriteLine("Exiting employee menu.");
-                                            break;
+                                            {
+                                                Console.WriteLine("Exiting employee menu.");
+                                                break;
+                                            }
                                         default:
-                                            Console.WriteLine("Invalid option. Please try again.");
-                                            break;
+                                            {
+                                                Console.WriteLine("Invalid option. Please try again.");
+                                                break;
+                                            }
                                     }
                                     if (chooseEmployee == "3")
                                     {
@@ -678,36 +957,238 @@ public static class Program
                             {
                                 if (result == "admin")
                                 {
-                                    menu.AdminMenu();
-                                    Console.WriteLine("Select an option:");
-                                    string chooseAdmin = Console.ReadLine();
-                                    switch (chooseAdmin)
+                                    pageCurrentEmloyee = 1;
+                                    do
                                     {
-                                        case "1":
-                                            Console.WriteLine("Add Employee selected.");
+                                        account.ViewAllEmployee(connection);
+                                        menu.AdminMenu();
+                                        Console.Write("Select an option:");
+                                        string chooseAdmin = Console.ReadLine();
+                                        switch (chooseAdmin)
+                                        {
+                                            case "1"://next page
+                                                {
+                                                    pageCurrentEmloyee++;
+                                                    break;
+                                                }
+                                            case "2"://previous page
+                                                {
+                                                    pageCurrentEmloyee--;
+                                                    break;
+                                                }
+                                            case "3"://goto page
+                                                {
+                                                    int pageNumber;
+                                                    do
+                                                    {
+                                                        Console.Write("Select tha page you want to go to: ");
+                                                        string check = Console.ReadLine();
+                                                        if (!int.TryParse(check, out pageNumber))
+                                                        {
+                                                            Console.WriteLine("Selection Isvalid");
+                                                        }
+                                                        else pageCurrentEmloyee = pageNumber; break;
+                                                    } while (true);
+                                                    break;
+                                                }
+                                            case "4"://tao tai khoan nv
+                                                {
+                                                    Console.WriteLine("Create account employee");
+                                                    account.CreateAccountEmloyee(connection);
+                                                    break;
+                                                }
+                                            case "5"://view details
+                                                {
+                                                    int viewDetailsId;
+                                                    do
+                                                    {
+                                                        Console.Write("Enter the employee id you want to view details: ");
+                                                        string check = Console.ReadLine();
+                                                        if (!int.TryParse(check, out viewDetailsId))
+                                                        {
+                                                            Console.WriteLine("Id Isvalid");
+                                                        }
+                                                        else break;
+                                                    } while (true);
+                                                    if (account.ViewInformationEmployee(viewDetailsId, connection) == 1)
+                                                    {
+                                                        Console.WriteLine("1. Update infomation");
+                                                        Console.WriteLine("2. Remove infomation");
+                                                        Console.WriteLine("3. Back");
+                                                        int adminInput;
+                                                        string checkAdminInput;
+                                                        do
+                                                        {
+                                                            Console.Write("Enter optiton: ");
+                                                            checkAdminInput = Console.ReadLine();
+                                                            if (!int.TryParse(checkAdminInput, out adminInput))
+                                                            {
+                                                                if (adminInput != 1 || adminInput != 2 || adminInput != 3)
+                                                                {
+                                                                    Console.WriteLine("Selection isvalid");
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                break;
+                                                            }
+                                                        } while (true);
+                                                        if (adminInput == 1)//update
+                                                        {
+                                                            account.UpdateInformationEmployee(viewDetailsId, connection);
+                                                        }
+                                                        else
+                                                        {
+                                                            if(adminInput==2){
+                                                                account.DeleteAccountEmployee(viewDetailsId, connection);
+                                                            }
+                                                        }
+                                                    }
+                                                    break;
+                                                }
+                                            case "6"://xoa nv
+                                                {
+                                                    int viewDetailsId;
+                                                    do
+                                                    {
+                                                        Console.Write("Enter the eployee id you want delete: ");
+                                                        string check = Console.ReadLine();
+                                                        if (!int.TryParse(check, out viewDetailsId))
+                                                        {
+                                                            Console.WriteLine("Id Isvalid");
+                                                        }
+                                                        else break;
+                                                    } while (true);
+                                                    account.DeleteAccountEmployee(viewDetailsId, connection);
+                                                    break;
+                                                }
+                                            case "7"://cap nhat
+                                                {
+                                                    int viewDetailsId;
+                                                    do
+                                                    {
+                                                        Console.Write("Enter the eployee id you want delete: ");
+                                                        string check = Console.ReadLine();
+                                                        if (!int.TryParse(check, out viewDetailsId))
+                                                        {
+                                                            Console.WriteLine("Id Isvalid");
+                                                        }
+                                                        else break;
+                                                    } while (true);
+                                                    account.UpdateInformationEmployee(viewDetailsId, connection);
+                                                    break;
+                                                }
+                                            case "8"://tim kiem
+                                                {
+
+                                                    pageCurrentEmloyee = 1;
+                                                    Console.Write("Enter name product:");
+                                                    string nameSearch = Console.ReadLine();
+                                                    if(account.SearchEmployeeByName(nameSearch, connection)==1)
+                                                    {
+                                                        menu.SearchMenuEmployeeOption();
+                                                        Console.Write("Select an option: ");
+                                                        string selectOptionSearch = Console.ReadLine();
+                                                        switch(selectOptionSearch)
+                                                        {
+                                                            case "1":
+                                                                {
+                                                                    pageCurrentEmloyee++;
+                                                                    break;
+                                                                }
+                                                            case "2":
+                                                                {
+                                                                    pageCurrentEmloyee--; 
+                                                                    break;
+                                                                }
+                                                            case "3":
+                                                                {
+                                                                    int pageNumber;
+                                                                    do
+                                                                    {
+                                                                        Console.Write("Select tha page you want to go to: ");
+                                                                        string check = Console.ReadLine();
+                                                                        if (!int.TryParse(check, out pageNumber))
+                                                                        {
+                                                                            Console.WriteLine("Selection Isvalid");
+                                                                        }
+                                                                        else pageCurrentEmloyee = pageNumber; break;
+                                                                    } while (true);
+                                                                    break;
+                                                                }
+                                                            case "4"://xem chi tiet
+                                                                {
+                                                                    int viewDetailsId;
+                                                                    do
+                                                                    {
+                                                                        Console.Write("Enter the employee id you want to view details: ");
+                                                                        string check = Console.ReadLine();
+                                                                        if (!int.TryParse(check, out viewDetailsId))
+                                                                        {
+                                                                            Console.WriteLine("Id Isvalid");
+                                                                        }
+                                                                        else break;
+                                                                    } while (true);
+                                                                    if (account.ViewInformationEmployee(viewDetailsId, connection) == 1)
+                                                                    {
+                                                                        Console.WriteLine("1. Update infomation");
+                                                                        Console.WriteLine("2. Remove infomation");
+                                                                        Console.WriteLine("3. Back");
+                                                                        int adminInput;
+                                                                        string checkAdminInput;
+                                                                        do
+                                                                        {
+                                                                            Console.Write("Enter optiton: ");
+                                                                            checkAdminInput = Console.ReadLine();
+                                                                            if (!int.TryParse(checkAdminInput, out adminInput))
+                                                                            {
+                                                                                if (adminInput != 1 || adminInput != 2 || adminInput != 3)
+                                                                                {
+                                                                                    Console.WriteLine("Selection isvalid");
+                                                                                }
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                break;
+                                                                            }
+                                                                        } while (true);
+                                                                        if (adminInput == 1)//update
+                                                                        {
+                                                                            account.UpdateInformationEmployee(viewDetailsId, connection);
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            if (adminInput == 2)
+                                                                            {
+                                                                                account.DeleteAccountEmployee(viewDetailsId, connection);
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    break;
+                                                                }
+                                                            case "5":
+                                                                {
+                                                                    break;
+                                                                }
+                                                            default:
+                                                                {
+                                                                    Console.WriteLine("Selection is valid");
+                                                                    break;
+                                                                }
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+
+                                                    }
+                                                    break;
+                                                }
+                                        }
+                                        if (chooseAdmin == "9")
+                                        {
                                             break;
-                                        case "2":
-                                            Console.WriteLine("View Employee Details selected.");
-                                            break;
-                                        case "3":
-                                            Console.WriteLine("Delete Employee by ID selected.");
-                                            break;
-                                        case "4":
-                                            Console.WriteLine("Update Employee Information by ID selected.");
-                                            break;
-                                        case "5":
-                                            Console.WriteLine("Search Employee selected.");
-                                            break;
-                                        case "6":
-                                            Console.WriteLine("Going back.");
-                                            return;
-                                        case "7":
-                                            Console.WriteLine("Exiting admin menu.");
-                                            return;
-                                        default:
-                                            Console.WriteLine("Invalid option. Please try again.");
-                                            break;
-                                    }
+                                        }
+                                    }while(true);
                                 }
                                 else
                                 {
