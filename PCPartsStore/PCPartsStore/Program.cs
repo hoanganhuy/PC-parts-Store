@@ -474,46 +474,106 @@ public static class Program
                                         }
                                     case "6":
                                         //view Cart
-                                        cartHandler.ViewCart(customerIdCurrent, connection);
-                                        Console.WriteLine("1.Update product in the cart");
-                                        Console.WriteLine("2.Pay");
-                                        Console.WriteLine("3.Back");
-                                        string optionViewCart;
-                                        do
+                                        if(cartHandler.ViewCart(customerIdCurrent, connection) == 1)
                                         {
-                                            Console.Write("Enter the option: ");
-                                            optionViewCart= Console.ReadLine();
-                                            if (optionViewCart == "2" || optionViewCart == "1"||optionViewCart=="3")
+                                            Console.WriteLine("1.Update product in the cart");
+                                            Console.WriteLine("2.Pay");
+                                            Console.WriteLine("3.Back");
+                                            string optionViewCart;
+                                            do
                                             {
-                                                break;
-                                            }
-                                            else
+                                                Console.Write("Enter the option: ");
+                                                optionViewCart = Console.ReadLine();
+                                                if (optionViewCart == "2" || optionViewCart == "1" || optionViewCart == "3")
+                                                {
+                                                    break;
+                                                }
+                                                else
+                                                {
+                                                    Console.WriteLine("Selection Invalid");
+                                                }
+                                            } while (true);
+                                            switch (optionViewCart)
                                             {
-                                                Console.WriteLine("Selection Invalid");
-                                            }
-                                        }while(true);
-                                        switch (optionViewCart)
-                                        {
-                                            case "1":
-                                                {
-                                                    cartHandler.UpdateProductToCart(customerIdCurrent, connection);
-                                                    break;
-                                                }
-                                            case "2":
-                                                {
-                                                    orderHandler.Pay(connection, customerIdCurrent);
-                                                    break;
-                                                }
-                                            case "3":
-                                                {
-                                                    Console.WriteLine("Leave view cart");
-                                                    break;
-                                                }
-                                            default:
-                                                {
+                                                case "1":
+                                                    {
+                                                        cartHandler.UpdateProductToCart(customerIdCurrent, connection);
+                                                        break;
+                                                    }
+                                                case "2":
+                                                    {
+                                                        orderHandler.Pay(connection, customerIdCurrent);
+                                                        break;
+                                                    }
+                                                case "3":
+                                                    {
+                                                        Console.WriteLine("Leave view cart");
+                                                        break;
+                                                    }
+                                                default:
+                                                    {
 
+                                                        break;
+                                                    }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Would you like to add more products?");
+                                            Console.WriteLine("1. Yes");
+                                            Console.WriteLine("2. Back");
+                                            string optionViewCart;
+                                            do
+                                            {
+                                                Console.Write("Enter option");
+                                                optionViewCart =Console.ReadLine();
+                                                if (optionViewCart == "1" || optionViewCart == "2")
+                                                {
                                                     break;
                                                 }
+                                                else
+                                                {
+                                                    Console.WriteLine("Selection invalid");
+                                                }
+                                            }while(true);
+                                            if (optionViewCart == "1")
+                                            {
+                                                Console.WriteLine("Add product to cart.");
+                                                int viewProductDetailsAdd;
+                                                do
+                                                {
+                                                    Console.Write("Enter the product id you want add to cart: ");
+                                                    string check = Console.ReadLine();
+                                                    if (!int.TryParse(check, out viewProductDetailsAdd))
+                                                    {
+                                                        Console.WriteLine("Id Invalid. Please enter a valid number");
+                                                    }
+                                                    else break;
+                                                } while (true);
+                                                if (productHandler.ViewProductDetails(viewProductDetailsAdd, connection) == 1)
+                                                {
+                                                    Console.Write("Enter quantity to add to cart: ");
+                                                    if (int.TryParse(Console.ReadLine(), out int quantity))
+                                                    {
+                                                        if (quantity > 0)
+                                                        {
+                                                            productHandler.AddToCart(viewProductDetailsAdd, customerIdCurrent, quantity, connection);
+                                                        }
+                                                        else
+                                                        {
+                                                            Console.WriteLine("Quantity must be a positive number.");
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        Console.WriteLine("Invalid quantity. Please enter a valid number.");
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    Console.WriteLine("Adding product to cart failed");
+                                                }
+                                            }
                                         }
                                         break;
                                     case "7"://view infomation
@@ -545,25 +605,25 @@ public static class Program
                                     //add product to cart                                  
                                     case "8":
                                         Console.WriteLine("Add product to cart.");
-                                        int addProductId;
+                                        int viewProductDetails;
                                         do
                                         {
                                             Console.Write("Enter the product id you want add to cart: ");
                                             string check = Console.ReadLine();
-                                            if (!int.TryParse(check, out addProductId))
+                                            if (!int.TryParse(check, out viewProductDetails))
                                             {
                                                 Console.WriteLine("Id Invalid. Please enter a valid number");
                                             }
                                             else break;
                                         } while (true);
-                                        if (productHandler.ViewProductDetails(addProductId, connection) == 1)
+                                        if (productHandler.ViewProductDetails(viewProductDetails, connection) == 1)
                                         {
                                             Console.Write("Enter quantity to add to cart: ");
                                             if (int.TryParse(Console.ReadLine(), out int quantity))
                                             {
                                                 if (quantity > 0)
                                                 {
-                                                    productHandler.AddToCart(addProductId, customerIdCurrent, quantity, connection);
+                                                    productHandler.AddToCart(viewProductDetails, customerIdCurrent, quantity, connection);
                                                 }
                                                 else
                                                 {
@@ -580,9 +640,43 @@ public static class Program
                                             Console.WriteLine("Adding product to cart failed");
                                         }
                                         break;
-                                    //case "9"://view order
-                                    //    orderHandler.ViewOrder(connection,customerIdCurrent);
-                                    //    break;
+                                    case "9"://view order
+                                        string optionViewOrder="0";
+                                        do
+                                        {
+                                            if (orderHandler.ViewOrder(connection, customerIdCurrent) == 1)
+                                            {
+                                                Console.WriteLine("1. View order detail");
+                                                Console.WriteLine("2. Back");
+
+                                                do
+                                                {
+                                                    Console.Write("Enter option:");
+                                                    optionViewOrder = Console.ReadLine();
+                                                    if (optionViewOrder == "1" || optionViewOrder == "2")
+                                                    {
+                                                        break;
+                                                    }
+                                                    else Console.WriteLine("selection invalid");
+                                                } while (true);
+                                                if (optionViewOrder == "1")
+                                                {
+                                                    int viewOrderId;
+                                                    do
+                                                    {
+                                                        Console.Write("Enter the id you want to view:");
+                                                        string check = Console.ReadLine();
+                                                        if (!int.TryParse(check, out viewOrderId))
+                                                        {
+                                                            Console.WriteLine("Id Invalid. Please enter a valid number");
+                                                        }
+                                                        else break;
+                                                    } while (true);
+                                                    orderHandler.ViewOrderDetails(viewOrderId, connection);
+                                                }
+                                            }
+                                        }while(optionViewOrder != "2");
+                                        break;
                                     case "10"://exit
                                         Console.WriteLine("Exit.");
                                         break;

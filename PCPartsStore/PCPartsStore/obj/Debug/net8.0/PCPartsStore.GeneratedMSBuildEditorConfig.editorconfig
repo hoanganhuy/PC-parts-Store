@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = PCPartsStore
-build_property.ProjectDir = D:\Thư mục mới\PC-parts-Store\PCPartsStore\PCPartsStore\
+build_property.ProjectDir = C:\Users\ngiemluong\source\repos\PC-parts-Store\PCPartsStore\PCPartsStore\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

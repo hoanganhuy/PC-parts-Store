@@ -19,62 +19,98 @@ namespace PC_Part_Store.Implement
         public string brand { get; set; }
         public int categoryId { get; set; }
         public string categoryName { get; set; }
-        public Validations validations { get; set; }
+        Validations validation = new Validations();
         public override void Add(MySqlConnection connection)
         {
+            string check;
+            Console.WriteLine("Add product");
+            int productIdCheck;
+            do
             {
-
-                Console.WriteLine("Add product");
                 Console.Write("Enter Id Product: ");
-                productId = int.Parse(Console.ReadLine());
-                while (validations.ProductExistCheck(productId))
+                check = Console.ReadLine();
+                if (!int.TryParse(check, out productIdCheck))
                 {
-                    Console.Write("Product Id Duplicated, Enter again: ");
-                    Console.ReadLine();
+                    Console.WriteLine("Selection Invalid");
                 }
-                Console.Write("Enter name product: ");
-                productName = Console.ReadLine();
-                Console.Write("Enter description product: ");
-                descriptionProduct = Console.ReadLine();
-                Console.Write("Enter price product: ");
-                price = decimal.Parse(Console.ReadLine());
-                Console.Write("Enter quantity product: ");
-                quantity = int.Parse(Console.ReadLine());
-                Console.Write("Enter brand product: ");
-                brand = Console.ReadLine();
-                Console.Write("Enter category id: ");
-                categoryId = int.Parse(Console.ReadLine());
-                //Might need to check product information
-
-                string query = "INSERT INTO product (Product_ID,Product_Name,Description,Price, Quantity,Brand,Category_Id) " +
-                               "VALUES (@productId,@productName,@description,@price,@quantity,@brand,@categoryId)";
-
-                using (MySqlCommand cmd = new MySqlCommand(query, connection))
+                else productId = productIdCheck; break;
+            } while (true);
+            while (validation.ProductExistCheck(productId, connection))
+            {
+                Console.WriteLine("The product id is duplicated, do you want to update the product?");
+                Console.WriteLine("1. Yes");
+                Console.WriteLine("2. No");
+                string optionAdd="0";
+                do
                 {
-                    cmd.Parameters.AddWithValue("@productId", productId);
-                    cmd.Parameters.AddWithValue("@productName", productName);
-                    cmd.Parameters.AddWithValue("@description", descriptionProduct);
-                    cmd.Parameters.AddWithValue("@price", price);
-                    cmd.Parameters.AddWithValue("@quantity", quantity);
-                    cmd.Parameters.AddWithValue("@brand", brand);
-                    cmd.Parameters.AddWithValue("@categoryId", categoryId);
-                    try
+                    Console.Write("Enter Option: ");
+                    optionAdd = Console.ReadLine();
+                    if (optionAdd != "1" || optionAdd != "2") break;
+                    else Console.WriteLine("Selection invalid");
+                } while (true);
+                if(optionAdd == "1")
+                {
+                    Console.WriteLine("Product details ");
+                    ViewProductDetails(productId, connection);
+                    Update(connection,productId);
+                }
+                else
+                {
+                    do
                     {
-                        connection.Open();
-                        cmd.ExecuteNonQuery();
-                        Console.WriteLine("Product added successfully.");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"An error occurred: {ex.Message}");
-                        throw;
-                    }
-                    finally
-                    {
-                        connection.Close();
-                    }
+                        Console.Write("Enter Id Product: ");
+                        check = Console.ReadLine();
+                        if (!int.TryParse(check, out productIdCheck))
+                        {
+                            Console.WriteLine("Selection Invalid");
+                        }
+                        else productId = productIdCheck; break;
+                    } while (true);
                 }
             }
+            Console.Write("Enter name product: ");
+            productName = Console.ReadLine();
+            Console.Write("Enter description product: ");
+            descriptionProduct = Console.ReadLine();
+            Console.Write("Enter price product: ");
+            price = decimal.Parse(Console.ReadLine());
+            Console.Write("Enter quantity product: ");
+            quantity = int.Parse(Console.ReadLine());
+            Console.Write("Enter brand product: ");
+            brand = Console.ReadLine();
+            Console.Write("Enter category id: ");
+            categoryId = int.Parse(Console.ReadLine());
+            //Might need to check product information
+
+            string query = "INSERT INTO product (Product_ID,Product_Name,Description,Price, Quantity,Brand,Category_Id) " +
+                            "VALUES (@productId,@productName,@description,@price,@quantity,@brand,@categoryId)";
+
+            using (MySqlCommand cmd = new MySqlCommand(query, connection))
+            {
+                cmd.Parameters.AddWithValue("@productId", productId);
+                cmd.Parameters.AddWithValue("@productName", productName);
+                cmd.Parameters.AddWithValue("@description", descriptionProduct);
+                cmd.Parameters.AddWithValue("@price", price);
+                cmd.Parameters.AddWithValue("@quantity", quantity);
+                cmd.Parameters.AddWithValue("@brand", brand);
+                cmd.Parameters.AddWithValue("@categoryId", categoryId);
+                try
+                {
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                    Console.WriteLine("Product added successfully.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error occurred: {ex.Message}");
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+            
         }
 
         public void AddToCart(int productId, int customerId, int amount, MySqlConnection connection)
@@ -207,14 +243,14 @@ namespace PC_Part_Store.Implement
                             }
                         }
 
-                        // Cập nhật số lượng hàng trong kho (nếu cần)
-                        // string updateQuantityProduct = "UPDATE product SET Quantity = Quantity - @amount WHERE Product_ID = @productId";
-                        // using (MySqlCommand cmdUpdateQuantity = new MySqlCommand(updateQuantityProduct, connection, transaction))
-                        // {
-                        //     cmdUpdateQuantity.Parameters.AddWithValue("@productId", productId);
-                        //     cmdUpdateQuantity.Parameters.AddWithValue("@amount", amount);
-                        //     cmdUpdateQuantity.ExecuteNonQuery();
-                        // }
+                        //Cập nhật số lượng hàng trong kho(nếu cần)
+                        string updateQuantityProduct = "UPDATE product SET Quantity = Quantity - @amount WHERE Product_ID = @productId";
+                        using (MySqlCommand cmdUpdateQuantity = new MySqlCommand(updateQuantityProduct, connection, transaction))
+                        {
+                            cmdUpdateQuantity.Parameters.AddWithValue("@productId", productId);
+                            cmdUpdateQuantity.Parameters.AddWithValue("@amount", amount);
+                            cmdUpdateQuantity.ExecuteNonQuery();
+                        }
 
                         transaction.Commit();
                         Console.WriteLine("Add product to cart successful");

@@ -49,25 +49,29 @@ namespace PCPartsStore
 
             return exists;
         }
-
-        public bool ProductExistCheck(int productId)
+        public bool ProductExistCheck(int productId, MySqlConnection connection)
         {
-            bool exists = false;
-
-            using (MySqlConnection conn = DBHelper.GetConnection())
+            string query = "SELECT COUNT(*) FROM product WHERE Product_ID = @productId";
+            using (MySqlCommand cmd = new MySqlCommand(query, connection))
             {
-                conn.Open();
-                string query = "SELECT COUNT(*) FROM Product WHERE ProductId = @productId";
-                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                cmd.Parameters.AddWithValue("@productId", productId);
+                try
                 {
-                    cmd.Parameters.AddWithValue("@productId", productId);
-                    exists = Convert.ToInt32(cmd.ExecuteScalar()) > 0;
+                    connection.Open();
+                    int count = Convert.ToInt32(cmd.ExecuteScalar());
+                    return count > 0;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Erorr: {ex.Message}");
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
                 }
             }
-
-            return exists;
         }
-
         public bool ProductRemainingCheck(int productId)
         {
             // Initialize the connection string

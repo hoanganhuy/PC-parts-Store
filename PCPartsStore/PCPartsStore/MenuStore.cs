@@ -26,7 +26,7 @@ namespace PC_Part_Store
             Console.WriteLine("6. View cart");
             Console.WriteLine("7. View information customer");
             Console.WriteLine("8. Add product to cart");
-            //Console.WriteLine("9. View order");
+            Console.WriteLine("9. View order");
             Console.WriteLine("10. Back");
         }
         public void EmployeeMenu()

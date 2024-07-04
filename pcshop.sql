@@ -90,7 +90,6 @@ CREATE TABLE `cart_detail` (
 
 LOCK TABLES `cart_detail` WRITE;
 /*!40000 ALTER TABLE `cart_detail` DISABLE KEYS */;
-INSERT INTO `cart_detail` VALUES (3,1,90);
 /*!40000 ALTER TABLE `cart_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -177,6 +176,36 @@ INSERT INTO `employee` VALUES (1,'ha noi','luongnv','1234567890','luongnv','luon
 UNLOCK TABLES;
 
 --
+-- Table structure for table `order_detail`
+--
+
+DROP TABLE IF EXISTS `order_detail`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `order_detail` (
+  `order_id` int DEFAULT NULL,
+  `product_id` int DEFAULT NULL,
+  `product_name` varchar(225) DEFAULT NULL,
+  `amount` int DEFAULT NULL,
+  `price` decimal(10,2) NOT NULL,
+  KEY `order_id` (`order_id`),
+  KEY `product_id` (`product_id`),
+  CONSTRAINT `order_detail_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`Order_ID`),
+  CONSTRAINT `order_detail_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `product` (`Product_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `order_detail`
+--
+
+LOCK TABLES `order_detail` WRITE;
+/*!40000 ALTER TABLE `order_detail` DISABLE KEYS */;
+INSERT INTO `order_detail` VALUES (15,1,'product',20,10.90),(16,1,'product',10,10.90),(17,1,'product',10,10.90);
+/*!40000 ALTER TABLE `order_detail` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `orders`
 --
 
@@ -186,17 +215,19 @@ DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders` (
   `Order_ID` int NOT NULL AUTO_INCREMENT,
   `Customer_ID` int NOT NULL,
-  `Customer_name` varchar(255) DEFAULT NULL,
-  `Customer_phone_number` varchar(20) DEFAULT NULL,
-  `Customer_email` varchar(255) DEFAULT NULL,
-  `Customer_Address` varchar(255) DEFAULT NULL,
-  `Total_Price` decimal(10,2) DEFAULT NULL,
   `Verified` tinyint(1) NOT NULL,
   `Accepted` tinyint(1) NOT NULL,
+  `customer_name` varchar(225) DEFAULT NULL,
+  `customer_address` varchar(225) DEFAULT NULL,
+  `customer_email` varchar(225) DEFAULT NULL,
+  `customer_phone_number` varchar(10) DEFAULT NULL,
+  `total_price` decimal(10,2) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `Rejected` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`Order_ID`),
   KEY `Customer_ID` (`Customer_ID`),
   CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`Customer_ID`) REFERENCES `customer` (`Customer_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -205,7 +236,7 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
-INSERT INTO `orders` VALUES (3,1,'luong','1234567890','luong','hanoi',439.60,1,1),(4,1,'luonghz','1234567890','luong','hanoi',714.35,0,0),(5,1,'luonghz','1234567890','luong','hanoi',914.25,0,0),(6,1,'luonghz','1234567890','luong','hanoi',989.10,0,0),(7,1,'luonghz','1234567890','luong','hanoi',989.10,0,0),(8,1,'luonghz','1234567890','luong','hanoi',989.10,0,0);
+INSERT INTO `orders` VALUES (15,1,1,1,'luonghz','hanoi','luong','1234567890',218.00,'2024-07-03 11:19:24',0),(16,1,1,0,'luonghz','hanoi','luong','1234567890',109.00,'2024-07-03 16:39:20',1),(17,1,1,0,'luonghz','hanoi','luong','1234567890',109.00,'2024-07-03 16:58:45',1);
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -236,7 +267,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1,'product','description for product',10.90,100,'brand',2),(2,'Product 2','Description for Product 2',19.99,190,'Brand B',2),(3,'Product 3','Description for Product 3',5.49,150,'Brand C',1),(4,'Product 4','Description for Product 4',15.99,80,'Brand D',2),(5,'luong','luong',10.50,100,'branad',2);
+INSERT INTO `product` VALUES (1,'product','description for product',10.90,140,'brand',2),(2,'Product 2','Description for Product 2',19.99,190,'Brand B',2),(3,'Product 3','Description for Product 3',5.49,150,'Brand C',1),(4,'Product 4','Description for Product 4',15.99,80,'Brand D',2),(5,'luong','luong',10.50,100,'branad',2);
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -249,4 +280,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-29 16:32:14
+-- Dump completed on 2024-07-04  9:24:42
