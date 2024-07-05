@@ -189,7 +189,7 @@ namespace PC_Part_Store.Implement
                     cmd.Parameters.AddWithValue("@customerId", customerId);
                     using(MySqlDataReader reader = cmd.ExecuteReader())
                     {
-                        Console.WriteLine("Order Id | order date | total price | acceptes | rejected");
+                        Console.WriteLine("Order Id | order date | total price | accepted | rejected");
                         bool hasOrders = false;
                         while (reader.Read())
                         {
@@ -297,7 +297,7 @@ namespace PC_Part_Store.Implement
                 //hien thi tat ca don hang
                 string queryGetOrder = "SELECT Order_ID,Customer_name,total_price,Verified,Accepted,Rejected FROM orders ";
                 Console.WriteLine("Orders List:");
-                Console.WriteLine("Order ID | Customer Name | Total Price | Verified | Accepted");
+                Console.WriteLine("Order ID | Customer Name | Total Price | Verified | Accepted | Rejected");
                 using (MySqlCommand cmdGetOrder = new MySqlCommand(queryGetOrder, connection))
                 {
                     using (MySqlDataReader reader = cmdGetOrder.ExecuteReader())

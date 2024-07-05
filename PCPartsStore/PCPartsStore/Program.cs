@@ -142,7 +142,7 @@ public static class Program
                                                 case "1":
                                                     {//search by name
                                                         pageNumberCurrent = 1;
-                                                        Console.Write("Enter name product:");
+                                                        Console.Write("Enter name product: ");
                                                         string nameSearch= Console.ReadLine();
                                                         do
                                                         {
@@ -525,7 +525,7 @@ public static class Program
                                             string optionViewCart;
                                             do
                                             {
-                                                Console.Write("Enter option");
+                                                Console.Write("Enter option: ");
                                                 optionViewCart =Console.ReadLine();
                                                 if (optionViewCart == "1" || optionViewCart == "2")
                                                 {
@@ -584,7 +584,7 @@ public static class Program
                                         string optionInformation;
                                         do
                                         {
-                                            Console.Write("Enter option:");
+                                            Console.Write("Enter option: ");
                                             optionInformation=Console.ReadLine();
                                             if (optionInformation == "2" || optionInformation == "1")
                                             {
@@ -651,7 +651,7 @@ public static class Program
 
                                                 do
                                                 {
-                                                    Console.Write("Enter option:");
+                                                    Console.Write("Enter option: ");
                                                     optionViewOrder = Console.ReadLine();
                                                     if (optionViewOrder == "1" || optionViewOrder == "2")
                                                     {
@@ -664,7 +664,7 @@ public static class Program
                                                     int viewOrderId;
                                                     do
                                                     {
-                                                        Console.Write("Enter the id you want to view:");
+                                                        Console.Write("Enter the id you want to view: ");
                                                         string check = Console.ReadLine();
                                                         if (!int.TryParse(check, out viewOrderId))
                                                         {
@@ -695,7 +695,7 @@ public static class Program
                                 do
                                 {
                                     menu.EmployeeMenu();
-                                    Console.Write("Select an option:");
+                                    Console.Write("Select an option: ");
                                     string chooseEmployee = Console.ReadLine();
                                     switch (chooseEmployee)
                                     {

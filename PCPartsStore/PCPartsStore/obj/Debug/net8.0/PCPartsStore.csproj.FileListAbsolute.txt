@@ -85,3 +85,39 @@ D:\Thư mục mới\PC-parts-Store\PCPartsStore\PCPartsStore\obj\Debug\net8.0\r
 D:\Thư mục mới\PC-parts-Store\PCPartsStore\PCPartsStore\obj\Debug\net8.0\PCPartsStore.pdb
 D:\Thư mục mới\PC-parts-Store\PCPartsStore\PCPartsStore\obj\Debug\net8.0\PCPartsStore.genruntimeconfig.cache
 D:\Thư mục mới\PC-parts-Store\PCPartsStore\PCPartsStore\obj\Debug\net8.0\ref\PCPartsStore.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\PCPartsStore.exe
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\PCPartsStore.deps.json
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\PCPartsStore.runtimeconfig.json
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\PCPartsStore.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\PCPartsStore.pdb
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\Google.Protobuf.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\K4os.Compression.LZ4.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\K4os.Compression.LZ4.Streams.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\K4os.Hash.xxHash.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\Microsoft.Win32.SystemEvents.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\MySql.Data.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\System.Configuration.ConfigurationManager.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\System.Drawing.Common.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\System.IO.Pipelines.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\System.Security.Cryptography.ProtectedData.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\System.Security.Permissions.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\System.Windows.Extensions.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\ZstdSharp.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\runtimes\win-x64\native\comerr64.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\runtimes\win-x64\native\gssapi64.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\runtimes\win-x64\native\k5sprt64.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\runtimes\win-x64\native\krb5_64.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\runtimes\win-x64\native\krbcc64.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\bin\Debug\net8.0\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\obj\Debug\net8.0\PCPartsStore.csproj.AssemblyReference.cache
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\obj\Debug\net8.0\PCPartsStore.csproj.CopyComplete
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\obj\Debug\net8.0\PCPartsStore.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\obj\Debug\net8.0\refint\PCPartsStore.dll
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\obj\Debug\net8.0\PCPartsStore.pdb
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\obj\Debug\net8.0\PCPartsStore.genruntimeconfig.cache
+D:\My Projects\CodingProject\PC-parts-Store\PCPartsStore\PCPartsStore\obj\Debug\net8.0\ref\PCPartsStore.dll
