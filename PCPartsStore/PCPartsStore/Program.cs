@@ -1,8 +1,10 @@
 ﻿using System;
 using Helpers;
 using MySql.Data.MySqlClient;
+using MySqlX.XDevAPI.Common;
 using PC_Part_Store;
 using PC_Part_Store.Implement;
+using PCPartsStore;
 using static PC_Part_Store.Implement.Product;
 
 public static class Program
@@ -19,7 +21,7 @@ public static class Program
             Product productHandler = new Product();
             Cart cartHandler = new Cart();
             Order orderHandler = new Order();
-
+            Validations validations = new Validations();
             while (true)
             {
                 menu.MenuLogin();
@@ -57,31 +59,16 @@ public static class Program
                                     case "3":
                                         {
                                             int pageNumber;
-                                            do
-                                            {
-                                                Console.Write("Select the page you want to go to: ");
-                                                string check = Console.ReadLine();
-                                                if (!int.TryParse(check, out pageNumber))
-                                                {
-                                                    Console.WriteLine("Selection Invalid");
-                                                }
-                                                else pageNumberCurrent = pageNumber; break;
-                                            } while (true);
+                                            Console.Write("Enter Page number go to: ");
+                                            pageNumber = validations.CheckInt();
+                                            pageNumberCurrent = pageNumber;
                                             break;
                                         }
                                     case "4":
                                         {
                                             int viewDetailsId;
-                                            do
-                                            {
-                                                Console.Write("Enter the porduct id you want to view details: ");
-                                                string check = Console.ReadLine();
-                                                if (!int.TryParse(check, out viewDetailsId))
-                                                {
-                                                    Console.WriteLine("Id Invalid");
-                                                }
-                                                else break;
-                                            } while (true);
+                                            Console.Write("Enter the id you want to see details: ");
+                                            viewDetailsId =validations.CheckInt();
                                             
                                             if (productHandler.ViewProductDetails(viewDetailsId, connection) == 1)
                                             {
@@ -95,22 +82,21 @@ public static class Program
                                                     switch (input)
                                                     {
                                                         case "1":
-                                                            Console.Write("Enter quantity to add to cart: ");
-                                                            if (int.TryParse(Console.ReadLine(), out int quantity))
+                                                            int quantity;
+                                                            do
                                                             {
+                                                                Console.Write("Enter quantity to add to cart: ");
+                                                                quantity = validations.CheckInt();
                                                                 if (quantity > 0)
                                                                 {
                                                                     productHandler.AddToCart(viewDetailsId, customerIdCurrent, quantity, connection);
+                                                                    break;
                                                                 }
                                                                 else
                                                                 {
                                                                     Console.WriteLine("Quantity must be a positive number.");
                                                                 }
-                                                            }
-                                                            else
-                                                            {
-                                                                Console.WriteLine("Invalid quantity. Please enter a valid number.");
-                                                            }
+                                                            } while (true);
                                                             break;
                                                         case "2":
                                                             // Exit 
@@ -166,33 +152,18 @@ public static class Program
                                                                     case "3":
                                                                         {
                                                                             int pageNumber;
-                                                                            do
-                                                                            {
-                                                                                Console.Write("Select the page you want to go to: ");
-                                                                                string check = Console.ReadLine();
-                                                                                if (!int.TryParse(check, out pageNumber))
-                                                                                {
-                                                                                    Console.WriteLine("Selection Invalid");
-                                                                                }
-                                                                                else pageNumberCurrent = pageNumber; break;
-                                                                            } while (true);
+                                                                            Console.Write("Select the page you want to go to: ");
+                                                                            pageNumber = validations.CheckInt();
+                                                                            pageNumberCurrent = pageNumber;
                                                                             break;
                                                                         }
                                                                     case "4"://xem chi tiet
                                                                         {
-                                                                            int viewDetailsId;
-                                                                            do
-                                                                            {
-                                                                                Console.Write("Enter the product id you want to view details: ");
-                                                                                string check = Console.ReadLine();
-                                                                                if (!int.TryParse(check, out viewDetailsId))
-                                                                                {
-                                                                                    Console.WriteLine("Id Invalid");
-                                                                                }
-                                                                                else break;
-                                                                            } while (true);
+                                                                            int viewDetailsSearchId;
+                                                                            Console.Write("Enter the id you want to see details: ");
+                                                                            viewDetailsSearchId = validations.CheckInt();
 
-                                                                            if (productHandler.ViewProductDetails(viewDetailsId, connection) == 1)
+                                                                            if (productHandler.ViewProductDetails(viewDetailsSearchId, connection) == 1)
                                                                             {
                                                                                 string input;
                                                                                 do
@@ -204,22 +175,21 @@ public static class Program
                                                                                     switch (input)
                                                                                     {
                                                                                         case "1":
-                                                                                            Console.Write("Enter quantity to add to cart: ");
-                                                                                            if (int.TryParse(Console.ReadLine(), out int quantity))
+                                                                                            int quantity;
+                                                                                            do
                                                                                             {
+                                                                                                Console.Write("Enter quantity to add to cart: ");
+                                                                                                quantity = validations.CheckInt();
                                                                                                 if (quantity > 0)
                                                                                                 {
-                                                                                                    productHandler.AddToCart(viewDetailsId, customerIdCurrent, quantity, connection);
+                                                                                                    productHandler.AddToCart(viewDetailsSearchId, customerIdCurrent, quantity, connection);
+                                                                                                    break;
                                                                                                 }
                                                                                                 else
                                                                                                 {
                                                                                                     Console.WriteLine("Quantity must be a positive number.");
                                                                                                 }
-                                                                                            }
-                                                                                            else
-                                                                                            {
-                                                                                                Console.WriteLine("Invalid quantity. Please enter a valid number.");
-                                                                                            }
+                                                                                            } while (true);
                                                                                             break;
 
                                                                                         case "2":
@@ -236,34 +206,25 @@ public static class Program
                                                                     case "5"://them gio hang
                                                                         {
                                                                             int addProductIdCart;
-                                                                            do
-                                                                            {
-                                                                                Console.Write("Enter the product id you want add to cart: ");
-                                                                                string check = Console.ReadLine();
-                                                                                if (!int.TryParse(check, out addProductIdCart))
-                                                                                {
-                                                                                    Console.WriteLine("Id Invalid. Please enter a valid number");
-                                                                                }
-                                                                                else break;
-                                                                            } while (true);
+                                                                            Console.Write("Enter the product id you want add to cart: ");
+                                                                            addProductIdCart=validations.CheckInt();
                                                                             if (productHandler.ViewProductDetails(addProductIdCart, connection) == 1)
                                                                             {
-                                                                                Console.Write("Enter quantity to add to cart: ");
-                                                                                if (int.TryParse(Console.ReadLine(), out int quantity))
+                                                                                do
                                                                                 {
+                                                                                    Console.Write("Enter quantity to add to cart: ");
+                                                                                    int quantity;
+                                                                                    quantity = validations.CheckInt();
                                                                                     if (quantity > 0)
                                                                                     {
                                                                                         productHandler.AddToCart(addProductIdCart, customerIdCurrent, quantity, connection);
+                                                                                        break;
                                                                                     }
                                                                                     else
                                                                                     {
                                                                                         Console.WriteLine("Quantity must be a positive number.");
                                                                                     }
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    Console.WriteLine("Invalid quantity. Please enter a valid number.");
-                                                                                }
+                                                                                } while (true);
                                                                             }
                                                                             else
                                                                             {
@@ -332,33 +293,17 @@ public static class Program
                                                                     case "3":
                                                                         {
                                                                             int pageNumber;
-                                                                            do
-                                                                            {
-                                                                                Console.Write("Select the page you want to go to: ");
-                                                                                string check = Console.ReadLine();
-                                                                                if (!int.TryParse(check, out pageNumber))
-                                                                                {
-                                                                                    Console.WriteLine("Selection Invalid");
-                                                                                }
-                                                                                else pageNumberCurrent = pageNumber; break;
-                                                                            } while (true);
+                                                                            Console.Write("Select the page you want to go to: ");
+                                                                            pageNumber = validations.CheckInt();
+                                                                            pageNumberCurrent = pageNumber;
                                                                             break;
                                                                         }
                                                                     case "4"://xem chi tiet
                                                                         {
-                                                                            int viewDetailsId;
-                                                                            do
-                                                                            {
-                                                                                Console.Write("Enter the product id you want to view details: ");
-                                                                                string check = Console.ReadLine();
-                                                                                if (!int.TryParse(check, out viewDetailsId))
-                                                                                {
-                                                                                    Console.WriteLine("Id Invalid");
-                                                                                }
-                                                                                else break;
-                                                                            } while (true);
-
-                                                                            if (productHandler.ViewProductDetails(viewDetailsId, connection) == 1)
+                                                                            int viewDetailsSearchId;
+                                                                            Console.Write("Enter the id you want to see details: ");
+                                                                            viewDetailsSearchId = validations.CheckInt();
+                                                                            if (productHandler.ViewProductDetails(viewDetailsSearchId, connection) == 1)
                                                                             {
                                                                                 string input;
                                                                                 do
@@ -370,22 +315,21 @@ public static class Program
                                                                                     switch (input)
                                                                                     {
                                                                                         case "1":
-                                                                                            Console.Write("Enter quantity to add to cart: ");
-                                                                                            if (int.TryParse(Console.ReadLine(), out int quantity))
+                                                                                            int quantity;
+                                                                                            do
                                                                                             {
+                                                                                                Console.Write("Enter quantity to add to cart: ");
+                                                                                                quantity = validations.CheckInt();
                                                                                                 if (quantity > 0)
                                                                                                 {
-                                                                                                    productHandler.AddToCart(viewDetailsId, customerIdCurrent, quantity, connection);
+                                                                                                    productHandler.AddToCart(viewDetailsSearchId, customerIdCurrent, quantity, connection);
+                                                                                                    break;
                                                                                                 }
                                                                                                 else
                                                                                                 {
                                                                                                     Console.WriteLine("Quantity must be a positive number.");
                                                                                                 }
-                                                                                            }
-                                                                                            else
-                                                                                            {
-                                                                                                Console.WriteLine("Invalid quantity. Please enter a valid number.");
-                                                                                            }
+                                                                                            } while (true);
                                                                                             break;
                                                                                         case "2":
                                                                                             // Exit 
@@ -401,34 +345,26 @@ public static class Program
                                                                     case "5"://them gio hang
                                                                         {
                                                                             int addProductIdCart;
-                                                                            do
-                                                                            {
-                                                                                Console.Write("Enter the product id you want add to cart: ");
-                                                                                string check = Console.ReadLine();
-                                                                                if (!int.TryParse(check, out addProductIdCart))
-                                                                                {
-                                                                                    Console.WriteLine("Id Invalid. Please enter a valid number");
-                                                                                }
-                                                                                else break;
-                                                                            } while (true);
+                                                                            Console.Write("Enter the product id you want add to cart: ");
+                                                                            addProductIdCart = validations.CheckInt();
                                                                             if (productHandler.ViewProductDetails(addProductIdCart, connection) == 1)
                                                                             {
-                                                                                Console.Write("Enter quantity to add to cart: ");
-                                                                                if (int.TryParse(Console.ReadLine(), out int quantity))
+                                                                                do
                                                                                 {
+                                                                                    Console.Write("Enter quantity to add to cart: ");
+                                                                                    int quantity;
+
+                                                                                    quantity = validations.CheckInt();
                                                                                     if (quantity > 0)
                                                                                     {
                                                                                         productHandler.AddToCart(addProductIdCart, customerIdCurrent, quantity, connection);
+                                                                                        break;
                                                                                     }
                                                                                     else
                                                                                     {
                                                                                         Console.WriteLine("Quantity must be a positive number.");
                                                                                     }
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    Console.WriteLine("Invalid quantity. Please enter a valid number.");
-                                                                                }
+                                                                                } while (true);
                                                                             }
                                                                             else
                                                                             {
@@ -605,40 +541,25 @@ public static class Program
                                     //add product to cart                                  
                                     case "8":
                                         Console.WriteLine("Add product to cart.");
-                                        int viewProductDetails;
+                                        int viewDetailsAddToCartId;
+                                        Console.Write("Enter the id you want to see details: ");
+                                        viewDetailsAddToCartId = validations.CheckInt();
                                         do
                                         {
-                                            Console.Write("Enter the product id you want add to cart: ");
-                                            string check = Console.ReadLine();
-                                            if (!int.TryParse(check, out viewProductDetails))
-                                            {
-                                                Console.WriteLine("Id Invalid. Please enter a valid number");
-                                            }
-                                            else break;
-                                        } while (true);
-                                        if (productHandler.ViewProductDetails(viewProductDetails, connection) == 1)
-                                        {
                                             Console.Write("Enter quantity to add to cart: ");
-                                            if (int.TryParse(Console.ReadLine(), out int quantity))
+                                            int quantity;
+
+                                            quantity = validations.CheckInt();
+                                            if (quantity > 0)
                                             {
-                                                if (quantity > 0)
-                                                {
-                                                    productHandler.AddToCart(viewProductDetails, customerIdCurrent, quantity, connection);
-                                                }
-                                                else
-                                                {
-                                                    Console.WriteLine("Quantity must be a positive number.");
-                                                }
+                                                productHandler.AddToCart(viewDetailsAddToCartId, customerIdCurrent, quantity, connection);
+                                                break;
                                             }
                                             else
                                             {
-                                                Console.WriteLine("Invalid quantity. Please enter a valid number.");
+                                                Console.WriteLine("Quantity must be a positive number.");
                                             }
-                                        }
-                                        else
-                                        {
-                                            Console.WriteLine("Adding product to cart failed");
-                                        }
+                                        } while (true);
                                         break;
                                     case "9"://view order
                                         string optionViewOrder="0";
@@ -662,16 +583,8 @@ public static class Program
                                                 if (optionViewOrder == "1")
                                                 {
                                                     int viewOrderId;
-                                                    do
-                                                    {
-                                                        Console.Write("Enter the id you want to view: ");
-                                                        string check = Console.ReadLine();
-                                                        if (!int.TryParse(check, out viewOrderId))
-                                                        {
-                                                            Console.WriteLine("Id Invalid. Please enter a valid number");
-                                                        }
-                                                        else break;
-                                                    } while (true);
+                                                    Console.Write("Enter the id you want to view: ");
+                                                    viewOrderId=validations.CheckInt();                                                 
                                                     orderHandler.ViewOrderDetails(viewOrderId, connection);
                                                 }
                                             }
@@ -701,8 +614,29 @@ public static class Program
                                     {
                                         //dong y thanh toan
                                         case "1":
-                                            Console.WriteLine("Approve application selected.");
-                                            orderHandler.Accepted(connection);
+                                            do
+                                            {
+                                                Console.WriteLine("Approve application selected.");
+                                                orderHandler.Accepted(connection);
+                                                string approveOption;
+                                                do
+                                                {
+                                                    Console.Write("Continue approving the order(1.Yes/2.No): ");
+                                                    approveOption = Console.ReadLine();
+                                                    if (approveOption == "1" || approveOption == "2")
+                                                    {
+                                                        break;
+                                                    }
+                                                    else
+                                                    {
+                                                        Console.WriteLine("Selection invalid");
+                                                    }
+                                                } while (true);
+                                                if (approveOption == "2")
+                                                {
+                                                    break;
+                                                }
+                                            } while (true);
                                             break;
                                         //quan li san pham
                                         case "2":

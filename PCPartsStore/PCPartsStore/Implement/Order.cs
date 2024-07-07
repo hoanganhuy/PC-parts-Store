@@ -1,16 +1,20 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Google.Protobuf.Collections;
+using MySql.Data.MySqlClient;
+using MySqlX.XDevAPI.Common;
 using Org.BouncyCastle.Crypto;
 using PC_Part_Store.Interface;
+using PCPartsStore;
 using System.Data;
 using System.Data.Common;
 using System.Globalization;
+using System.Runtime.Intrinsics.Arm;
 using System.Transactions;
 
 namespace PC_Part_Store.Implement
 {
     internal class Order : IOrder
     {
-
+        Validations validations = new Validations();
         public string customerName { get; set; }
         public string customerPhoneNumber { get; set; }
         public string customerEmail { get; set; }
@@ -47,7 +51,16 @@ namespace PC_Part_Store.Implement
 
                         // Update Customer Information if needed
                         Console.Write("Do you want to update your personal information? (1.yes/2.no): ");
-                        int updateInfo = int.Parse(Console.ReadLine());
+                        int updateInfo;
+                        do
+                        {
+                            updateInfo = validations.CheckInt();
+                            if (updateInfo == 1 || updateInfo == 2)
+                            {
+                                break;
+                            }
+                            else Console.WriteLine("Selection invalid");
+                        } while (true);
                         if (updateInfo == 1)
                         {
                             Account account = new Account();
@@ -75,15 +88,18 @@ namespace PC_Part_Store.Implement
                         }
 
                         // Display Customer Information
+                        Console.WriteLine("+----------------------------------------+");
                         Console.WriteLine("Customer Information:");
                         Console.WriteLine($"Name: {customerName}");
                         Console.WriteLine($"Email: {customerEmail}");
                         Console.WriteLine($"Address: {customerAddress}");
                         Console.WriteLine($"Phone: {customerPhoneNumber}");
-
+                        Console.WriteLine("+----------------------------------------+");
                         // Retrieve and Display Order Information
                         Console.WriteLine("Order Information:");
-                        Console.WriteLine("Product ID | Quantity | Unit Price | Total Price");
+                        Console.WriteLine("+------------+----------------------+----------+------------+------------+");
+                        Console.WriteLine("| Product ID | Product Name         | Quantity | Unit Price | Total Price|");
+                        Console.WriteLine("+------------+----------------------+----------+------------+------------+");
                         string queryCartItems = "SELECT cd.product_ID, cd.amount,p.product_name, p.price FROM cart_Detail cd JOIN product p ON cd.product_ID = p.product_ID WHERE cd.cart_ID = @cartId;";
                         List<(int productId,string productName, int amount, decimal price)> cartItems = new List<(int,string, int, decimal)>();
                         decimal totalOrderPrice = 0;
@@ -101,19 +117,28 @@ namespace PC_Part_Store.Implement
                                     decimal totalPrice = amount * price;
 
                                     totalOrderPrice += totalPrice;
-                                    Console.WriteLine($"{productId} | {productName} | {amount} | {price:F2} | {totalPrice:F2}");
+                                    Console.WriteLine($"| {productId,-10} | {productName,-20} | {amount,-8} | {price,10:F2} | {totalPrice,10:F2} |");
 
                                     // Add to cartItems list for later update
                                     cartItems.Add((productId,productName, amount, price));
                                 }
                             }
                         }
-
+                        Console.WriteLine("+------------+----------------------+----------+------------+------------+");
                         Console.WriteLine($"Total Order Price: {totalOrderPrice:F2}");
 
                         // Confirm Payment
                         Console.Write("Do you want to proceed with the payment? (1.yes/2.no): ");
-                        int confirmation = int.Parse(Console.ReadLine());
+                        int confirmation;                     
+                        do
+                        {
+                            confirmation = validations.CheckInt();
+                            if (updateInfo == 1 || updateInfo == 2)
+                            {
+                                break;
+                            }
+                            else Console.WriteLine("Selection invalid");
+                        } while (true);
                         if (confirmation != 1)
                         {
                             Console.WriteLine("Payment cancelled.");
@@ -189,7 +214,8 @@ namespace PC_Part_Store.Implement
                     cmd.Parameters.AddWithValue("@customerId", customerId);
                     using(MySqlDataReader reader = cmd.ExecuteReader())
                     {
-                        Console.WriteLine("Order Id | order date | total price | accepted | rejected");
+                        Console.WriteLine("Order Id  | Order Date           | Total Price | Status");
+                        Console.WriteLine("+---------+----------------------+-------------+-------------+");
                         bool hasOrders = false;
                         while (reader.Read())
                         {
@@ -199,17 +225,34 @@ namespace PC_Part_Store.Implement
                             decimal totalPrice = reader.GetDecimal("total_price");
                             bool accepted = reader.GetBoolean("accepted");
                             bool rejected = reader.GetBoolean("rejected");
-                            Console.WriteLine($"{orderId} | {orderDate} | {totalPrice} | {accepted} | {rejected}");
-                        }
+                            string status;
+                            if(accepted==false && rejected==false)
+                            {
+                                status = "Processing";
+                            }
+                            else
+                            {
+                                if(accepted==false && rejected == true)
+                                {
+                                    status = "rejected";
+                                }
+                                else
+                                {
+                                    status = "Accepted";
+                                }
+                            }
+                            Console.WriteLine($"| {orderId,-7} | {orderDate,-20:yyyy-MM-dd HH:mm:ss} | {totalPrice,11:F2} | {status,-10}  |");
+                        }               
                         if (!hasOrders)
                         {
                             Console.WriteLine("No orders found for this customer.");
                             return 0;
-                        }
+                        }                    
                         else
                         {
+                            Console.WriteLine("+---------+----------------------+-------------+-------------+");
                             return 1;
-                        }
+                        }                      
                     }
                 }
             }
@@ -222,7 +265,7 @@ namespace PC_Part_Store.Implement
                 connection.Close();
             }
         }
-        public void ViewOrderDetails(int orderId, MySqlConnection connection)
+        public int ViewOrderDetails(int orderId, MySqlConnection connection)
         {
             try
             {
@@ -233,30 +276,57 @@ namespace PC_Part_Store.Implement
                     cmdOrders.Parameters.AddWithValue("@orderId", orderId);
                     using (MySqlDataReader readerOrders = cmdOrders.ExecuteReader())
                     {
-                        if (readerOrders.Read())
+                        if (readerOrders.HasRows)
                         {
-                            DateTime orderDate = readerOrders.GetDateTime("created_at");
-                            decimal totalPrice = readerOrders.GetDecimal("total_price");
-                            bool accepted = readerOrders.GetBoolean("Accepted");
-                            customerName =readerOrders.GetString("customer_name");
-                            customerAddress = readerOrders.GetString("customer_address");
-                            customerPhoneNumber = readerOrders.GetString("customer_phone_number");
-                            customerEmail = readerOrders.GetString("customer_email");
-                            bool rejected = readerOrders.GetBoolean("rejected");
 
-                            Console.WriteLine($"Order ID: {orderId}");
-                            Console.WriteLine($"Order Date: {orderDate}");
-                            Console.WriteLine($"Customer Name: {customerName}");
-                            Console.WriteLine($"Customer Address: {customerAddress}");
-                            Console.WriteLine($"Customer Phone Number: {customerPhoneNumber}");
-                            Console.WriteLine($"Cusromer Email:{customerEmail}");
-                            Console.WriteLine($"Total Price: {totalPrice}");
-                            Console.WriteLine($"Accepted: {accepted}");
-                            Console.WriteLine($"Rejected: {rejected}");                                                
+                            if (readerOrders.Read())
+                            {
+                                DateTime orderDate = readerOrders.GetDateTime("created_at");
+                                decimal totalPrice = readerOrders.GetDecimal("total_price");
+                                bool accepted = readerOrders.GetBoolean("Accepted");
+                                customerName = readerOrders.GetString("customer_name");
+                                customerAddress = readerOrders.GetString("customer_address");
+                                customerPhoneNumber = readerOrders.GetString("customer_phone_number");
+                                customerEmail = readerOrders.GetString("customer_email");
+                                bool rejected = readerOrders.GetBoolean("rejected");
+                                string status;
+                                if (accepted == false && rejected == false)
+                                {
+                                    status = "Processing";
+                                }
+                                else
+                                {
+                                    if (accepted == false && rejected == true)
+                                    {
+                                        status = "rejected";
+                                    }
+                                    else
+                                    {
+                                        status = "Accepted";
+                                    }
+                                }
+                                Console.WriteLine("+----------------------------------------+");
+                                Console.WriteLine($"Order ID: {orderId}");
+                                Console.WriteLine($"Order Date: {orderDate}");
+                                Console.WriteLine($"Customer Name: {customerName}");
+                                Console.WriteLine($"Customer Address: {customerAddress}");
+                                Console.WriteLine($"Customer Phone Number: {customerPhoneNumber}");
+                                Console.WriteLine($"Cusromer Email:{customerEmail}");
+                                Console.WriteLine($"Total Price: {totalPrice}");
+                                Console.WriteLine($"Accepted: {status}");
+                                Console.WriteLine("+----------------------------------------+");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Order not found");
+                            return 0;
                         }
                     }
                     Console.WriteLine("Order Details:");
-                    Console.WriteLine("Product ID | Product Name | Quantity | Unit Price | Total Price");
+                    Console.WriteLine("+------------+----------------------+----------+------------+------------+");
+                    Console.WriteLine("| Product ID | Product Name         | Quantity | Unit Price | Total Price|");
+                    Console.WriteLine("+------------+----------------------+----------+------------+------------+");
                     // Truy vấn chi tiết đơn hàng
                     string queryOrderDetails = "SELECT product_id,product_name,amount,price from order_detail where order_id = @orderId";
                     using (MySqlCommand cmdOrderDetails = new MySqlCommand(queryOrderDetails, connection))
@@ -273,16 +343,19 @@ namespace PC_Part_Store.Implement
                                 decimal unitPrice = readerOrderDetails.GetDecimal("price");
                                 decimal totalPriceDetail = quantity * unitPrice;
 
-                                Console.WriteLine($"{productId} | {productName} | {quantity} | {unitPrice:F2} | {totalPriceDetail:F2}");
+                                Console.WriteLine($"| {productId,-10} | {productName,-20} | {quantity,-8} | {unitPrice,10:F2} | {totalPriceDetail,10:F2} |");
                             }
                             //readerOrderDetails.Close();
                         }
+                        Console.WriteLine("+------------+----------------------+----------+------------+------------+");
+                        return 1;
                     }
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("An error occurred while retrieving order information: " + ex.Message);
+                return -1;
             }
             finally
             {
@@ -297,36 +370,58 @@ namespace PC_Part_Store.Implement
                 //hien thi tat ca don hang
                 string queryGetOrder = "SELECT Order_ID,Customer_name,total_price,Verified,Accepted,Rejected FROM orders ";
                 Console.WriteLine("Orders List:");
-                Console.WriteLine("Order ID | Customer Name | Total Price | Verified | Accepted | Rejected");
+                Console.WriteLine("+----------+-----------------+-------------+----------+------------+");
+                Console.WriteLine("| Order ID | Customer Name   | Total Price | Verified | Status     |");
+                Console.WriteLine("+----------+-----------------+-------------+----------+------------+");
                 using (MySqlCommand cmdGetOrder = new MySqlCommand(queryGetOrder, connection))
                 {
                     using (MySqlDataReader reader = cmdGetOrder.ExecuteReader())
                     {
-                        while (reader.Read())
+                        if (reader.HasRows)
                         {
-                            int orderId = reader.GetInt32("Order_Id");
-                            string customerNameOrder = reader.GetString("customer_Name");
-                            decimal totalPrice = reader.GetDecimal("total_price");
-                            bool verified = reader.GetBoolean("Verified");
-                            bool accepted = reader.GetBoolean("Accepted");
-                            bool rejected = reader.GetBoolean("Rejected");
-                            Console.WriteLine($"{orderId} | {customerNameOrder} | {totalPrice} | {verified} | {accepted} | {rejected}");
-
+                            while (reader.Read())
+                            {
+                                int orderId = reader.GetInt32("Order_Id");
+                                string customerNameOrder = reader.GetString("customer_Name");
+                                decimal totalPrice = reader.GetDecimal("total_price");
+                                bool verified = reader.GetBoolean("Verified");
+                                bool accepted = reader.GetBoolean("Accepted");
+                                bool rejected = reader.GetBoolean("Rejected");
+                                string status;
+                                if (accepted == false && rejected == false)
+                                {
+                                    status = "Processing";
+                                }
+                                else
+                                {
+                                    if (accepted == false && rejected == true)
+                                    {
+                                        status = "rejected";
+                                    }
+                                    else
+                                    {
+                                        status = "Accepted";
+                                    }
+                                }
+                                Console.WriteLine($"| {orderId,-8} | {customerNameOrder,-15} | {totalPrice,11:F2} | {verified,-8} | {status,-10} |");
+                            }
+                            Console.WriteLine("+----------+-----------------+-------------+----------+------------+");
+                        }
+                        else
+                        {
+                            Console.WriteLine("List empty");
+                            return;
                         }
                     }
                 }
                 Console.Write("Enter the Order ID to view details: ");
-                int selectedOrderId = int.Parse(Console.ReadLine());
-                //danh dau don hang da xem
-                string queryVerified = "UPDATE orders set verified=true where order_Id=@orderID";
-                using (MySqlCommand cmdVerified = new MySqlCommand(queryVerified, connection))
-                {
-                    cmdVerified.Parameters.AddWithValue("@orderId", selectedOrderId);
-                    cmdVerified.ExecuteNonQuery();
-                }
+                int selectedOrderId = validations.CheckInt();
                 //hien thi thong tin khach hang và đơn hàng 
                 connection.Close();
-                ViewOrderDetails(selectedOrderId, connection);
+                if(ViewOrderDetails(selectedOrderId, connection) == 0)
+                {
+                    return;
+                }
                 connection.Open();
                 //kiem tra don hang da thanh toan chua
                 string queryCheckStatus = "SELECT accepted, rejected FROM orders WHERE order_ID = @orderId";
@@ -358,8 +453,17 @@ namespace PC_Part_Store.Implement
                 //lua chon co thanh toan don hang hay khong
                 Console.Write("Do you want to accept this order as paid? (1.yes/2.no): ");
                 int confirmation = int.Parse(Console.ReadLine());
+                //danh dau don hang da duyet
+                string queryVerified = "UPDATE orders set verified=true where order_Id=@orderID";
+                using (MySqlCommand cmdVerified = new MySqlCommand(queryVerified, connection))
+                {
+                    cmdVerified.Parameters.AddWithValue("@orderId", selectedOrderId);
+                    cmdVerified.ExecuteNonQuery();
+                }
                 if (confirmation == 1)
                 {
+                    
+                    //thannh toan don hang
                     string queryAcceptOrder = "UPDATE orders SET accepted = true WHERE order_Id = @orderId";
                     using (MySqlCommand cmdAcceptOrder = new MySqlCommand(queryAcceptOrder, connection))
                     {

@@ -16,5 +16,6 @@ namespace PC_Part_Store.Interface
         public void AddToCart(int productId, int customerId, int amount, MySqlConnection connection);
         public int ViewProductDetails(int productId, MySqlConnection connection);
         public void DisplayAllCategory(MySqlConnection connection);
+        public void CreateCategory(MySqlConnection connection,int categoryId);
     }
 }

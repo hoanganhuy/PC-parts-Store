@@ -16,5 +16,8 @@ namespace PCPartsStore.Interface
         bool CustomerUsernameDuplicateCheck(string username);
         bool EmployeeUsernameDuplicateCheck(string username);
         bool UsernameFormCheck(string username);
+        public int CheckInt();
+        public bool CheckCategoryExist(int categoryId,MySqlConnection connection);
+        public bool CheckCategoryNameExist(string name,MySqlConnection connection);
     }
 }

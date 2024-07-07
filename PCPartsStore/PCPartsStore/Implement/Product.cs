@@ -24,28 +24,20 @@ namespace PC_Part_Store.Implement
         {
             string check;
             Console.WriteLine("Add product");
-            int productIdCheck;
-            do
-            {
-                Console.Write("Enter Id Product: ");
-                check = Console.ReadLine();
-                if (!int.TryParse(check, out productIdCheck))
-                {
-                    Console.WriteLine("Selection Invalid");
-                }
-                else productId = productIdCheck; break;
-            } while (true);
+            Console.Write("Enter Id Product: ");
+            productId = validation.CheckInt();
             while (validation.ProductExistCheck(productId, connection))
             {
                 Console.WriteLine("The product id is duplicated, do you want to update the product?");
-                Console.WriteLine("1. Yes");
-                Console.WriteLine("2. No");
+                Console.WriteLine("1. Update product");
+                Console.WriteLine("2. Rewrite ID");
+                Console.WriteLine("3. Back");
                 string optionAdd="0";
                 do
                 {
                     Console.Write("Enter Option: ");
                     optionAdd = Console.ReadLine();
-                    if (optionAdd != "1" || optionAdd != "2") break;
+                    if (optionAdd != "1" || optionAdd != "2"|| optionAdd!="3") break;
                     else Console.WriteLine("Selection invalid");
                 } while (true);
                 if(optionAdd == "1")
@@ -56,30 +48,102 @@ namespace PC_Part_Store.Implement
                 }
                 else
                 {
-                    do
+                    if(optionAdd == "2") 
                     {
                         Console.Write("Enter Id Product: ");
-                        check = Console.ReadLine();
-                        if (!int.TryParse(check, out productIdCheck))
-                        {
-                            Console.WriteLine("Selection Invalid");
-                        }
-                        else productId = productIdCheck; break;
-                    } while (true);
+                        productId = validation.CheckInt();
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
             }
             Console.Write("Enter name product: ");
             productName = Console.ReadLine();
             Console.Write("Enter description product: ");
             descriptionProduct = Console.ReadLine();
-            Console.Write("Enter price product: ");
-            price = decimal.Parse(Console.ReadLine());
-            Console.Write("Enter quantity product: ");
-            quantity = int.Parse(Console.ReadLine());
+            decimal priceInput;
+            do
+            {
+                Console.Write("Enter price product: ");
+                if (decimal.TryParse(Console.ReadLine(), out priceInput))
+                {
+                    // Điều kiện kiểm tra giá sản phẩm
+                    if (priceInput > 0)
+                    {
+                        price= priceInput;
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("The price must be greater than 0. Please try again.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Please enter a valid decimal number.");
+                }
+
+            } while (true);
+            do
+            {
+                Console.Write("Enter quantity product: ");
+                quantity = validation.CheckInt();
+                if (quantity > 0)
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Please enter a number greater than 0");
+                }
+            } while (true);
             Console.Write("Enter brand product: ");
             brand = Console.ReadLine();
-            Console.Write("Enter category id: ");
-            categoryId = int.Parse(Console.ReadLine());
+            do
+            {
+                Console.Write("Enter category id: ");
+                categoryId = validation.CheckInt();
+                if (!validation.CheckCategoryExist(categoryId, connection))
+                {
+                    Console.WriteLine("Do you want to re-enter the category id");
+                    Console.WriteLine("1. Re enter the category id");
+                    Console.WriteLine("2. Create Category");
+                    Console.WriteLine("3. Back to menu");
+                    int optionAddCategory;
+                    do
+                    {
+                        Console.Write("Enter option: ");
+                        optionAddCategory = validation.CheckInt();
+                        if (optionAddCategory == 1 || optionAddCategory == 2 || optionAddCategory == 3)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Selection invalid");
+                        }
+                    } while (true);
+                    if (optionAddCategory == 1)
+                    {
+                        //nhap lai
+                    }
+                    else if(optionAddCategory==2)
+                    {
+                        CreateCategory(connection,categoryId);
+                        break;
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            } while (true);
             //Might need to check product information
 
             string query = "INSERT INTO product (Product_ID,Product_Name,Description,Price, Quantity,Brand,Category_Id) " +
@@ -274,33 +338,32 @@ namespace PC_Part_Store.Implement
 
         public override void Remove(MySqlConnection connection, int id)
         {
+            throw new NotImplementedException();
+            //string query = "DELETE FROM product WHERE Product_ID = @id";
 
+            //using (MySqlCommand cmd = new MySqlCommand(query, connection))
+            //{
+            //    cmd.Parameters.AddWithValue("@id", id);
+            //    try
+            //    {
+            //        connection.Open();
+            //        int rowsAffected = cmd.ExecuteNonQuery();
 
-            string query = "DELETE FROM product WHERE Product_ID = @id";
-
-            using (MySqlCommand cmd = new MySqlCommand(query, connection))
-            {
-                cmd.Parameters.AddWithValue("@id", id);
-                try
-                {
-                    connection.Open();
-                    int rowsAffected = cmd.ExecuteNonQuery();
-
-                    if (rowsAffected > 0)
-                    {
-                        Console.WriteLine("Record deleted successfully.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("No record found with the specified Id.");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"An error occurred: {ex.Message}");
-                    throw;
-                }
-            }
+            //        if (rowsAffected > 0)
+            //        {
+            //            Console.WriteLine("Record deleted successfully.");
+            //        }
+            //        else
+            //        {
+            //            Console.WriteLine("No record found with the specified Id.");
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        Console.WriteLine($"An error occurred: {ex.Message}");
+            //        throw;
+            //    }
+            //}
         }
         public int SeaProductByCategory(int categoryId, MySqlConnection connection)
         {
@@ -472,6 +535,7 @@ namespace PC_Part_Store.Implement
 
         public override void Update(MySqlConnection connection, int id)
         {
+            List<string> update = new List<string>();
             Console.WriteLine("Update Product (or press Enter to skip)");
             Console.Write("Enter new product name: ");
             string newProductName = Console.ReadLine();
@@ -487,13 +551,29 @@ namespace PC_Part_Store.Implement
             bool isQuantityValid = int.TryParse(newQuantityInput, out newQuantity);
             Console.Write("Enter new product brand: ");
             string newBrand = Console.ReadLine();
-            Console.Write("Enter new category ID: ");
-            string newCategoryIdInput = Console.ReadLine();
-            int newCategoryId;
-            bool isCategoryIdValid = int.TryParse(newCategoryIdInput, out newCategoryId);
-
-            List<string> update = new List<string>();
-
+            int newCategoryId = 0;
+            
+            do
+            {
+                Console.Write("Enter new category ID: ");
+                string check = Console.ReadLine();
+                if (string.IsNullOrEmpty(check)) 
+                {
+                    break;
+                }
+                if (!int.TryParse(check, out newCategoryId))
+                {
+                    Console.WriteLine("Id Invalid. Please enter a valid number ");
+                }
+                else
+                {
+                    if (validation.CheckCategoryExist(newCategoryId, connection))
+                    {
+                        break;
+                    }
+                }
+            } while (true);
+           
             if (!string.IsNullOrEmpty(newProductName))
             {
                 update.Add("Product_name = @name");
@@ -514,11 +594,10 @@ namespace PC_Part_Store.Implement
             {
                 update.Add("Brand = @brand");
             }
-            if (isCategoryIdValid)
+            if (newCategoryId!=0)
             {
                 update.Add("Category_ID = @categoryId");
             }
-
             if (update.Count > 0)
             {
                 string query = "UPDATE product SET " + string.Join(", ", update) + " WHERE Product_ID = @id";
@@ -545,7 +624,7 @@ namespace PC_Part_Store.Implement
                     {
                         cmd.Parameters.AddWithValue("@brand", newBrand);
                     }
-                    if (isCategoryIdValid)
+                    if (newCategoryId!=0)
                     {
                         cmd.Parameters.AddWithValue("@categoryId", newCategoryId);
                     }
@@ -631,6 +710,7 @@ namespace PC_Part_Store.Implement
                     {
                         if (reader.Read())
                         {
+                            Console.WriteLine("+----------------------------------------------+");
                             Console.WriteLine($"ID: {reader["Product_ID"]}");
                             Console.WriteLine($"Name: {reader["Product_Name"]}");
                             Console.WriteLine($"Price: {reader["Price"]}");
@@ -638,6 +718,7 @@ namespace PC_Part_Store.Implement
                             Console.WriteLine($"Quantity: {reader["Quantity"]}");
                             Console.WriteLine($"Brand: {reader["Brand"]}");
                             Console.WriteLine($"Category: {reader["Category_Name"]}");
+                            Console.WriteLine("+----------------------------------------------+");
                             // Option
                             return 1;
                         }
@@ -670,7 +751,7 @@ namespace PC_Part_Store.Implement
             else
             {
                 //chinh sua phan trang muon test
-                int pageSize = 1;
+                int pageSize = 5;
                 int totalRecords = products.Count;
                 int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
                
@@ -687,15 +768,15 @@ namespace PC_Part_Store.Implement
 
                 int start = (pageNumberCurrent - 1) * pageSize;
                 int end = Math.Min(start + pageSize, totalRecords);
-
-                    
-
+                Console.WriteLine("+-----+--------------------+--------+----------+--------------------+------------------+");
+                Console.WriteLine("| ID  | Name               | Price  | Quantity | Brand              | Category Name    |");
+                Console.WriteLine("+-----+--------------------+--------+----------+--------------------+------------------+");
                 for (int i = start; i < end; i++)
                 {
                     Product product = products[i];
-                    Console.WriteLine($"ID: {product.productId}, Name: {product.productName}, Description: {product.descriptionProduct}, " +
-                                                    $"Price: {product.price}, Quantity: {product.quantity}, Brand: {product.brand}, Category Name: {product.categoryName}");
+                    Console.WriteLine($"| {product.productId,-3} | {product.productName,-18} | {product.price,6:F2} | {product.quantity,8} | {product.brand,-18} | {product.categoryName,-16} |");
                 }
+                Console.WriteLine("+-----+--------------------+--------+----------+--------------------+------------------+");
                 Console.WriteLine($"Page {pageNumberCurrent} of {totalPages}");                                             
             }
         }
@@ -710,14 +791,18 @@ namespace PC_Part_Store.Implement
                     connection.Open();
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
+                        Console.WriteLine("+----+--------------------+");
+                        Console.WriteLine("| ID | Category Name      |");
+                        Console.WriteLine("+----+--------------------+");
                         while (reader.Read())
                         {
                             int categoryId = reader.GetInt32("Category_ID");
                             string categoryName = reader.GetString("Category_Name");
 
                             // Display category directly
-                            Console.WriteLine($"ID: {categoryId}, Name: {categoryName}");
+                            Console.WriteLine($"| {categoryId,-3} | {categoryName,-18} |");
                         }
+                        Console.WriteLine("+----+--------------------+");
                     }
                 }
                 catch (Exception ex)
@@ -732,5 +817,35 @@ namespace PC_Part_Store.Implement
             }
         }
 
+        public void CreateCategory(MySqlConnection connection,int categoryId)
+        {        
+            // Prepare your SQL command to insert a new category
+            string sql = "INSERT INTO Category (Category_Id,Category_Name) VALUES (@categoryId,@categoryName)";
+            // Example category name, replace with actual data
+            string categoryNameAdd;
+            do
+            {
+                Console.Write("Enter category name: ");
+                categoryNameAdd = Console.ReadLine();
+                if (!validation.CheckCategoryNameExist(categoryNameAdd, connection))
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Category name does not exist");
+                }
+            } while (true);
+            // Create a command object
+            connection.Open();
+            MySqlCommand command = new MySqlCommand(sql, connection);
+            // Add parameters to your command
+            command.Parameters.AddWithValue("@categoryId", categoryId);
+            command.Parameters.AddWithValue("@categoryName", categoryNameAdd);
+            // Execute the command
+            command.ExecuteNonQuery();
+            // Close the connection
+            connection.Close();
+        }
     }
 }

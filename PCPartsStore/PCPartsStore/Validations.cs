@@ -3,6 +3,7 @@ using MySql.Data.MySqlClient;
 using PCPartsStore.Interface;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -154,7 +155,7 @@ namespace PCPartsStore
             string connectionString = DBHelper.DefaultConnectionString;
 
             // Define the query to check for duplicate username
-            string query = "SELECT COUNT(*) FROM CustomerTable WHERE Username = @username";
+            string query = "SELECT COUNT(*) FROM employee WHERE Username = @username";
 
             // Initialize a boolean variable to store the result
             bool usernameExists = false;
@@ -189,6 +190,106 @@ namespace PCPartsStore
         {
             // Check if the username contains any spaces
             return !username.Contains(" ");
+        }
+
+        public int CheckInt()
+        {
+            int checkOut;
+            do
+            {
+                string check = Console.ReadLine();
+                if (!int.TryParse(check, out checkOut))
+                {
+                    Console.Write("Id Invalid. Please enter a valid number: ");
+                }
+                else
+                {
+                    return checkOut;
+                }
+            } while(true);
+        }
+
+        public bool CheckCategoryExist(int categoryId, MySqlConnection connection)
+        {
+            bool exists = false;
+            try
+            {
+                // Mở kết nối nếu nó chưa mở
+                connection.Open();
+                // Tạo truy vấn SQL để kiểm tra sự tồn tại của categoryId
+                string query = "SELECT COUNT(*) FROM category WHERE Category_ID = @CategoryID";
+
+                using (MySqlCommand cmd = new MySqlCommand(query, connection))
+                {
+                    // Thêm tham số vào truy vấn để tránh SQL injection
+                    cmd.Parameters.AddWithValue("@CategoryID", categoryId);
+                    // Thực hiện truy vấn và lấy kết quả
+                    var result = cmd.ExecuteScalar();
+
+                    // Kiểm tra kết quả để xem categoryId có tồn tại không
+                    if (result != null && Convert.ToInt32(result) > 0)
+                    {
+                        exists = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Category id does not exist");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+            finally
+            {
+                // Đảm bảo kết nối được đóng sau khi hoàn tất
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+            }
+            return exists;
+        }
+
+        public bool CheckCategoryNameExist(string name, MySqlConnection connection)
+        {
+            bool exists = false;
+
+            try
+            {
+                // Open the connection (if not already open)
+                connection.Open();
+
+                // Prepare your SQL command to check if the category name exists
+                string sql = "SELECT COUNT(*) FROM Category WHERE Category_Name = @CategoryName";
+
+                // Create a command object
+                MySqlCommand command = new MySqlCommand(sql, connection);
+
+                // Add parameters to your command
+                command.Parameters.AddWithValue("@CategoryName", name);
+
+                // Execute the command and get the result
+                int count = Convert.ToInt32(command.ExecuteScalar());
+
+                // If count > 0, category name already exists
+                exists = (count > 0);
+            }
+            catch (Exception ex)
+            {
+                exists = false; // For simplicity, assume category does not exist on exception
+            }
+            finally
+            {
+                // Close the connection
+                if (connection.State == ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+            }
+
+            return exists;
         }
     }
 }

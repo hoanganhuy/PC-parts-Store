@@ -1,5 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
+using MySqlX.XDevAPI.Common;
 using PC_Part_Store.Interface;
+using PCPartsStore;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
-
 namespace PC_Part_Store.Implement
 {
     public class Cart : Super<Cart>, ICart
@@ -16,6 +17,7 @@ namespace PC_Part_Store.Implement
         public int quantity { get; set; }
         public int idCart { get; set; }
         public int idCustomer { get; set; }
+        Validations validations = new Validations();
         public override void Add(MySqlConnection connection)
         {
             throw new NotImplementedException();
@@ -57,7 +59,7 @@ namespace PC_Part_Store.Implement
                         }
                         //ViewCart(Program.customerIdCurrent, connection);
                         Console.Write("Enter the product id you want to update: ");
-                        int productId = int.Parse(Console.ReadLine());
+                        int productId = validations.CheckInt();
                         //lay so luong hang hien tai trong cart details
                         string queryCheckProductInCart = "SELECT Amount FROM cart_Detail WHERE Cart_ID = @cartId AND Product_ID = @productId;";
                         int currentQuantity;
@@ -80,7 +82,7 @@ namespace PC_Part_Store.Implement
                         Console.WriteLine("2.Remove product from cart");
                         Console.WriteLine("3.Cancel update");
                         Console.Write("Choose an option: ");
-                        int option = int.Parse(Console.ReadLine());
+                        int option = validations.CheckInt();
                         switch (option)
                         {
                             case 1:
@@ -237,7 +239,9 @@ namespace PC_Part_Store.Implement
                             return 0;
                         }
                         Console.WriteLine($"Cart Details for Customer ID: {customerId}");
-                        Console.WriteLine("------------------------------------------");
+                        Console.WriteLine("+------------+----------------------+----------+--------+----------+");
+                        Console.WriteLine("| Product ID | Product Name         | Price    | Amount | Cost     |");
+                        Console.WriteLine("+------------+----------------------+----------+--------+----------+");
                         decimal totalCost = 0;
                         while (reader.Read())
                         {
@@ -247,10 +251,10 @@ namespace PC_Part_Store.Implement
                             int amount = reader.GetInt32("Amount");
                             decimal cost = price * amount;
 
-                            Console.WriteLine($"Product ID: {productId}, Name: {productName}, Price: {price:F2}, Amount: {amount}, Cost: {cost:F2}");
+                            Console.WriteLine($"| {productId,-10} | {productName,-20} | {price,8:F2} | {amount,6} | {cost,8:F2} |");
                             totalCost += cost;
                         }
-                        Console.WriteLine("------------------------------------------");
+                        Console.WriteLine("+------------+----------------------+----------+--------+----------+");
                         Console.WriteLine($"Total Cost: {totalCost:F2}");
                         return 1;
                     }

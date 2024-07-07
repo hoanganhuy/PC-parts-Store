@@ -29,6 +29,16 @@ namespace PC_Part_Store.Implement
             Console.WriteLine("Enter new information employee");
             Console.Write("Enter user name employee: ");
             username = Console.ReadLine();
+            while (!validations.UsernameFormCheck(username))
+            {
+                Console.Write("Invalid username form, please enter again: ");
+                username = Console.ReadLine();
+            }
+            while (validations.EmployeeUsernameDuplicateCheck(username))
+            {
+                Console.Write("Duplicated username, please enter again: ");
+                username = Console.ReadLine();
+            }
             Console.Write("Enter password: ");
             password = Console.ReadLine();
             Console.Write("Enter name employee: ");
@@ -334,10 +344,12 @@ namespace PC_Part_Store.Implement
                             string customerPhoneNumber = reader.GetString("phone_number");
                             string customerEmail = reader.GetString("Email");
                             string customerAddress = reader.GetString("Address");
+                            Console.WriteLine("+----------------------------------------+");
                             Console.WriteLine($"Name: {customerName}");
                             Console.WriteLine($"Phone Number: {customerPhoneNumber}");
                             Console.WriteLine($"Email: {customerEmail}");
                             Console.WriteLine($"Address: {customerAddress}");
+                            Console.WriteLine("+----------------------------------------+");
                         }
                     }
                 }
@@ -371,8 +383,10 @@ namespace PC_Part_Store.Implement
                             password = reader.GetString("Password");
                             email = reader.GetString("Email");
                             username = reader.GetString("username");
+                            Console.WriteLine("+----------------------------------------+");
                             Console.WriteLine($"ID: {idEmployee}\n Name: {name}\n Address: {address}\n " +
                                                                 $"Phone number: {phoneNumber}\n Email: {email}\n Username: {username}\n Password: {password}");
+                            Console.WriteLine("+----------------------------------------+");
                             return 1;
                         }
                         else
@@ -430,7 +444,7 @@ namespace PC_Part_Store.Implement
                         else
                         {
                             //chinh sua phan trang muon test
-                            int pageSize = 1;
+                            int pageSize = 5;
                             int totalRecords = accounts.Count;
                             int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
 
@@ -447,15 +461,19 @@ namespace PC_Part_Store.Implement
 
                             int start = (pageCurrentEmloyee - 1) * pageSize;
                             int end = Math.Min(start + pageSize, totalRecords);
+                            Console.WriteLine("+----------+---------------+---------------+----------------+-------------------+--------------+------------+");
+                            Console.WriteLine("| ID       | Name          | Address       | Phone Number   | Email             | Username     | Password   |");
+                            Console.WriteLine("+----------+---------------+---------------+----------------+-------------------+--------------+------------+");
 
-
-
+                            // Print each employee in the current page
                             for (int i = start; i < end; i++)
                             {
                                 Account account = accounts[i];
-                                Console.WriteLine($"ID: {account.idEmployee}, Name: {account.name}, Address: {account.address}, " +
-                                                                $"Phone number: {account.phoneNumber}, Email: {account.email}, Username: {account.username}, Password: {account.password}");
+                                Console.WriteLine($"| {account.idEmployee,-8} | {account.name,-13} | {account.address,-13} | {account.phoneNumber,-14} | {account.email,-17} | {account.username,-12} | {account.password,-10} |");
                             }
+
+                            // Print the footer
+                            Console.WriteLine("+----------+---------------+---------------+----------------+-------------------+--------------+------------+");
                             Console.WriteLine($"Page {pageCurrentEmloyee} of {totalPages}");
                         }
                     }
@@ -552,15 +570,19 @@ namespace PC_Part_Store.Implement
 
                         int start = (pageCurrentEmloyee - 1) * pageSize;
                         int end = Math.Min(start + pageSize, totalRecords);
+                        Console.WriteLine("+----------+---------------+---------------+----------------+-------------------+--------------+------------+");
+                        Console.WriteLine("| ID       | Name          | Address       | Phone Number   | Email             | Username     | Password   |");
+                        Console.WriteLine("+----------+---------------+---------------+----------------+-------------------+--------------+------------+");
 
-
-
+                        // Print each employee in the current page
                         for (int i = start; i < end; i++)
                         {
                             Account account = accounts[i];
-                            Console.WriteLine($"ID: {account.idEmployee}, Name: {account.name}, Address: {account.address}, " +
-                                                            $"Phone number: {account.phoneNumber}, Email: {account.email}, Username: {account.username}, Password: {account.password}");
+                            Console.WriteLine($"| {account.idEmployee,-8} | {account.name,-13} | {account.address,-13} | {account.phoneNumber,-14} | {account.email,-17} | {account.username,-12} | {account.password,-10} |");
                         }
+
+                        // Print the footer
+                        Console.WriteLine("+----------+---------------+---------------+----------------+-------------------+--------------+------------+");
                         Console.WriteLine($"Page {pageCurrentEmloyee} of {totalPages}");
                         return 1;
                     }
