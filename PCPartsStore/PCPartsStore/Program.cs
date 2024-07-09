@@ -533,9 +533,9 @@ public static class Program
                                         }while(true);
                                         if (optionInformation == "1")
                                         {
-                                            connection.Open();
-                                            account.UpdateInformationCustomer(customerIdCurrent, connection);
                                             connection.Close();
+                                            account.UpdateInformationCustomer(customerIdCurrent, connection);
+                                            //connection.Close();
                                         }
                                         break;
                                     //add product to cart                                  

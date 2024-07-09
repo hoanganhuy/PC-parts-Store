@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PCPartsStore")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fde0d1bf01baaad735cdcb95cda06e45894ea08d")]
 [assembly: System.Reflection.AssemblyProductAttribute("PCPartsStore")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PCPartsStore")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
