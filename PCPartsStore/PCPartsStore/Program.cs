@@ -533,7 +533,7 @@ public static class Program
                                         }while(true);
                                         if (optionInformation == "1")
                                         {
-                                            connection.Close();
+                                            //connection.Close();
                                             account.UpdateInformationCustomer(customerIdCurrent, connection);
                                             //connection.Close();
                                         }
