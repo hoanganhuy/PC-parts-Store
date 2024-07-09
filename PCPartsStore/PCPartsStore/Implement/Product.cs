@@ -338,32 +338,54 @@ namespace PC_Part_Store.Implement
 
         public override void Remove(MySqlConnection connection, int id)
         {
-            throw new NotImplementedException();
-            //string query = "DELETE FROM product WHERE Product_ID = @id";
+            //throw new NotImplementedException();
+            string queryCart = "Delete from cart_detail where product_id=@productId";
+            using (MySqlCommand cmdCart = new MySqlCommand(queryCart, connection))
+            {
+                cmdCart.Parameters.AddWithValue("@productId", id);
+                try
+                {
+                    connection.Open();
+                    int rowsAffected = cmdCart.ExecuteNonQuery();
 
-            //using (MySqlCommand cmd = new MySqlCommand(query, connection))
-            //{
-            //    cmd.Parameters.AddWithValue("@id", id);
-            //    try
-            //    {
-            //        connection.Open();
-            //        int rowsAffected = cmd.ExecuteNonQuery();
+                    if (rowsAffected < 0)
+                    {
+                        Console.WriteLine("No record found with the specified Id.");
+                        return;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error occurred: {ex.Message}");
+                    throw;
+                }
+                finally { connection.Close(); }
+            }
+            string query = "DELETE FROM product WHERE Product_ID = @id";
 
-            //        if (rowsAffected > 0)
-            //        {
-            //            Console.WriteLine("Record deleted successfully.");
-            //        }
-            //        else
-            //        {
-            //            Console.WriteLine("No record found with the specified Id.");
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        Console.WriteLine($"An error occurred: {ex.Message}");
-            //        throw;
-            //    }
-            //}
+            using (MySqlCommand cmd = new MySqlCommand(query, connection))
+            {
+                cmd.Parameters.AddWithValue("@id", id);
+                try
+                {
+                    connection.Open();
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        Console.WriteLine("Record deleted successfully.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("No record found with the specified Id.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error occurred: {ex.Message}");
+                    throw;
+                }
+                finally { connection.Close(); }
+            }
         }
         public int SeaProductByCategory(int categoryId, MySqlConnection connection)
         {
@@ -540,19 +562,43 @@ namespace PC_Part_Store.Implement
             Console.Write("Enter new product name: ");
             string newProductName = Console.ReadLine();
             Console.Write("Enter new product description: ");
-            string newDescriptionProduct = Console.ReadLine();
-            Console.Write("Enter new product price: ");
-            string newPriceInput = Console.ReadLine();
+            string newDescriptionProduct = Console.ReadLine();                
             decimal newPrice;
-            bool isPriceValid = decimal.TryParse(newPriceInput, out newPrice);
-            Console.Write("Enter new product quantity: ");
-            string newQuantityInput = Console.ReadLine();
+            bool isPriceValid;
+            do
+            {
+                Console.Write("Enter new product price: ");
+                string newPriceInput = Console.ReadLine();
+                isPriceValid = decimal.TryParse(newPriceInput, out newPrice);
+                if (newPrice > 0)
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("The price must be greater than 0. Please try again.");
+                }
+            } while (true);
+            bool isQuantityValid;
             int newQuantity;
-            bool isQuantityValid = int.TryParse(newQuantityInput, out newQuantity);
+            do
+            {
+                Console.Write("Enter new product quantity: ");
+                string newQuantityInput = Console.ReadLine();              
+                isQuantityValid = int.TryParse(newQuantityInput, out newQuantity);
+                if (newQuantity > 0)
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("The quantity must be greater than 0. Please try again.");
+                }
+            } while (true);
             Console.Write("Enter new product brand: ");
             string newBrand = Console.ReadLine();
             int newCategoryId = 0;
-            
+
             do
             {
                 Console.Write("Enter new category ID: ");

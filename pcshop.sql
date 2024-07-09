@@ -53,7 +53,7 @@ CREATE TABLE `cart` (
   PRIMARY KEY (`Cart_ID`),
   KEY `Customer_ID` (`Customer_ID`),
   CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`Customer_ID`) REFERENCES `customer` (`Customer_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -62,7 +62,7 @@ CREATE TABLE `cart` (
 
 LOCK TABLES `cart` WRITE;
 /*!40000 ALTER TABLE `cart` DISABLE KEYS */;
-INSERT INTO `cart` VALUES (3,1);
+INSERT INTO `cart` VALUES (3,1),(4,2);
 /*!40000 ALTER TABLE `cart` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -90,6 +90,7 @@ CREATE TABLE `cart_detail` (
 
 LOCK TABLES `cart_detail` WRITE;
 /*!40000 ALTER TABLE `cart_detail` DISABLE KEYS */;
+INSERT INTO `cart_detail` VALUES (4,3,10);
 /*!40000 ALTER TABLE `cart_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -104,7 +105,7 @@ CREATE TABLE `category` (
   `Category_ID` int NOT NULL AUTO_INCREMENT,
   `Category_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`Category_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -113,7 +114,7 @@ CREATE TABLE `category` (
 
 LOCK TABLES `category` WRITE;
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
-INSERT INTO `category` VALUES (1,'name 1'),(2,'name 2');
+INSERT INTO `category` VALUES (1,'name 1'),(2,'name 2'),(3,'name 3'),(5,'name test');
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -133,7 +134,7 @@ CREATE TABLE `customer` (
   `Address` varchar(255) DEFAULT NULL,
   `phone_number` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`Customer_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -142,7 +143,7 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` VALUES (1,'luonghz','luong','luong','luong','hanoi','1234567890'),(2,'huy','huy','huy@gmail.com','huy','hanoi','1234567890');
+INSERT INTO `customer` VALUES (1,'luonghz','luong','luong','luong','hanoi','0123456789'),(2,'a','huy','a','huy','hanoi','lmaolmao'),(3,'dat','dat','dat@gmail','dat','hanoi','012345678'),(4,'l','dat1','a','dat1','l','a'),(5,'test','test','test@gmail.com','test','hanoi','1234567890');
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -171,7 +172,7 @@ CREATE TABLE `employee` (
 
 LOCK TABLES `employee` WRITE;
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `employee` VALUES (1,'ha noi','luongnv','1234567890','luongnv','luong','luongnv');
+INSERT INTO `employee` VALUES (1,'l','l','l','luongnv','l','luongnv');
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -190,8 +191,7 @@ CREATE TABLE `order_detail` (
   `price` decimal(10,2) NOT NULL,
   KEY `order_id` (`order_id`),
   KEY `product_id` (`product_id`),
-  CONSTRAINT `order_detail_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`Order_ID`),
-  CONSTRAINT `order_detail_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `product` (`Product_ID`)
+  CONSTRAINT `order_detail_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`Order_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -201,7 +201,7 @@ CREATE TABLE `order_detail` (
 
 LOCK TABLES `order_detail` WRITE;
 /*!40000 ALTER TABLE `order_detail` DISABLE KEYS */;
-INSERT INTO `order_detail` VALUES (15,1,'product',20,10.90),(16,1,'product',10,10.90),(17,1,'product',10,10.90);
+INSERT INTO `order_detail` VALUES (15,1,'product',20,10.90),(16,1,'product',10,10.90),(17,1,'product',10,10.90),(18,1,'product',20,10.90);
 /*!40000 ALTER TABLE `order_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -227,7 +227,7 @@ CREATE TABLE `orders` (
   PRIMARY KEY (`Order_ID`),
   KEY `Customer_ID` (`Customer_ID`),
   CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`Customer_ID`) REFERENCES `customer` (`Customer_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -236,7 +236,7 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
-INSERT INTO `orders` VALUES (15,1,1,1,'luonghz','hanoi','luong','1234567890',218.00,'2024-07-03 11:19:24',0),(16,1,1,0,'luonghz','hanoi','luong','1234567890',109.00,'2024-07-03 16:39:20',1),(17,1,1,0,'luonghz','hanoi','luong','1234567890',109.00,'2024-07-03 16:58:45',1);
+INSERT INTO `orders` VALUES (15,1,1,1,'luonghz','hanoi','luong','1234567890',218.00,'2024-07-03 11:19:24',0),(16,1,1,0,'luonghz','hanoi','luong','1234567890',109.00,'2024-07-03 16:39:20',1),(17,1,1,0,'luonghz','hanoi','luong','1234567890',109.00,'2024-07-03 16:58:45',1),(18,1,0,0,'luonghz','hanoi','luong','1234567890',218.00,'2024-07-06 03:27:54',0);
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -267,7 +267,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1,'product','description for product',10.90,140,'brand',2),(2,'Product 2','Description for Product 2',19.99,190,'Brand B',2),(3,'Product 3','Description for Product 3',5.49,150,'Brand C',1),(4,'Product 4','Description for Product 4',15.99,80,'Brand D',2),(5,'luong','luong',10.50,100,'branad',2);
+INSERT INTO `product` VALUES (2,'Product 2','Description for Product 2',19.99,190,'Brand B',2),(3,'Product 3','Description for Product 3',5.49,140,'Brand C',1),(4,'Product 4','Description for Product 4',15.99,80,'Brand D',2),(5,'luong','luong',10.50,100,'branad',2),(7,'test','test',10.00,100,'test',2),(8,'test2','test2',5.00,100,'test2',3),(11,'hhh','hhh',10.00,100,'hhh',5);
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -280,4 +280,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-04  9:24:42
+-- Dump completed on 2024-07-09 21:46:13

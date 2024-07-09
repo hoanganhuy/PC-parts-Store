@@ -27,28 +27,99 @@ namespace PC_Part_Store.Implement
         public void CreateAccountEmloyee(MySqlConnection connection)
         {
             Console.WriteLine("Enter new information employee");
-            Console.Write("Enter user name employee: ");
-            username = Console.ReadLine();
+            do
+            {
+                Console.Write("Enter user name employee: ");
+                username = Console.ReadLine();
+                if (string.IsNullOrEmpty(username))
+                {
+                    Console.WriteLine("Please do not leave it blank");
+                }
+                else
+                {
+                    break;
+                }
+            } while (true);
             while (!validations.UsernameFormCheck(username))
             {
-                Console.Write("Invalid username form, please enter again: ");
-                username = Console.ReadLine();
+                do
+                {
+                    Console.Write("Invalid username form, please enter again: ");
+                    username = Console.ReadLine();
+                    if (string.IsNullOrEmpty(username))
+                    {
+                        Console.WriteLine("Please do not leave it blank");
+                    }
+                    else
+                    {
+                        break;
+                    }
+                } while(true);
             }
             while (validations.EmployeeUsernameDuplicateCheck(username))
             {
-                Console.Write("Duplicated username, please enter again: ");
-                username = Console.ReadLine();
+                do
+                {
+                    Console.Write("Duplicated username, please enter again: ");
+                    username = Console.ReadLine();
+                    if (string.IsNullOrEmpty(username))
+                    {
+                        Console.WriteLine("Please do not leave it blank");
+                    }
+                    else
+                    {
+                        break;
+                    }
+                } while(true);
             }
-            Console.Write("Enter password: ");
-            password = Console.ReadLine();
-            Console.Write("Enter name employee: ");
-            name = Console.ReadLine();
-            Console.Write("Enter address employee: ");
-            address = Console.ReadLine();
-            Console.Write("Enter email employee: ");
-            email = Console.ReadLine();
-            Console.Write("Enter phone number: ");
-            phoneNumber = Console.ReadLine();
+            do {
+                Console.Write("Enter password: ");
+                password = Console.ReadLine();
+                if (string.IsNullOrEmpty(password))
+                {
+                    Console.WriteLine("Please do not leave it blank");
+                }
+                else
+                {
+                    break;
+                }
+            }while(true);
+            do
+            {
+                Console.Write("Enter name employee: ");
+                name = Console.ReadLine();
+                if (string.IsNullOrEmpty(name))
+                {
+                    Console.WriteLine("Please do not leave it blank");
+                }
+                else
+                {
+                    break;
+                }
+            } while (true);
+            do
+            {
+                Console.Write("Enter address employee: ");
+                address = Console.ReadLine();
+                if (string.IsNullOrEmpty(address))
+                {
+                    Console.WriteLine("Please do not leave it blank");
+                }
+                else
+                {
+                    break;
+                }
+            } while (true);
+            do
+            {
+                Console.Write("Enter email employee: ");
+                email = Console.ReadLine();
+            } while (validations.CheckEmail(email)==false);
+            do
+            {
+                Console.Write("Enter phone number: ");
+                phoneNumber = Console.ReadLine();               
+            } while (validations.CheckPhoneNumber(phoneNumber)==false);
             string query = "INSERT INTO employee (username,password,Employee_name, address, Phone_number, email) VALUES (@username ,@password, @name, @address, @phoneNumber, @email)";
             using (MySqlCommand cmd = new MySqlCommand(query, connection))
             {
@@ -180,28 +251,99 @@ namespace PC_Part_Store.Implement
         public void Register(MySqlConnection connection)
         {
             Console.WriteLine("Screen register");
-            Console.Write("Enter user name: ");
-            username = Console.ReadLine();
+            do {
+                Console.Write("Enter user name: ");
+                username = Console.ReadLine();
+                if (string.IsNullOrEmpty(username))
+                {
+                    Console.WriteLine("Please do not leave it blank");
+                }
+                else
+                {
+                    break;
+                }
+            }while(true);
             while (!validations.UsernameFormCheck(username))
             {
-                Console.Write("Invalid username form, please enter again: ");
-                username = Console.ReadLine();
+                do
+                {
+                    Console.Write("Invalid username form, please enter again: ");
+                    username = Console.ReadLine();
+                    if (string.IsNullOrEmpty(username))
+                    {
+                        Console.WriteLine("Please do not leave it blank");
+                    }
+                    else
+                    {
+                        break;
+                    }
+                } while(true);
             }
             while (validations.CustomerUsernameDuplicateCheck(username))
             {
-                Console.Write("Duplicated username, please enter again: ");
-                username = Console.ReadLine();
+                do
+                {
+                    Console.Write("Duplicated username, please enter again: ");
+                    username = Console.ReadLine();
+                    if (string.IsNullOrEmpty(username))
+                    {
+                        Console.WriteLine("Please do not leave it blank");
+                    }
+                    else
+                    {
+                        break;
+                    }
+                } while (true);
             }
-            Console.Write("Enter password: ");
-            password = Console.ReadLine();
-            Console.Write("Enter name: ");
-            name = Console.ReadLine();
-            Console.Write("Enter email: ");
-            email = Console.ReadLine();
-            Console.Write("Enter Phone number: ");
-            phoneNumber = Console.ReadLine();
-            Console.Write("Enter address: ");
-            address = Console.ReadLine();
+            do
+            {
+                Console.Write("Enter password: ");
+                password = Console.ReadLine();
+                if (string.IsNullOrEmpty(password))
+                {
+                    Console.WriteLine("Please do not leave it blank");
+                }
+                else
+                {
+                    break;
+                }
+            } while (true);
+            do
+            {
+                Console.Write("Enter name: ");
+                name = Console.ReadLine();
+                if (string.IsNullOrEmpty(name))
+                {
+                    Console.WriteLine("Please do not leave it blank");
+                }
+                else
+                {
+                    break;
+                }
+            } while (true);
+            do
+            {
+                Console.Write("Enter email: ");
+                email = Console.ReadLine();
+            } while (validations.CheckEmail(email) == false);
+            do
+            {
+                Console.Write("Enter phone number: ");
+                phoneNumber = Console.ReadLine();
+            } while (validations.CheckPhoneNumber(phoneNumber) == false);
+            do
+            {
+                Console.Write("Enter address: ");
+                address = Console.ReadLine();
+                if (string.IsNullOrEmpty(address))
+                {
+                    Console.WriteLine("Please do not leave it blank");
+                }
+                else
+                {
+                    break;
+                }
+            } while (true);
             string query = "INSERT INTO customer (username, password, Customer_name, email, phone_number, address) " +
                        "VALUES (@username, @password, @name, @email, @phoneNumber, @address)";
             using (MySqlCommand cmd = new MySqlCommand(query, connection))
@@ -235,10 +377,26 @@ namespace PC_Part_Store.Implement
             Console.WriteLine("Update Customer Information (or press Enter to skip)");
             Console.Write("Enter new name: ");
             string name = Console.ReadLine();
-            Console.Write("Enter new email: ");
-            string email = Console.ReadLine();
-            Console.Write("Enter new phone number: ");
-            string phoneNumber = Console.ReadLine();
+            string email;
+            do
+            {
+                Console.Write("Enter new email: ");
+                email = Console.ReadLine();
+                if(string.IsNullOrEmpty(email) || validations.CheckEmail(email) == true)
+                {
+                    break;
+                }
+            } while (true);
+            string phoneNumber;
+            do
+            {
+                Console.Write("Enter new phone number: ");
+                phoneNumber = Console.ReadLine();
+                if ( string.IsNullOrEmpty(phoneNumber) || validations.CheckPhoneNumber(phoneNumber) == true)
+                {
+                    break;
+                }
+            } while (true);
             Console.Write("Enter new address: ");
             string address = Console.ReadLine();
 
@@ -320,10 +478,26 @@ namespace PC_Part_Store.Implement
             string name = Console.ReadLine();
             Console.Write("Update Address employee: ");
             string address = Console.ReadLine();
-            Console.Write("Update phone number employee: ");
-            string phoneNumber = Console.ReadLine();
-            Console.Write("Update email employee: ");
-            string email = Console.ReadLine();
+            string phoneNumber;
+            do
+            {
+                Console.Write("Update phone number employee: ");
+                phoneNumber = Console.ReadLine();
+                if (string.IsNullOrEmpty(phoneNumber) || validations.CheckPhoneNumber(phoneNumber))
+                {
+                    break;
+                }
+            } while (true);
+            string email;
+            do
+            {
+                Console.Write("Update email employee: ");
+                email = Console.ReadLine();
+                if(string.IsNullOrEmpty(email) || validations.CheckEmail(email))
+                {
+                    break;
+                }
+            } while (true);
             string query = "UPDATE employee SET ";
             List<string> updates = new List<string>();
             if (!string.IsNullOrEmpty(name)) updates.Add("Employee_name = @name");

@@ -19,5 +19,7 @@ namespace PCPartsStore.Interface
         public int CheckInt();
         public bool CheckCategoryExist(int categoryId,MySqlConnection connection);
         public bool CheckCategoryNameExist(string name,MySqlConnection connection);
+        public bool CheckPhoneNumber(string phoneNumber);
+        public bool CheckEmail(string email);
     }
 }

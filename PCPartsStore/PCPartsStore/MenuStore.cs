@@ -46,7 +46,8 @@ namespace PC_Part_Store
             Console.WriteLine("4. View details product");
             Console.WriteLine("5. Search product");
             Console.WriteLine("6. Add product");
-            Console.WriteLine("7. Back");
+            Console.WriteLine("7. Remove product");
+            Console.WriteLine("8. Back");
         }
         public void AdminMenu()
         {

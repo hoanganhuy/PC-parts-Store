@@ -995,7 +995,15 @@ public static class Program
                                                             productHandler.Add(connection);
                                                             break;
                                                         }
+                                                    
                                                     case "7":
+                                                        {
+                                                            Console.Write("Enter id: ");
+                                                            int idRemove = validations.CheckInt();
+                                                            productHandler.Remove(connection, idRemove);
+                                                            break;
+                                                        }
+                                                    case "8":
                                                         {
                                                             Console.WriteLine("Back");
                                                             break;
@@ -1004,7 +1012,7 @@ public static class Program
                                                         Console.WriteLine("Invalid option. Please try again.");
                                                         break;
                                                 }
-                                                if (productManageOption == "7")
+                                                if (productManageOption == "8")
                                                 {
                                                     break;
                                                 }

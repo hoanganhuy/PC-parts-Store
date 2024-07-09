@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace PCPartsStore
@@ -290,6 +291,39 @@ namespace PCPartsStore
             }
 
             return exists;
+        }
+
+        public bool CheckPhoneNumber(string phoneNumber)
+        {
+            string pattern = @"^\d{10}$";
+
+            // Create Regex object
+            Regex regex = new Regex(pattern);
+
+            // Validate the phone number format
+            if (!regex.IsMatch(phoneNumber))
+            {
+                Console.WriteLine("Invalid phone number. Please enter a 10-digit phone number.");
+                return false;
+            }
+            return true;
+        }
+
+        public bool CheckEmail(string email)
+        {
+            // Regular expression to check if the email format is valid
+            string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+
+            // Create Regex object
+            Regex regex = new Regex(pattern);
+
+            // Validate the email format
+            if (!regex.IsMatch(email))
+            {
+                Console.WriteLine("Invalid email format.");
+                return false;
+            }
+            return true;
         }
     }
 }
