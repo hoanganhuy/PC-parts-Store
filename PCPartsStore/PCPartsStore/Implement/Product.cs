@@ -559,6 +559,7 @@ namespace PC_Part_Store.Implement
                 string check = Console.ReadLine();
                 if (string.IsNullOrEmpty(check)) 
                 {
+                    newCategoryId = 0;
                     break;
                 }
                 if (!int.TryParse(check, out newCategoryId))
