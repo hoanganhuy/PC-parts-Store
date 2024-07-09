@@ -588,6 +588,10 @@ public static class Program
                                                     orderHandler.ViewOrderDetails(viewOrderId, connection);
                                                 }
                                             }
+                                            else
+                                            {
+                                                break;
+                                            }
                                         }while(optionViewOrder != "2");
                                         break;
                                     case "10"://exit

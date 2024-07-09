@@ -82,8 +82,38 @@ namespace PC_Part_Store.Implement
             username = Console.ReadLine();
             Console.Write("Enter password: ");
             password = Console.ReadLine();
+            int count = 0;
             while (!validations.AccountExistCheck(username, password))
             {
+                count++;
+                if (count == 3)
+                {
+                    Console.WriteLine("Do you want to continue re-entering your account?");
+                    Console.WriteLine("1. Yes");
+                    Console.WriteLine("2. No");
+                    Console.Write("Enter seletion: ");
+                    int selectionLogin;
+                    do
+                    {
+                        selectionLogin = validations.CheckInt();
+                        if(selectionLogin == 1 || selectionLogin == 2)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("selection invalid");
+                        }
+                    } while (true);
+                    if (selectionLogin == 1)
+                    {
+                        count = 0;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
                 Console.WriteLine("Account or password is incorrect");
                 Console.Write("Username: ");
                 username = Console.ReadLine();
@@ -217,22 +247,26 @@ namespace PC_Part_Store.Implement
             if (!string.IsNullOrEmpty(name))
             {
                 query += "Customer_name = @name, ";
+                updates.Add("Employee_name = @name");
             }
             if (!string.IsNullOrEmpty(email))
             {
                 query += "email = @email, ";
+                updates.Add("email = @email");
             }
             if (!string.IsNullOrEmpty(phoneNumber))
             {
                 query += "phone_number = @phoneNumber, ";
+                updates.Add("phone_number = @phoneNumber");
             }
             if (!string.IsNullOrEmpty(address))
             {
                 query += "address = @address, ";
+                updates.Add("address = @address");
             }
 
             // Remove the trailing comma and space if any updates were added
-            if (updates.Count != null)
+            if (updates.Count != 0)
             {
                 query = query.Substring(0, query.Length - 2); // Remove last ", "
                 query += " WHERE Customer_ID = @id";
